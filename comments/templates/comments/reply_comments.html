@@ -1,0 +1,37 @@
+
+<br>
+
+<div class="reply-comment">
+
+    {% for reply in comment.replies.all %}
+        {% if reply.comment_author %}
+      <a href="{% url 'articles-channel' reply.comment_author.id %}" style="text-decoration:none">
+          <span class="inline"><img src="{{ reply.comment_author.avatar.url }}" width="30px" class="rounded-full inline"></span>
+          <h6 class="inline" style="margin-top:3px;">{{ reply.comment_author }}</h6>
+      </a>
+      {% else %}
+          <span class="inline"><img src="{{ default_avatar }}" width="30px" class="rounded-full inline"></span>
+          <p style="margin-bottom:10px;" class="inline">Пользователь удален</p>
+      {% endif %}
+        <div style="margin-left:33px;font-size:14.5px;" class="text_break">{{ reply.comment|linebreaks }}</div>
+        <span class="inline">
+            <form action="{% url 'like_comment' post.id reply.id %}" method="post" style="margin: 0 0 10px 33px;">
+                {% csrf_token %}
+                <input type="hidden" name="url_from" value="{{ request.path }}">
+
+                <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-sm
+                {% if user in reply.likes.all %}
+                    btn-danger
+                {% else %}
+                    btn-outline-danger
+                {% endif %}" style="font-size:10px">
+                 ❤{{ reply.likes.count }}
+                </button>
+            </form>
+        </span>
+         <p style="margin: 0 0 0 20px;padding:0;font-size:10px;" class="text-muted">{{ reply.time_create|timesince }} назад</p>
+
+        <p class="text-muted" style="margin:0;padding:0">__________________________________________________________________________________________________________________________</p>
+      {% endfor %}
+
+</div>

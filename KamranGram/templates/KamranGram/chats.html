@@ -1,0 +1,22 @@
+<br>
+<br>
+<br>
+<div class="chat-aside inline">
+    {% for room in rooms %}
+      <a href="{% url 'room' room.id %}" class="text-none text-white">
+       <div class="chat-div">
+           <div style="font-weight:bold">{{room.name}}</div><br>
+       </div>
+      </a>
+    {% endfor %}
+</div>
+
+<div class="footer">
+    <span class="form-group" style="width: 100%;">
+        <input class="form-control inline" placeholder="Сообщение" id="my_input" type="text" style="width:400px;" required></br>
+    </span>
+</div>
+
+
+
+

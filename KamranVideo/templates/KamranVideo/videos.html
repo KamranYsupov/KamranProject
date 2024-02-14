@@ -1,0 +1,29 @@
+{% extends 'KamranVideo/video-base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block header %}<span class="page fs-3">{{title}}</span>{% endblock %}
+
+{% block content %}
+{% if videos %}
+{% for i in videos %}
+<a href="{% url 'watch' i.id %}" style="text-decoration:none">
+<div class="video-div rounded-xl">
+    <img src="{{ i.preview.url }}" class="preview rounded-xl">
+
+    {% if i.title|length > 35 %}
+        <p>{{ i.title|slice:34|truncatewords:5 }}...</p>
+    {% else %}
+        <p>{{ i.title }}</p>
+    {% endif %}
+    <p style="padding:0;margin:0;" class="text-muted">{{ i.author }}</p>
+    <p style="padding:0;margin:0;" class="text-muted">{{ i.time_create }}</p>
+</div>
+</a>
+{% endfor %}
+{% else %}
+<p>Ни одного видео не загруженно!</p>
+{% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,1 @@
+<img src="C:/kamranproject/projects/django/KAMRAN/media/users/avatars_default/nursultan.jpeg">

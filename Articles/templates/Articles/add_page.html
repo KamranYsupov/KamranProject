@@ -1,0 +1,15 @@
+{% extends 'Articles/base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block header %}<span class="page fs-3">{{title}}</span>{% endblock %}
+
+{% block content %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <hr>
+    <p><button type="submit" class="btn btn-success">Добавить</button></p>
+</form>
+<hr>
+{% endblock %}

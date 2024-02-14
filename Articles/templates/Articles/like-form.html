@@ -1,0 +1,13 @@
+<form action="{% url 'like_post' post.slug %}" method="post" class="inline">
+    {% csrf_token %}
+    <input type="hidden" name="url_from" value="{{ request.path }}">
+
+    <button type="submit" name="post_slug" value="{{ post.slug }}" class="btn btn-sm
+           {% if user in post.likes.all %}
+                  btn-danger
+           {% else %}
+                  btn-outline-danger
+           {% endif %}">
+           ❤{{ post.likes.count }}
+    </button>
+</form>

@@ -1,0 +1,14 @@
+<form action="{% url 'like_video' video.id %}" method="post" class="inline">
+    {% csrf_token %}
+    <input type="hidden" name="url_from" value="{{ request.path }}">
+
+    <button type="submit" name="video_id" value="{{ video.id }}" class="btn btn-sm
+           {% if user in video.likes.all %}
+                  btn-danger
+           {% else %}
+                  btn-outline-danger
+           {% endif %}">
+           <!--<span style="font-size:20px;"></span>-->❤  {{ video.likes.count }}
+    </button>
+
+</form>

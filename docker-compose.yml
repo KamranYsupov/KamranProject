@@ -1,0 +1,64 @@
+services:
+  web-app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/KAMRAN
+    environment:
+      - DB_HOST=database
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASS=pass
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - redis
+
+
+  redis:
+    image: redis:7.0.11-alpine
+    hostname: redis
+    ports:
+      - '6379:6379'
+
+  worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    volumes:
+      - ./:/KAMRAN
+
+    environment:
+      - DB_HOST=database
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASS=pass
+
+    command: >
+       -A KAMRAN worker -l info -P gevent
+    links:
+      - redis
+    depends_on:
+      - redis
+
+  flower:
+    build:
+      context: .
+    hostname: flower
+    entrypoint: celery
+    command: -A KAMRAN flower
+    volumes:
+      - ./:/KAMRAN
+    links:
+      - redis
+    depends_on:
+      - redis
+    ports:
+      - '5555:5555'
+
+
+
+

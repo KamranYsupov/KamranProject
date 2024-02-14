@@ -1,0 +1,22 @@
+{% extends 'Articles/base.html' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block header %}<span class="page fs-3">{{title}}</span>{% endblock %}
+
+{% block content %}
+
+<form  action="{% url 'register' %}" method="post">
+    {% csrf_token %}
+    <div class="auth-form border-gray rounded-xl">
+        {{ form.as_p }}
+        <input type="hidden" name="next" value="{{ next }}" />
+
+        <button type="submit" class="btn btn-dark active">Зарегестрироваться</button>
+        <br><br>
+        <span style="margin-left:5px">Уже есть аккаунт? <a href="{% url 'login' %}">Авторизоваться</a> </span>
+    </div>
+</form>
+
+
+{% endblock %}

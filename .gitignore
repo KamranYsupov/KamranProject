@@ -1,0 +1,9 @@
+/.idea
+
+/db.json
+/db.sqlite3
+/plat.txt
+/tasks.txt
+/main.py
+/django/kamranvenv
+

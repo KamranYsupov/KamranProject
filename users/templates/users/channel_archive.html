@@ -1,0 +1,102 @@
+{% extends 'users/channel.html' %}
+
+{% block channel_content %}
+{% include 'Articles/br.html' %}
+<br>
+<br>
+<br>
+
+{% include 'users/channel-menu.html' %}
+<div class="channel_right_aside rounded-xl inline">
+    <div class="followers_menu rounded-xl" style="margin-left:20px;margin-top:10px;">
+      <p class="rounded-xl" style="margin:0;padding:0;">Подписчики {{owner.followers.count}}</p>
+        {% if owner.followers %}
+        {% for i in owner.followers.all|slice:10 %}
+        <div class="follower">
+            <a href="{% url 'articles-channel' i.id %}" style="text-decoration:none">
+                <img src="{{ i.avatar.url }}" style="width:27px" class="inline rounded-full">
+                <span class="inline rounded-full">
+                    {% if i.username|length > 12 %}
+                       {{ i.username|slice:12 }}..
+                    {% else %}
+                       {{ i.username }}
+                    {% endif %}
+                </span>
+            </a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>У {{ owner.username }} 0 подписчиков(</p>
+        {% endif %}
+    </div>
+    <div class="followed_by_menu rounded-xl" style="margin-left:20px;margin-top:10px;">
+      <p class="rounded-xl" style="margin:0;padding:0;">Подписки {{owner.followed_by.count}}</p>
+        {% if owner.followed_by %}
+        {% for i in owner.followed_by.all|slice:10 %}
+        <div class="follower">
+            <a href="{% url 'articles-channel' i.id %}" style="text-decoration:none">
+                <img src="{{ i.avatar.url }}" style="width:27px" class="inline rounded-full">
+                <span class="inline rounded-full">
+                    {% if i.username|length > 12 %}
+                       {{ i.username|slice:12 }}..
+                    {% else %}
+                       {{ i.username }}
+                    {% endif %}
+                </span>
+            </a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>{{ owner.username }} ни на кого подписан(</p>
+        {% endif %}
+    </div>
+</div>
+
+{% if archived_articles %}
+    {% for post in archived_articles %}
+        <div class="channel-post rounded-xl inline">
+            <img src="{{ post.author.avatar.url }}" width="30px" class="inline rounded-full">
+            <p class="text-white inline"> {{ post.author.username }}<span style="margin-left:330px;"> {% include 'Articles/like_percent.html' %}</span></p>
+            <h4 class="text-white">{{ post.title }}</h4>
+            <div class="text-white text-break">
+                {% if post.content|length > 500 %}
+                     {{ post.content|slice:497|truncatewords:35 }}...
+                {% else %}
+                     {{ post.content }}
+                {% endif %}
+            </div>
+            <p>
+                {% if post.photo %}
+                   <a href="{{ post.photo.url }}"><img src="{{ post.photo.url }}" style="width:420px;" class="rounded-xl"></a>
+                {% endif %}
+                {% include 'Articles/like-form.html' %}
+            <div class="inline">
+            {% if user == post.author %}
+                   <a href="{% url 'edit-page' post.slug %}" class="btn btn-sm  btn-outline-success" style="margin-left:90px;">
+                       Изменить
+                   </a>
+                   <a href="{% url 'read' post.slug %}" class="btn  btn-sm btn-primary" >
+                       Читать пост
+                   </a>
+               {% else %}
+                  <a href="{% url 'read' post.slug %}" class="btn btn-sm btn-primary" style="margin-left:190px;">
+                      Читать пост
+                  </a>
+            {% endif %}
+        </div>
+        </p>
+        </div>
+    <br>
+    <br>
+    {% endfor %}
+{% else %}
+<div class="channel-post rounded-xl inline">
+   <span style="margin-left:55px;" class="text-muted">Ни одной публикации не загруженно в архив</span>
+</div>
+{% endif %}
+<br>
+<br>
+<br>
+
+
+{% endblock %}

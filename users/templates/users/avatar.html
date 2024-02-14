@@ -1,0 +1,5 @@
+{% if user.avatar %}
+       <a href="{{ user.avatar.url }}"><img class="avatar-img rounded-full" src="{{ user.avatar.url}}"></a>
+{% else %}
+       <a href="{{ default_avatar }}"><img class="avatar-img rounded-full" src="{{ default_avatar }}"></a>
+{% endif %}

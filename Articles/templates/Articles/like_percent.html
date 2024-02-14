@@ -1,0 +1,15 @@
+{% if post.like_percent != 0 %}
+         <span style="
+         color:
+         {% if 80 <= post.like_percent and post.like_percent <= 100 %}
+              green;
+         {% elif 60 <= post.like_percent and post.like_percent <= 80 %}
+              green
+         {% elif 20 <= post.like_percent and post.like_percent <= 600 %}
+              orange
+         {% else %}
+              red
+         {% endif %}">
+             {{post.like_percent}}%
+         </span>
+{% endif %}

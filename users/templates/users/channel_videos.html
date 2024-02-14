@@ -1,0 +1,27 @@
+{% extends 'users/channel.html' %}
+
+{% block channel_content %}
+<div style="margin-top:183px">{% include 'users/channel-menu.html' %}</div>
+{% if videos %}
+  {% for i in videos %}
+    <a href="{% url 'watch' i.id %}" style="text-decoration:none">
+      <div class="video-div-for-channel inline rounded-xl">
+        <img src="{{ i.preview.url }}" class="preview rounded-xl">
+
+          {% if i.title|length > 35 %}
+            <p>{{ i.title|slice:34|truncatewords:5 }}...</p>
+          {% else %}
+            <p>{{ i.title }}</p>
+          {% endif %}
+          <p style="padding:0;margin:0;font-size:14.5px" class="text-muted">{{ i.author }}</p>
+          <p style="padding:0;margin:0;font-size:14.5px" class="text-muted">{{ i.time_create }}</p>
+      </div>
+    </a>
+  {% endfor %}
+{% else %}
+  <div class="channel-post rounded-xl inline" style="margin-left:140px;">
+     <span style="margin-left:85px;" class="text-muted">Ни одного видео не загруженно</span>
+  </div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'Articles/base.html' %}
+{% block style %}
+.main-main {
+   display: flex;
+   flex-direction: column;
+   flex: 1 1 auto;
+}
+{% endblock %}
+
+{% block title %}{{room.name}}{% endblock %}
+
+{% block header %}
+<span><br><br></span>
+   <form action="{% url 'room_search' %}" method="get" class="search">
+       <input style="height:36.5px;width:450px;background:white;" type="text" name="room_search" placeholder="   Поиск" class="rounded-l-lg">
+       <button class=" search-div border border-gray-300 rounded-r-lg"><p style="position:relative;bottom:4px;">🔍</p></button>
+   </form>
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
+
+{% block more %}
+<br>
+<br>
+<br>
+<div class="chat-aside inline">
+    {% for room in rooms %}
+       <a href="{% url 'room' room.id %}" class="text-none text-white">
+           <div class="{% if room == rooms|first %}first-chat-div{% else %}chat-div{% endif %}">
+               <div style="font-weight:bold">{{room.name}}</div><br>
+           </div>
+       </a>
+    {% endfor %}
+</div>
+<div class="chat">
+            <form>
+                <div class="form-group">
+                  <div class="background-chat {% include 'KamranGram/choice-theme.html' %}" id="chatbox" style="max-height: 90%;overflow-y: scroll;">
+                      {% if messages %}
+                      <b class="text-muted text-break">{{room.description}}</b>
+                      {% for message in messages %}
+                        <span class="{% if message.user == request.user %}text-right{% else %}text-left{% endif %}">
+                          <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="position:static;top:25px;"><b class="inline">{{message.sender.username}}</b> : {{ message.content }}<br>
+                        </span>
+
+                        {% endfor %}
+                      {% else %}
+                      <span class="rounded-full" style="margin-left:150px;background:">Поздоровайтесь со всеми!</span>
+                      {% endif %}
+                  </div>
+
+
+                <br/>
+
+            </form>
+</div>
+<div class="footer rounded-xl">
+    <div class="inline"><input class="form-control" placeholder="Сообщение" id="my_input" type="text" style="width:690px;margin-top:20px;" required></div><div class="inline"><button class="btn btn-primary inline" id="submit_button" type="button" style="width:50px">↑</button></div>
+</div>
+{{ room.id|json_script:"room-id" }}
+{{ room.name|json_script:"room-name" }}
+
+
+<br/>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+
+
+      const roomID = JSON.parse(document.getElementById('room-id').textContent);
+
+      const chatSocket = new WebSocket(
+         'ws://'
+         + window.location.host
+         + '/ws/KGram/room/'
+         + roomID
+         + '/'
+      );
+      chatSocket.onopen = function (e) {
+      console.log("Соединение было успешно установленно!");
+      };
+      chatSocket.onclose = function (e) {
+      console.log("Произошло что-то неожиданное!");
+      };
+
+      document.querySelector("#my_input").focus();
+      document.querySelector("#my_input").onkeyup = function (e) {
+         if (e.keyCode == 13) {
+           e.preventDefault();
+           document.querySelector("#submit_button").click();
+        }
+      };
+      document.querySelector("#submit_button").onclick = function (e) {
+         var messageInput = document.querySelector(
+            "#my_input"
+         ).value;
+
+         if(messageInput.length == 0)
+            {
+              alert("Напишите сообщение перед тем как его отправить!")
+            }
+         else
+            {
+             chatSocket.send(JSON.stringify({ message: messageInput, sender : "{{request.user.username}}", avatar: "{{request.user.avatar.url}}", room_id: "{{room.id}}"}));
+
+
+             }
+
+      };
+
+      chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        var span = document.createElement("span");
+        span.innerHTML = `<img class='rounded-full inline' width='27px' src=${data.avatar} style='position:static;top:25px;'>` + "<b class='inline'>" + data.sender + "</b> : " + data.message + "<br>";
+        console.log(`${data.sender}: ${data.message}`)
+
+        // Add class based on user authentication
+        if (data.username === "{{ request.user.username }}") {
+          span.classList.add("text-right");
+        } else {
+          span.classList.add("text-left");
+        }
+
+        document.querySelector("#my_input").value = "";
+        document.querySelector("#chatbox").appendChild(span);
+        document.querySelector("#chatbox").scrollTo(0, document.querySelector("#chatbox").scrollHeight);
+       };
+    </script>
+{% endblock %}

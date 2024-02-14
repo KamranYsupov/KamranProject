@@ -1,0 +1,83 @@
+{% extends 'Articles/base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block header %}
+   <span class="page fs-3">{{title}}</span>{% include 'Articles/order-menu.html' %}
+{% endblock %}
+
+{% block content %}
+{% if posts %}
+
+<ul>
+    {% for post in posts %}
+      <li>
+        <div class="post rounded-xl">
+        {% if post.author %}
+          <a style="text-decoration:none;" href="{% url 'articles-channel' post.author.id %}">
+              <img src="{{ post.author.avatar.url }}" width="30px" class="inline rounded-full">
+              <p class="text-white inline" >
+                  {{ post.author.username }} {% include 'Articles/like_percent.html' %}
+              </p>
+          </a>
+        {% else %}
+            <p class="text-white inline">Пользователь удален {% include 'Articles/like_percent.html' %}</p>
+        {% endif %}
+        <h4 class="text-white">{{ post.title }}</h4>
+            <div class="text-white text-break">
+                {% if post.content|length > 500 %}
+                     {{ post.content|slice:497|truncatewords:35 }}...
+                {% else %}
+                     {{ post.content }}
+                {% endif %}
+            </div>
+        <p>
+          {% if post.photo %}
+                 <img src="{{ post.photo.url }}" style="margin:10px 0 0 10px;width:420px;" class="rounded-xl">
+          {% endif %}
+           {% include 'Articles/like-form.html' %}
+            <span style="margin-left:5px;font-size:15px;" class="text-muted">
+               {{ post.views }}
+               {% if post.views > 1 %}
+                  Просмотров
+               {% else %}
+                  Просмотр
+               {% endif %}
+            </span>
+            <div class="inline">
+               {% if user == post.author %}
+                   <a href="{% url 'edit-page' post.slug %}" class="btn btn-sm  btn-outline-success" style="margin-left:90px;">
+                       Изменить
+                   </a>
+                   <a href="{% url 'read' post.slug %}" class="btn  btn-sm btn-primary" >
+                       Читать пост
+                   </a>
+               {% else %}
+                  <a href="{% url 'read' post.slug %}" class="btn btn-sm btn-primary" style="margin-left:177.5px;">
+                      Читать пост
+                  </a>
+               {% endif %}
+            </div>
+        </p>
+        </div>
+      </li><br>
+    {% endfor %}
+</ul>
+{% else %}
+   <p class="text-muted" style="font-size:15px;">Статей нет.Будте первым!</p>
+{% endif %}
+<div id="btn-arrow-left">
+   {% if page_obj.has_previous %}
+       <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-dark" ><</a>
+   {% endif %}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}" class="btn btn-dark" >></a>
+   {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'main/js/main.js' %}"></script>
+<!--<script src="{% static 'Articles/js/like.js' %}"></script>-->
+{% endblock %}

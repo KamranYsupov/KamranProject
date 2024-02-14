@@ -1,0 +1,197 @@
+{% extends 'KamranVideo/video-base.html' %}
+
+{% block title %}{{video.title}}{% endblock %}
+
+{% block header %}<span class="page fs-3">KamranVideo</span>{% endblock %}
+
+{% block content %}
+<video width="65%" class="watch-div rounded-xl" autoplay controls="controls"><source src="{{ video.video.url }}"></video>
+<div class="watch-div rounded-xl">
+    <div class="">
+        <h3>{{ video.title }}</h3>
+        <a href="{% url 'video-channel' video.author.id %}" style="text-decoration:none">
+            <img src="{{video.author.avatar.url}}" width="26px" class="rounded-full inline" style="margin-bottom:6.5px;" >
+            <h5 class="inline" style="margin-left:1px;vertical-align:bottom;">{{ video.author }}</h5>
+        </a>
+        <br>
+
+        <span style="margin-top:px;">{% include 'KamranVideo/like-form.html' %}</span>
+
+        <span class="inline" style="padding:0;margin:2px 0 0 0">
+            <p style="margin:0;padding:0" class="text-muted">{{ video.views }} {% if video.views > 1 %}просмотров{% else %}просмотр{% endif %}</p>
+        </span>
+
+        <span class="text-muted inline" style="font-size:14px;margin: 0 0 0 385px;padding:0">{{ video.time_create }} </span>
+
+        <hr>
+        {% if video.description %}
+           <h4>Описание</h4>
+              <div id="desc">
+                  {% if ' ' not in video.description %}
+                      {{video.description|slice:50}}
+                  {% else %}
+                      {{video.description|linebreaks|truncatewords:30}}
+                  {% if video.description|length > 200 %}
+                      <button id="show-desc">Открыть</button>
+                  {% endif %}
+                  {% endif %}
+              </div>
+        <div id="full-desc" class="hidden">{{video.description|linebreaks}}<button id="hide-desc">Скрыть</button></div>
+        {% endif %}
+<p class="text-muted">_____________________________________________________________________________________________________________</p>
+<h3 style="position:static">Комментарии</h3>
+<p class="text-muted" style="margin:5;padding:0">_____________________________________________________________________________________________________________</p>
+{% if not user.is_authenticated %}
+    <p style="margin-left:5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы оставить комментарий</p>
+{% else %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.comment }}
+        <button style="margin-top:5px;margin-left:620px;" type="submit" class="btn "><span>Отправить</span></button>
+    </form>
+{% endif %}
+<p class="text-muted" style="margin:5;padding:0">_____________________________________________________________________________________________________________</p>
+
+{% if video_comments %}
+    {% for comment in video_comments %}
+     <div style="margin-left:20px;">
+      {% if comment.author %}
+      <a href="{% url 'video-channel' comment.author.id %}" style="text-decoration:none">
+          <span class="inline"><img src="{{ comment.author.avatar.url }}" width="27.5px" class="rounded-full inline"></span>
+          <h5 style="margin-bottom:20px;" class="inline">{{ comment.author }}</h5>
+      </a>
+      {% else %}
+          <span class="inline"><img src="{{ default_avatar }}" width="27.5px" class="rounded-full inline"></span>
+          <p style="margin-bottom:20px;" class="inline">Пользователь удален</p>
+      {% endif %}
+        <div style="margin-left:33px;font-size:16x;" class="text_break">{{comment.comment|linebreaks}}</div>
+        <span class="inline">
+            <form action="{% url 'like_comment' video.id comment.id %}" method="post" style="margin-left:30px;margin-bottom:15px;">
+                {% include 'comments/like-comment-form.html' %}
+            </form>
+        </span>
+        <span class="inline" style="margin:4px 0 0 5px;font-size:13.5px">
+            {{ comment.replies.count }}
+        </span>
+        <span id="{% if comment.replies.all %}open_reply_form_div{% endif %}" class="inline" style="margin-top:3px">
+            <button id="open_reply_form_button">
+                <img src="/media/KamranGram/icons/chat.png" width="24.5px;">
+            </button>
+        </span>
+         <p style="margin: 0 0 0 30px;padding:0;font-size:10px;" class="text-muted">{{ comment.time_create|timesince }} назад</p>
+         <div id="reply_div" class="">
+             <br>
+             <div class="reply-comment">
+                 {% for reply in comment.replies.all %}
+                     {% if reply.author %}
+                         <a href="{% url 'articles-channel' reply.author.id %}" style="text-decoration:none">
+                             <span class="inline"><img src="{{ reply.author.avatar.url }}" width="27.5px" class="rounded-full inline"></span>
+                             <h6 class="inline" style="margin-top:3px;">{{ reply.author }}</h6>
+                         </a>
+                     {% else %}
+                 <span class="inline"><img src="{{ default_avatar }}" width="27.5px" class="rounded-full inline"></span>
+                 <p style="margin-bottom:10px;" class="inline">Пользователь удален</p>
+                     {% endif %}
+                 <div style="margin-left:33px;font-size:14.5px;" class="text_break">{{ reply.comment|linebreaks }}</div>
+                 <span class="inline">
+                     <form action="{% url 'like_comment' video.id reply.id %}" method="post" style="margin: 0 0 10px 33px;">
+                         {% csrf_token %}
+                         <input type="hidden" name="url_from" value="{{ request.path }}">
+
+                         <button type="submit" name="id" value="{{ comment.id }}" class="btn btn-sm
+                                 {% if user in reply.likes.all %}
+                                    btn-danger
+                                 {% else %}
+                                    btn-outline-danger
+                                {% endif %}" style="font-size:10px">
+                                 ❤{{ reply.likes.count }}
+                         </button>
+                     </form>
+                 </span>
+                 <p style="margin: 0 0 0 20px;padding:0;font-size:10px;" class="text-muted">{{ reply.time_create|timesince }} назад</p>
+
+                 <p class="text-muted" style="margin:0;padding:0">__________________________________________________________________________________________</p>
+                 {% endfor %}
+             </div>
+             {% if user.is_authenticated %}
+                 <form action="{% url 'reply_comment' video.id comment.id %}" method="post" style="margin-left:51.2px">
+                     {% csrf_token %}
+                     <span class="inline">{{ reply_form.comment }}</span>
+                     <input type="hidden" name="url_from" value="{{ request.path }}">
+                     <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                     <span class="inline">
+                         <button type="submit" class="btn btn-dark">
+                             <span>Ответить</span>
+                         </button>
+                     </span>
+                 </form>
+             {% else %}
+                 <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
+             {% endif %}
+         </div>
+        <p class="text-muted" style="margin: 0 0 10px 0;padding:0">___________________________________________________________________________________________________________</p>
+      </div>
+{% endfor %}
+{% else %}
+    <p class="text-muted" style="font-size:15px;">Комментариев нет.Будте первым!</p>
+{% endif %}
+
+
+{% endblock %}
+
+{% block more %}
+<aside class="video-menu">
+{% if videos|length > 1 %}
+    {% for i in videos %}
+    {% if video.id != i.id %}
+    <a href="{% url 'watch' i.id %}" style="text-decoration: none;">
+        <div class="mini-video-div rounded-xl">
+                <img width="170px" src="{{ i.preview.url }}" class="rounded-xl video-elem">
+                <span class="text-white fs-6 video-elem" style="margin-top:5px;">
+                    {% if i.title|length > 23 %}
+                       {{ i.title|slice:23|truncatewords:5 }}..
+                    {% else %}
+                       {{ i.title }}
+                    {% endif %}
+                    <p class="text-muted" style="padding:0;margin:0;margin-top:10px;">{{ i.author }}</p>
+                    <p class="text-muted" style="padding:0;margin:0;">{{ i.time_create }}</p>
+                </span>
+        </div>
+    </a>
+  {% endif %}
+  {% endfor %}
+
+{% else %}
+<div class="mini-video-div rounded-xl">
+    <span style="margin-left:75px;">В очереди ни одного видео</span>
+</div>
+{% endif %}
+</aside>
+{% endblock %}
+{% block scripts %}
+<script>
+    const fullDecsElement = document.querySelector('#full-desc')
+    const DecsElement = document.querySelector('#desc')
+    const ShowDecsElement = document.querySelector('#show-desc')
+    const HideDecsElement = document.querySelector('#hide-desc')
+
+    ShowDecsElement.onclick = function(e) {
+        e.preventDefault()
+
+        DecsElement.classList.add('hidden')
+        fullDecsElement.classList.remove('hidden')
+
+        return false
+    }
+
+    HideDecsElement.onclick = function(e) {
+        e.preventDefault()
+
+        fullDecsElement.classList.add('hidden')
+        DecsElement.classList.remove('hidden')
+
+        return false
+    }
+
+</script>
+{% endblock %}
