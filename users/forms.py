@@ -7,12 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, Pass
 
 current_year = datetime.date.today().year
 default_widget = {
-    'class': 'form-control',
-    'style':
-        'margin-top:5px;'
-        'background: #141214;'
-        'border-color: #141214;'
-        'color: white;',
+    'class': 'form-control input-form',
 }
 
 
@@ -22,7 +17,7 @@ class LoginUserForm(AuthenticationForm):
 
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(
         attrs=default_widget | {'placeholder': 'Пароль'}))
-
+ 
     class Meta:
         model = get_user_model()
         fields = ['username', 'password']

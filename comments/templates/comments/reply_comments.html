@@ -4,10 +4,10 @@
 <div class="reply-comment">
 
     {% for reply in comment.replies.all %}
-        {% if reply.comment_author %}
-      <a href="{% url 'articles-channel' reply.comment_author.id %}" style="text-decoration:none">
-          <span class="inline"><img src="{{ reply.comment_author.avatar.url }}" width="30px" class="rounded-full inline"></span>
-          <h6 class="inline" style="margin-top:3px;">{{ reply.comment_author }}</h6>
+        {% if reply.author %}
+      <a href="{% url 'articles-channel' reply.author.id %}" style="text-decoration:none">
+          <span class="inline"><img src="{{ reply.author.avatar.url }}" width="30px" class="rounded-full inline"></span>
+          <h6 class="inline" style="margin-top:3px;">{{ reply.author }}</h6>
       </a>
       {% else %}
           <span class="inline"><img src="{{ default_avatar }}" width="30px" class="rounded-full inline"></span>

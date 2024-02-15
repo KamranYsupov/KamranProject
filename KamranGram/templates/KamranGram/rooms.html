@@ -5,7 +5,7 @@
 {% block header %}
    <span class="fs-3" style="margin-left:10px;">{{title}}</span>
    <form action="{% url 'room_search' %}" method="get" class="search">
-       <input style="height:36.5px;width:450px;background:white;" type="text" name="room_search" placeholder="   Поиск" class="rounded-l-lg">
+       <input style="height:36.5px;width:450px;background:white;" type="text" name="room_search" placeholder="   Поиск комнаты" class="rounded-l-lg">
        <button class=" search-div border border-gray-300 rounded-r-lg"><p style="position:relative;bottom:4px;">🔍</p></button>
    </form>
 {% endblock %}
@@ -16,7 +16,15 @@
     <div class="chat-div {% include 'KamranGram/choice-theme.html' %} rounded-xl">
        <h3 class="text-white chat-page">{{room.name}}</h3>
        <p class="text-white text-break">{{room.description|slice:62|truncatewords:10}}</p>
-       <a href="{% url 'join_room' room.id %}" style="text-decoration:none;font-size:15px" class="text-white">Пресоединиться</a>
+        {% if user not in room.members.all %}
+            <a href="{% url 'login_room' room.id %}" style="text-decoration:none;font-size:15px" class="text-white">
+               Пресоединиться
+           </a>
+        {% else %}
+           <a href="{% url 'room' room.id %}" style="text-decoration:none;font-size:15px" class="text-white">
+               Пресоединиться
+           </a>
+        {% endif %}
     </div>
   {% endfor %}
 {% else %}
@@ -26,4 +34,5 @@
 
 {% endblock %}
 
-<!--style="margin-bottom:6px;margin-right:100px;height:35px;"-->
+<!--style="margin-bottom:6px;margin-right:100px;height:35px;"
+-->

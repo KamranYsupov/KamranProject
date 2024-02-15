@@ -73,13 +73,31 @@
         <span class="inline" style="margin:4px 0 0 5px;font-size:13.5px">
             {{ comment.replies.count }}
         </span>
-        <span id="{% if comment.replies.all %}open_reply_form_div{% endif %}" class="inline" style="margin-top:3px">
-            <button id="open_reply_form_button">
+        <span class="inline" style="margin-top:3px">
+            <button id="open_reply_button">
+                <img src="/media/KamranGram/icons/chat.png" width="24.5px;">
+            </button>
+            <button id="close_reply_button" class="hidden">
                 <img src="/media/KamranGram/icons/chat.png" width="24.5px;">
             </button>
         </span>
          <p style="margin: 0 0 0 30px;padding:0;font-size:10px;" class="text-muted">{{ comment.time_create|timesince }} назад</p>
-         <div id="reply_div" class="">
+         <div id="reply_div" class="hidden reply_div">
+             {% if user.is_authenticated %}
+                 <form action="{% url 'reply_comment' video.id comment.id %}" method="post" style="margin:10px 0 0 51.2px">
+                     {% csrf_token %}
+                     <span class="inline">{{ reply_form.comment }}</span>
+                     <input type="hidden" name="url_from" value="{{ request.path }}">
+                     <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                     <span class="inline">
+                         <button type="submit" class="btn btn-dark">
+                             <span>Ответить</span>
+                         </button>
+                     </span>
+                 </form>
+             {% else %}
+                 <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
+             {% endif %}
              <br>
              <div class="reply-comment">
                  {% for reply in comment.replies.all %}
@@ -113,21 +131,6 @@
                  <p class="text-muted" style="margin:0;padding:0">__________________________________________________________________________________________</p>
                  {% endfor %}
              </div>
-             {% if user.is_authenticated %}
-                 <form action="{% url 'reply_comment' video.id comment.id %}" method="post" style="margin-left:51.2px">
-                     {% csrf_token %}
-                     <span class="inline">{{ reply_form.comment }}</span>
-                     <input type="hidden" name="url_from" value="{{ request.path }}">
-                     <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                     <span class="inline">
-                         <button type="submit" class="btn btn-dark">
-                             <span>Ответить</span>
-                         </button>
-                     </span>
-                 </form>
-             {% else %}
-                 <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
-             {% endif %}
          </div>
         <p class="text-muted" style="margin: 0 0 10px 0;padding:0">___________________________________________________________________________________________________________</p>
       </div>
@@ -167,8 +170,14 @@
 </div>
 {% endif %}
 </aside>
+
+{{ video.video_comments.count|json_script:"comments_count" }}
+
 {% endblock %}
+
 {% block scripts %}
+{% load static %}
+<script src="{% static 'main/js/comments.js' %}"></script>
 <script>
     const fullDecsElement = document.querySelector('#full-desc')
     const DecsElement = document.querySelector('#desc')

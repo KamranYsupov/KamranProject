@@ -25,18 +25,21 @@ class Room(models.Model):
         ('#ab09e0', PURPLE),
     ]
 
-    name = models.CharField(max_length=20, unique=True)
-    creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, related_name='rooms')
-    members = models.ManyToManyField(get_user_model(), related_name='current_rooms')
-    description = models.TextField(max_length=300, blank=True)
-    theme = models.CharField(max_length=20, choices=THEME_CHOICES, default=BLUE)
-    time_create = models.DateTimeField(auto_now_add=True)
-    last_visit = models.DateTimeField(default=datetime.datetime.now())
-    password = models.CharField(max_length=20, blank=True)
+    name = models.CharField(verbose_name='Название', max_length=20, unique=True)
+    creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, related_name='rooms',
+                                verbose_name='Создатель')
+    members = models.ManyToManyField(get_user_model(), related_name='current_rooms', verbose_name='Участники')
+    description = models.TextField(verbose_name='Описание', max_length=300, blank=True)
+    theme = models.CharField(verbose_name='Тема', max_length=20, choices=THEME_CHOICES, default=BLUE)
+    time_create = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
+    last_visit = models.DateTimeField(verbose_name='Последнее посещение', default=datetime.datetime.now())
+    password = models.CharField(verbose_name='Пароль комнаты', max_length=20, blank=True)
+    limit_members = models.PositiveIntegerField(verbose_name='Лимит участников', default=2)
+    is_searchable = models.BooleanField(verbose_name='Доступна для поиска', default=True)
     room_avatar = my_models.AvatarImageField(upload_to='KamranGram/room_avatars',
                                              validators=[FileExtensionValidator(
                                                  allowed_extensions=['jpg', 'jpeg', 'png', 'svg'])],
-                                             default='KamranGram/room_avatars/default_group.jpeg')
+                                             default='KamranGram/room_avatars/default_group.png')
 
     class Meta:
         ordering = ['-last_visit']

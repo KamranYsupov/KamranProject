@@ -486,3 +486,10 @@ input, textarea {
    margin: 0 0 0 140px;
    background: #242424;
 }
+
+.input-form {
+   margin-top:5px;
+   background: #141214;
+   border-color: #141214;
+   color: white;
+}

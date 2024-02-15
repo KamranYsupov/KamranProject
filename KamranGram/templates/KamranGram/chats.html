@@ -17,6 +17,16 @@
     </span>
 </div>
 
+{% else %}
+                 'join_room'
+              {% endif %}
+           {% endif %}
+
+           {% if user in room.members.all %}
+              'room'
+           {% else %}
+              {% if room.password %}
+
 
 
 

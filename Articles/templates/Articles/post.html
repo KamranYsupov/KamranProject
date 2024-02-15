@@ -37,12 +37,12 @@
     {% for comment in article_comments %}
      <div style="margin-left:20px;">
       {% if comment.author %}
-      <a href="{% url 'articles-channel' comment.author.id %}" style="text-decoration:none">
-          <span class="inline"><img src="{{ comment.author.avatar.url }}" width="30px" class="rounded-full inline"></span>
+      <a href="{% url 'video-channel' comment.author.id %}" style="text-decoration:none">
+          <span class="inline"><img src="{{ comment.author.avatar.url }}" width="27.5px" class="rounded-full inline"></span>
           <h5 style="margin-bottom:20px;" class="inline">{{ comment.author }}</h5>
       </a>
       {% else %}
-          <span class="inline"><img src="{{ default_avatar }}" width="30px" class="rounded-full inline"></span>
+          <span class="inline"><img src="{{ default_avatar }}" width="27.5px" class="rounded-full inline"></span>
           <p style="margin-bottom:20px;" class="inline">Пользователь удален</p>
       {% endif %}
         <div style="margin-left:33px;font-size:16x;" class="text_break">{{comment.comment|linebreaks}}</div>
@@ -54,31 +54,77 @@
         <span class="inline" style="margin:4px 0 0 5px;font-size:13.5px">
             {{ comment.replies.count }}
         </span>
-        <span id="{% if comment.replies.all %}open_reply_form_div{% endif %}" class="inline" style="margin-top:3px">
-            <button id="open_reply_form_button">
+        <span class="inline" style="margin-top:3px">
+            <button id="open_reply_button">
+                <img src="/media/KamranGram/icons/chat.png" width="24.5px;">
+            </button>
+            <button id="close_reply_button" class="hidden">
                 <img src="/media/KamranGram/icons/chat.png" width="24.5px;">
             </button>
         </span>
          <p style="margin: 0 0 0 30px;padding:0;font-size:10px;" class="text-muted">{{ comment.time_create|timesince }} назад</p>
-         <div id="reply_div" class="">
-             {% include 'comments/reply_comments.html' %}
-             <form action="{% url 'reply_comment' post.id comment.id %}" method="post" style="margin-left:51.2px">
-                 {% csrf_token %}
-                 <span class="inline" >{{ reply_form.comment }}</span>
-                 <input type="hidden" name="url_from" value="{{ request.path }}">
-                 <input type="hidden" name="parent_id" value="{{ comment.id }}">
+         <div id="reply_div" class="hidden">
+             {% if user.is_authenticated %}
+                 <form action="{% url 'reply_comment' post.id comment.id %}" method="post" style="margin:10px 0 0 51.2px">
+                     {% csrf_token %}
+                     <span class="inline">{{ reply_form.comment }}</span>
+                     <input type="hidden" name="url_from" value="{{ request.path }}">
+                     <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                     <span class="inline">
+                         <button type="submit" class="btn btn-dark">
+                             <span>Ответить</span>
+                         </button>
+                     </span>
+                 </form>
+             {% else %}
+                 <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
+             {% endif %}
+             <br>
+             <div class="reply-comment">
+                 {% for reply in comment.replies.all %}
+                     {% if reply.author %}
+                         <a href="{% url 'articles-channel' reply.author.id %}" style="text-decoration:none">
+                             <span class="inline"><img src="{{ reply.author.avatar.url }}" width="27.5px" class="rounded-full inline"></span>
+                             <h6 class="inline" style="margin-top:3px;">{{ reply.author }}</h6>
+                         </a>
+                     {% else %}
+                 <span class="inline"><img src="{{ default_avatar }}" width="27.5px" class="rounded-full inline"></span>
+                 <p style="margin-bottom:10px;" class="inline">Пользователь удален</p>
+                     {% endif %}
+                 <div style="margin-left:33px;font-size:14.5px;" class="text_break">{{ reply.comment|linebreaks }}</div>
                  <span class="inline">
-                     <button type="submit" class="btn btn-dark">
-                         <span>Ответить</span>
-                     </button>
+                     <form action="{% url 'like_comment' post.id reply.id %}" method="post" style="margin: 0 0 10px 33px;">
+                         {% csrf_token %}
+                         <input type="hidden" name="url_from" value="{{ request.path }}">
+
+                         <button type="submit" name="id" value="{{ comment.id }}" class="btn btn-sm
+                                 {% if user in reply.likes.all %}
+                                    btn-danger
+                                 {% else %}
+                                    btn-outline-danger
+                                {% endif %}" style="font-size:10px">
+                                 ❤{{ reply.likes.count }}
+                         </button>
+                     </form>
                  </span>
-             </form>
+                 <p style="margin: 0 0 0 20px;padding:0;font-size:10px;" class="text-muted">{{ reply.time_create|timesince }} назад</p>
+
+                 <p class="text-muted" style="margin:0;padding:0">__________________________________________________________________________________________</p>
+                 {% endfor %}
+             </div>
          </div>
-        <p class="text-muted" style="margin: 0 0 10px 0;padding:0">__________________________________________________________________________________________________________________________________</p>
+        <p class="text-muted" style="margin: 0 0 10px 0;padding:0">___________________________________________________________________________________________________________</p>
       </div>
 {% endfor %}
 {% else %}
     <p class="text-muted" style="font-size:15px;">Комментариев нет.Будте первым!</p>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+
+{% load static %}
+<script src="{% static 'main/js/comments.js' %}"></script>
+
 {% endblock %}
 

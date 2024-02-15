@@ -1,17 +1,20 @@
 import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.db.models import Q
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.forms import forms
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 
 from django.conf import settings
 from Articles.my_mixins import BaseMixin
 from .mixins import RoomMixin
 from .forms import AddRoomForm
 from .models import Room, Message
+from .service import join_room
 
 related_rooms = Room.objects.select_related('creator').prefetch_related('members')
 
@@ -31,6 +34,10 @@ class DetailRoom(RoomMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         room = kwargs['object']
+        if self.request.user not in room.members.all():
+            raise forms.ValidationError(
+                f'Чтобы зайти в комнату {room.name}, найдите ее в поиске и нажмите "Пресоединится"!'
+            )
         room.last_visit = datetime.datetime.now()
         room.save()
         messages = Message.objects.select_related('sender', 'room').filter(room=room)
@@ -62,19 +69,25 @@ class RoomSearch(BaseMixin, LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['room_search'] = query
         context['rooms'] = Room.objects.filter(
-            Q(name__iregex=query) |
-            Q(description__iregex=query) |
-            Q(creator__username__iregex=query) |
-            Q(creator__first_name__iregex=query) |
-            Q(creator__last_name__iregex=query)
+            Q(is_searchable=True) &
+            (Q(name__iregex=query) |
+             Q(description__iregex=query) |
+             Q(creator__username__iregex=query) |
+             Q(creator__first_name__iregex=query) |
+             Q(creator__last_name__iregex=query))
         )
         return context
 
 
-def join_room(request, room_id):
+def login_room(request, room_id):
     current_room = Room.objects.get(id=room_id)
-    if not current_room.members.filter(id=request.user.id):
-        current_room.members.add(request.user)
-    current_room.last_visit = datetime.datetime.now()
-    current_room.save()
-    return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
+    input_password = request.POST.get('input_password')
+    if current_room.members.filter(id=request.user.id):
+        return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
+    if not current_room.password:
+        join_room(request, current_room)
+
+    if input_password == current_room.password:
+        join_room(request, current_room)
+
+    return render(request, 'KamranGram/login_room.html', context={'room': current_room})
