@@ -33,11 +33,33 @@
 <div id="full-aside" class="flex">
 <aside>
     <h3 class="text-white">KamranProject</h3>
-    <ul>
-        <a href="{% url 'Articles' %}" class="menu"><li>Главная страница</li></a>
-        <a href="{% url 'articles_by_time' %}" class="menu"><li>Список статей</li></a>
-        <a href="{% url 'videos' %}" class="menu"><li>KamranVideo</li></a>
-        <a href="{% url 'rooms' %}" class="menu"><li>Месенджер</li></a>
+    <ul style="margin-top:15px;">
+        <a href="{% url 'articles_by_time' %}" class="menu">
+            <span class="inline"  style="margin-top: 4.8px;padding:0;">
+                <img src="/media/menu_icons/newspaper-folded.png" width=17px">
+            </span>
+            <span class="inline" style="margin:0;padding:0;">
+                Новости
+            </span>
+        </a>
+        <br>
+        <a href="{% url 'videos' %}" class="menu">
+            <span class="inline"  style="margin-top: 4.8px;padding:0;">
+                <img src="/media/menu_icons/play.png" width=17px">
+            </span>
+            <span class="inline" style="margin:0;padding:0;">
+                Видео
+            </span>
+        </a>
+        <br>
+        <a href="{% url 'rooms' %}" class="menu">
+            <span class="inline"  style="margin-top: 4.8px;padding:0;">
+                <img src="/media/menu_icons/chat.png" width=17px">
+            </span>
+            <span class="inline" style="margin:0;padding:0;">
+                Месенджер
+            </span>
+        </a>
     </ul>
 
 
@@ -49,6 +71,7 @@
 {% block content %} {% endblock %}
 </main>
     <script src="{% static 'main/js/base.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
