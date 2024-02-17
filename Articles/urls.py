@@ -15,6 +15,7 @@ urlpatterns = [
     path('read_post/<slug:post_slug>/', views.ShowPost.as_view(), name='read'),
     path('edit_post/<slug:edit_post_slug>/', views.EditPage.as_view(), name='edit-page'),
     path('like_post/<slug:post_slug>/', views.like_post, name='like_post'),
+    path('search/', views.ArticleSearch.as_view(), name='article_search'),
 ]
 
 

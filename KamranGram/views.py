@@ -59,7 +59,7 @@ class CreateRoom(BaseMixin, CreateView):
         return super().form_valid(form)
 
 
-class RoomSearch(BaseMixin, LoginRequiredMixin, ListView):
+class RoomSearch(BaseMixin, ListView):
     model = Room
     template_name = 'KamranGram/rooms.html'
     title = 'KamranGram'
@@ -68,14 +68,10 @@ class RoomSearch(BaseMixin, LoginRequiredMixin, ListView):
         query = self.request.GET.get('room_search')
         context = super().get_context_data(**kwargs)
         context['room_search'] = query
-        context['rooms'] = Room.objects.filter(
+        context['rooms'] = (related_rooms.filter(
             Q(is_searchable=True) &
             (Q(name__iregex=query) |
-             Q(description__iregex=query) |
-             Q(creator__username__iregex=query) |
-             Q(creator__first_name__iregex=query) |
-             Q(creator__last_name__iregex=query))
-        )
+             Q(creator__username__iregex=query))))
         return context
 
 

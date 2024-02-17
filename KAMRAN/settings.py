@@ -137,9 +137,9 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'Articles'
+LOGIN_REDIRECT_URL = 'articles_by_time'
 LOGIN_URL = 'login'
-LOGOUT_REDIRECT_URL = 'Articles'
+LOGOUT_REDIRECT_URL = 'articles_by_time'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

@@ -1,14 +1,9 @@
 {% extends 'users/channel.html' %}
 
 {% block channel_content %}
-{% include 'Articles/br.html' %}
-<br>
-<br>
-<br>
-
 {% include 'users/channel-menu.html' %}
 <div class="channel_right_aside rounded-xl inline">
-    <div class="followers_menu rounded-xl" style="margin-left:20px;margin-top:10px;">
+    <div class="followers_menu rounded-xl" style="margin-left:20px">
       <p class="rounded-xl" style="margin:0;padding:0;">Подписчики {{owner.followers.count}}</p>
         {% if owner.followers %}
         {% for i in owner.followers.all|slice:10 %}
@@ -67,9 +62,17 @@
             </div>
             <p>
                 {% if post.photo %}
-                   <a href="{{ post.photo.url }}"><img src="{{ post.photo.url }}" style="width:420px;" class="rounded-xl"></a>
+                   <img src="{{ post.photo.url }}" style="width:420px;" class="rounded-xl">
                 {% endif %}
                 {% include 'Articles/like-form.html' %}
+                <span style="margin-left:5px;font-size:15px;" class="text-muted">
+                    {{ post.views }}
+                    {% if post.views == 1 %}
+                       Просмотр
+                    {% else %}
+                       Просмотров
+                    {% endif %}
+                </span>
             <div class="inline">
             {% if user == post.author %}
                    <a href="{% url 'edit-page' post.slug %}" class="btn btn-sm  btn-outline-success" style="margin-left:90px;">

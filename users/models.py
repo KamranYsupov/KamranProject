@@ -9,7 +9,7 @@ from users import my_models
 class User(AbstractUser):
     followers = models.ManyToManyField('self', related_name='followed_by', symmetrical=False, blank=True)
     avatar = my_models.AvatarImageField(
-        upload_to=f'users/avatars/', validators=[FileExtensionValidator(
+        upload_to='users/avatars/', validators=[FileExtensionValidator(
             allowed_extensions=['jpg', 'jpeg', 'png', 'svg']
         )], default='users/avatars_default/nursultan.jpeg')
     date_birth = models.DateField(null=True)

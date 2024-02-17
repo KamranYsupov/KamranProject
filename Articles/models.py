@@ -14,7 +14,7 @@ class Article(models.Model):
         (1, PUBLISHED),
         (0, ARCHIVE),
     )
-    title = models.CharField(max_length=50, verbose_name='Заголовок')
+    title = models.CharField(max_length=50, db_index=True, verbose_name='Заголовок')
     slug = models.SlugField(unique=True, db_index=True, max_length=50, verbose_name='URL')
     content = models.TextField(verbose_name='Контент')
     photo = models.ImageField(upload_to='posts_images', verbose_name='Изображение', blank=True, null=True)
@@ -27,6 +27,7 @@ class Article(models.Model):
     like_percent = models.PositiveIntegerField(validators=[MaxValueValidator(limit_value=100)], default=0)
 
     class Meta:
+        ordering = ['-time_create']
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
 

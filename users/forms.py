@@ -1,4 +1,3 @@
-# from captcha.fields import CaptchaField
 import datetime
 
 from django import forms
@@ -7,7 +6,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, Pass
 
 current_year = datetime.date.today().year
 default_widget = {
-    'class': 'form-control input-form',
+    'class': 'form-control',
+    'style': 'color: white;background: #141214;border-color: #141214;',
 }
 
 
@@ -45,7 +45,7 @@ class RegisterUserForm(UserCreationForm):
                                              'margin-top:5px;'
                                              'background: #141214;'
                                              'border-color: #141214;'
-                                             'color: white;',
+                                             'color:white;',
                                          'placeholder': 'Дата рождения'
                                      }))
 

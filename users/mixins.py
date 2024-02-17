@@ -7,9 +7,15 @@ from .models import User
 
 class ChannelMixin(BaseMixin, DetailView):
     queryset = get_user_model().objects.prefetch_related('followers')
-    template_name = None
     context_object_name = 'object'
     pk_url_kwarg = 'owner_id'
+    template_name = None
+    order = None
+
+    def __init__(self):
+        super().__init__()
+        if self.order:
+            self.extra_context['order'] = self.order
 
     def get_context_data(self, **kwargs):
         owner = kwargs['object']

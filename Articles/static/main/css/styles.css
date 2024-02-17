@@ -77,13 +77,11 @@ h1, h2, h3, h4, h5, h6, span, p, li {
 
 }
 .mini-menu {
-   position:relative;
+   position: relative;
+   right: 55px;
    text-decoration: none;
-   color: white;
-   right: 30px;
 
 }
-
 
 .aside-btn {
   text-decoration: none;
@@ -139,6 +137,7 @@ form {
    padding: 20px;
    border-width: 0.1px;
    border-color: gray;
+
 }
 
 .channel-post {
@@ -172,6 +171,10 @@ form {
 
    }
 
+.order-link:hover {
+  color: #02cc7f;
+}
+
 .channel-menu {
    margin: 15px 0 10px 178px;
 
@@ -184,6 +187,11 @@ form {
    background: #141214;
    margin-top: 5px;
    padding: 0 4px 0;
+}
+
+.channel-link:hover {
+   color: #02cc7f;
+
 }
 
 .auth {
@@ -411,11 +419,20 @@ input, textarea {
     }
 
 .channel-piece {
-   position: absolute;
    background: #090d0a;
    padding: 10px;
    border-radius: 0.75rem;
 
+}
+
+.channel-top-div {
+  width: 95%;
+  background: #141214;
+  margin-left: 30px;
+  padding: 10px;
+  border-radius: 0.75rem;
+  border-width: 0.1px;
+  border-color: gray;
 }
 
 .channel-sub-button {
@@ -444,19 +461,29 @@ input, textarea {
 
 }
 
+.follow_button {
+   width:117.5px;
+   background: #02cc7f;
+   padding: 10px;
+}
+
+.follow_button:hover {
+   background: #0afca0;
+}
+
 .followers_menu {
    background: #141214;
    padding: 10px;
-   border-width: 0.5px;
-   border-color: rgb(209 213 219 / var(--tw-border-opacity));
+   border-width: 0.1px;
+   border-color: gray;
 
 }
 
 .followed_by_menu {
    background: #141214;
    padding: 10px;
-   border-width: 0.5px;
-   border-color: rgb(209 213 219 / var(--tw-border-opacity));
+   border-width: 0.1px;
+   border-color: gray;
 }
 
 .border-gray {
@@ -489,7 +516,7 @@ input, textarea {
 
 .input-form {
    margin-top:5px;
+   color: white;
    background: #141214;
    border-color: #141214;
-   color: white;
 }

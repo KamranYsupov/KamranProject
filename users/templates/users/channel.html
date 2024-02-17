@@ -6,38 +6,45 @@
 
 {% block content %}
 
-<img src="/media/users/channel-themes/back-theme-for-channel.jpg" width="79%" height="10%" style="position:absolute;bottom:321px;left:21%;" >
-<span style="position:absolute;left:300px;bottom:355px;" >
-      <a href="{{ owner.avatar.url }}">
-            <img class="avatar-img rounded-full" src="{{ owner.avatar.url}}">
-      </a>
-</span>
+<!--<img src="/media/users/channel-themes/back-theme-for-channel.jpg" width="79%" height="10%" style="position:absolute;bottom:321px;left:21%;" >-->
 
-<span class="fs-1" style="position:absolute;left:460px;bottom:420px;font-weight:bold;">
-      {{owner.username}}
-</span>
-
-<span class="channel-piece rounded-full inline" style="top:182px;left:580px;width:132.6px;">
-      {{ owner.followers.count }}
-      {% if owner.followers.count != 1 %}
-         Подписчиков
-      {% else %}
-         Подписчик
-      {% endif %}
-</span>
-<form action="{% url 'follow' owner.id %}" method="post" >
-      {% csrf_token %}
-      <input type="hidden" name="url_from" value="{{ request.path }}">
-      <button type="submit" class="rounded-full" style="position:absolute;top:182px;left:460px; position: absolute;width:117.5px;background: #101411;padding: 10px;">
-            <span style="color:white;">
+<div class="channel-top-div">
+      <span class="inline" >
+            <a href="{{ owner.avatar.url }}">
+                  <img class="avatar-img rounded-full" src="{{ owner.avatar.url}}">
+            </a>
+      </span>
+      <span class="inline" style="margin-top:15px">
+            <div class="fs-1" style="font-weight:bold;">
+                  {{owner.username}}
+            </div>
+            <form action="{% url 'follow' owner.id %}" method="post" class="inline" style="width:115px;margin-top:10px">
+                  {% csrf_token %}
+                  <input type="hidden" name="url_from" value="{{ request.path }}">
+                  <button type="submit" style="margin-top:10px">
                   {% if request.user in owner.followers.all %}
-                     Отписаться
+
+                            <span style="color:white;" class="follow_button rounded-full">
+                                Отписаться
+                            </span>
+                {% else %}
+                            <span style="color:white;" class="follow_button rounded-full">
+                                Подписаться
+                            </span>
+                {% endif %}
+                </button>
+            </form>
+            <span class="channel-piece rounded-full inline" style="width:140px;margin-top:10px">
+
+                  {% if owner.followers.count == 1 %}
+                        <span style="margin-left:3px">{{ owner.followers.count }} Подписчик</span>
                   {% else %}
-                     Подписаться
+                        <span>{{ owner.followers.count }} Подписчиков</span>
                   {% endif %}
             </span>
-      </button>
-</form>
+      </span>
+</div>
+
 {% block channel_content %}
       {% endblock %}
 

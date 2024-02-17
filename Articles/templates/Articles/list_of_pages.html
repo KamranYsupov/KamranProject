@@ -1,10 +1,24 @@
 {% extends 'Articles/base.html' %}
 {% load static %}
 
-{% block title %}{{title}}{% endblock %}
+{% block title %}
+   {% if title_by_query %}
+       {{ title_by_query }}
+   {% else %}
+       {{ title }}
+   {% endif %}
+{% endblock %}
 
 {% block header %}
-   <span class="page fs-3">{{title}}</span>{% include 'Articles/order-menu.html' %}
+   <span class="fs-3" style="margin-left:270px;">{{title}}</span>
+   <form action="{% url 'article_search' %}" method="get" style="position:absolute;left:810px;bottom:22px;">
+       <input style="position:relative;bottom:1px;height:29px;width:200px;background:white;" type="text" name="article_search" placeholder="   Поиск статьи " class="rounded-l-lg">
+       <button class="border border-gray-300 rounded-r-lg" style="position:absolute;bottom:0.0001px;height:30px;background:#141214;padding:10px;">
+           <p style="position:relative;bottom:2px;font-size:10px;">🔍</p>
+       </button>
+   </form>
+
+{% include 'Articles/order-menu.html' %}
 {% endblock %}
 
 {% block content %}
@@ -65,7 +79,7 @@
     {% endfor %}
 </ul>
 {% else %}
-   <p class="text-muted" style="font-size:15px;">Статей нет.Будте первым!</p>
+   <p class="text-muted" style="font-size:15px;margin-left:10px">По запросу "{{ article_search }}" ничего не найдено</p>
 {% endif %}
 <div id="btn-arrow-left">
    {% if page_obj.has_previous %}

@@ -1,7 +1,7 @@
 {% extends 'users/channel.html' %}
 
 {% block channel_content %}
-<div style="margin-top:183px">{% include 'users/channel-menu.html' %}</div>
+<div>{% include 'users/channel-menu.html' %}</div>
 {% if videos %}
   {% for i in videos %}
     <a href="{% url 'watch' i.id %}" style="text-decoration:none">

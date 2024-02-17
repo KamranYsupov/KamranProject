@@ -10,7 +10,7 @@ class AddCommentForm(forms.ModelForm):
         widgets = {
             'comment': forms.Textarea(attrs={
                 'class': 'form-control',
-                'style': 'height:10px;width:800px;margin:0;background: #141214;border-color: #141214',
+                'style': 'color:white;height:10px;width:800px;margin:0;background: #141214;',
                 'rows': 1,
                 'placeholder': 'Комментарий',
             }),
@@ -25,7 +25,7 @@ class ReplyCommentForm(forms.ModelForm):
         widgets = {
             'comment': forms.Textarea(attrs={
                 'class': 'form-control',
-                'style': 'height:10px;width:500px;margin:0;background: #141214;border-color: #141214;',
+                'style': 'color:white;height:10px;width:500px;margin:0;background: #141214;border-color:gray',
                 'placeholder': 'Ответ на комментарий',
             }),
         }

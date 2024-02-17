@@ -64,6 +64,7 @@ class Channel(DetailView):
 
 class ArticlesChannel(ChannelMixin):
     template_name = 'users/channel_articles.html'
+    order = 'news'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -76,6 +77,7 @@ class ArticlesChannel(ChannelMixin):
 
 class VideoChannel(ChannelMixin):
     template_name = 'users/channel_videos.html'
+    order = 'videos'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -87,6 +89,7 @@ class VideoChannel(ChannelMixin):
 
 class ArchiveChannel(ChannelMixin):
     template_name = 'users/channel_archive.html'
+    order = 'archive'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

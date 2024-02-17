@@ -31,6 +31,7 @@ class Comment(models.Model):
             return (f'{self.author}: {self.comment[:30]}'
                     f' --reply to--> '
                     f'{self.parent.author}: {self.parent.comment[:30]}')
+        return self.comment
 
     def get_reply_queryset(self):
         return (Comment.objects.

@@ -15,7 +15,7 @@
 </head>
 <body style="background:#342c36">
 <div style="max-height:73.8px" class=" fixed right-2 w-full top-2 p-2 bg-black border border-lime rounded-full">
-    <p class="page">{% block header %}{% endblock %}
+    {% block header %}{% endblock %}
     {% if user.is_authenticated %}
     <button id="open-create-div" class="rounded-full create-div-button">➕</button>
     <button id="close-create-div" class="rounded-full create-div-button hidden">➕</button>{% include 'users/mini-avatar.html' %}</p>
@@ -31,13 +31,28 @@
 </div>
 <div id="mini-aside" class="">
 <aside>
-    <h3 class="text-white">KPj</h3>
+    <h2 class="text-white">KPj</h2>
+    <br>
     <ul>
-        <a href="{% url 'Articles' %}" class="mini-menu"><li class="fs-1">🏠</li></a>
-        <a href="{% url 'articles_by_time' %}" class="mini-menu"><li class="fs-1">🖨</li></a>
-        <a href="{% url 'videos' %}" class="mini-menu"><li class="fs-1">🎞</li></a>
+        <a href="{% url 'articles_by_time' %}" class="mini-menu">
+            <li style="font-weight:bold;margin-top:15px;">
+                <img style="margin-left:25px"src="/media/menu_icons/newspaper-solid-reversed.svg" width=35px">
+                <span style="font-size:14px;margin-left:16.8px">Новости</span>
+            </li>
+        </a>
+        <a href="{% url 'videos' %}" class="mini-menu">
+            <li style="font-weight:bold;margin-top:30px;">
+                <img style="margin-left:25px" src="/media/menu_icons/circle-play-solid.svg" width=35px">
+                <span style="font-size:14px;margin-left:23px">Видео</span>
+            </li>
+        </a>
 
-        <!--<a href="" class="menu"><li>Месенджер</li></a>-->
+        <a href="{% url 'rooms' %}" class="mini-menu">
+            <li style="font-weight:bold;margin-top:30px;">
+                <img style="margin-left:25px" src="/media/menu_icons/comments-solid.svg" width=35px">
+                <span style="font-size:14px;margin-left:2px">Мессенджер</span>
+            </li>
+        </a>
     </ul>
 </aside>
 </div>

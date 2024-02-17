@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
-from django.db.models import Count, Prefetch
+from django.db.models import Count, Prefetch, Q
 from django import forms
 from django.db.transaction import atomic
 
@@ -53,7 +53,7 @@ class ArticlesByViews(ArticlesMixin):
 
 class ArticlesByTime(ArticlesMixin):
     queryset = articles.order_by('-time_create')
-    order = 'new'
+    order = 'time'
 
 
 class AddPage(BaseMixin, LoginRequiredMixin, CreateView):
@@ -116,6 +116,27 @@ class ShowPost(DetailView, BaseMixin, CreateView):
         f.author = self.request.user
         f.post = self.get_object()
         return super().form_valid(form)
+
+
+class ArticleSearch(BaseMixin, ListView):
+    model = Article
+    template_name = 'Articles/list_of_pages.html'
+    title = 'Новости'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        article_search = self.request.GET.get('article_search')
+        context = super().get_context_data(**kwargs)
+        context['posts'] = (Article.objects
+                            .select_related('author')
+                            .prefetch_related('likes')
+                            .filter(Q(is_published=True) &
+                                    (Q(title__iregex=article_search) |
+                                     Q(slug__iregex=article_search) |
+                                     Q(author__username__iregex=article_search)))
+                            )
+        context['article_search'] = article_search
+        context['title_by_query'] = f'"{article_search}" Поиск'
+        return context
 
 
 def like_post(request, post_slug):

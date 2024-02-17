@@ -1,12 +1,12 @@
 <div class="order-menu">
-    <a href="{% url 'articles_by_time' %}" class="order-link rounded-full" style="{% if order == 'new' %}
-    color:#4169E1{% endif %}">Новые</a>
+    <a href="{% url 'articles_by_time' %}" class="order-link rounded-full" style="text-decoration:none;{% if order == 'time' %}
+    color:#0afca0{% endif %}">Новые</a>
     <a href="{% url 'articles_by_views' %}" class="order-link rounded-full" style="{% if order == 'views' %}
-    color:#4169E1{% endif %}">Больше просмотров</a>
+    color:#0afca0{% endif %}">Больше просмотров</a>
     <a href="{% url 'articles_by_likes' %}" class="order-link rounded-full" style="{% if order == 'likes' %}
-    color:#4169E1{% endif %}">Больше лайков</a>
+    color:#0afca0{% endif %}">Больше лайков</a>
     <a href="{% url 'articles_by_like_percent' %}" class="order-link rounded-full" style="{% if order == 'like_percent' %}
-    color:#4169E1{% endif %}">Лучшие</a>
+    color:#0afca0{% endif %}">Лучшие</a>
 </div>
 
 

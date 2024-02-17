@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -21,7 +21,7 @@ related_video_queryset = Video.objects.select_related('author').prefetch_related
 
 
 class Videos(BaseMixin, ListView):
-    queryset = Video.objects.select_related('author').prefetch_related('likes')
+    queryset = Video.objects.select_related('author')
     context_object_name = 'videos'
     template_name = 'KamranVideo/videos.html'
     title = 'KamranVideo'
@@ -40,7 +40,7 @@ class CreateVideo(BaseMixin, CreateView):
 
 
 class WatchVideo(DetailView, BaseMixin, CreateView):
-    queryset = related_video_queryset
+    queryset = Video.objects.select_related('author').prefetch_related('likes')
     form_class = AddCommentForm
     template_name = 'KamranVideo/watch.html'
     context_object_name = 'video'
@@ -73,14 +73,26 @@ class WatchVideo(DetailView, BaseMixin, CreateView):
 
     def form_valid(self, form):
         f = form.save(commit=False)
-        f.comment_author = self.request.user
-        f.comment_video = self.get_object()
+        f.author = self.request.user
+        f.video = self.get_object()
         return super().form_valid(form)
 
 
-class VideoAPIView(ReadOnlyModelViewSet):
-    queryset = related_video_queryset
-    serializer_class = VideoSerializer
+class VideoSearch(BaseMixin, ListView):
+    model = Video
+    template_name = 'KamranVideo/videos.html'
+    title = 'KamranVideo'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        video_search = self.request.GET.get('video_search')
+        context['videos'] = (Video.objects
+                             .select_related('author')
+                             .filter(Q(title__iregex=video_search)
+                                     | Q(author__username__iregex=video_search)))
+        context['video_search'] = video_search
+
+        return context
 
 
 def like_video(request, video_id):

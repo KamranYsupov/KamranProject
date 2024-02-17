@@ -2,7 +2,13 @@
 
 {% block title %}{{video.title}}{% endblock %}
 
-{% block header %}<span class="page fs-3">KamranVideo</span>{% endblock %}
+{% block header %}
+<span class="fs-3" style="font-weight:bold;position:relative;margin-left:135px;top:5px">KamranVideo</span>
+<form action="{% url 'video_search' %}" method="get" style="position:absolute;left:380px;bottom:17px;">
+    <input style="height:36.5px;width:450px;background:white;" type="text" name="video_search" placeholder="   Поиск видео" class="rounded-l-lg">
+    <button class=" search-div border border-gray-300 rounded-r-lg"><p style="position:relative;bottom:4px;">Поиск</p></button>
+</form>
+{% endblock %}
 
 {% block content %}
 <video width="65%" class="watch-div rounded-xl" autoplay controls="controls"><source src="{{ video.video.url }}"></video>
