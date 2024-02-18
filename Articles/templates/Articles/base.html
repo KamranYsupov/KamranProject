@@ -20,16 +20,18 @@
 <div style="max-height:73.8px" class=" fixed right-2 w-full top-2 p-2 bg-black border border-lime rounded-full">
      <p class="page">{% block header %}{% endblock %}
     {% if user.is_authenticated %}
-    <button id="open-create-div" class="rounded-full create-div-button">➕</button>
-    <button id="close-create-div" class="rounded-full create-div-button hidden">➕</button>{% include 'users/mini-avatar.html' %}</p>
-    <ul id="create-div" class="rounded-xl border border-gray-300 hidden">
-        <h5>Создать</h5>
-           <a href="{% url 'add_page' %}" class="text-none null"><li class="li-text null">📃 Статью</li></a>
-           <a href="{% url 'create_video' %}" class="text-none null"><li class="li-text null">🎥 Видео</li></a>
-           <a href="{% url 'create_room' %}" class="text-none null"><li class="li-text null">🗨 Комнату</li></a>
-    </ul>
+       <button id="open-create-div" class="rounded-full create-div-button">➕</button>
+       <button id="close-create-div" class="rounded-full create-div-button hidden">➕</button>{% include 'users/mini-avatar.html' %}</p>
+       {% if not KamranGram %}
+           <ul id="create-div" class="rounded-xl border border-gray-300 hidden">
+               <h5>Создать</h5>
+               <a href="{% url 'add_page' %}" class="text-none null"><li class="li-text null">📃 Статью</li></a>
+               <a href="{% url 'create_video' %}" class="text-none null"><li class="li-text null">🎥 Видео</li></a>
+               <a href="{% url 'create_room' %}" class="text-none null"><li class="li-text null">🗨 Комнату</li></a>
+           </ul>
+       {% endif %}
     {% else %}
-   <span style="position:absolute;left:1070px;top:20px;"><a href="{% url 'session_login' %}">Войти</a> | <a href="{% url 'register' %}">Регистрация</a></span></p>
+       <span style="position:absolute;left:1070px;top:20px;"><a href="{% url 'session_login' %}">Войти</a> | <a href="{% url 'register' %}">Регистрация</a></span></p>
     {% endif %}
 </div>
 <div id="full-aside" class="flex">

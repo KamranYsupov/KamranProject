@@ -14,16 +14,14 @@ from Articles.my_mixins import BaseMixin
 from .mixins import RoomMixin
 from .forms import AddRoomForm
 from .models import Room, Message
-from .service import join_room
 
 related_rooms = Room.objects.select_related('creator').prefetch_related('members')
 
 
 class Rooms(RoomMixin, ListView):
+    model = Room
     template_name = 'KamranGram/rooms.html'
     title = 'KamranGram'
-    model = Room
-    context_object_name = 'rooms'
 
 
 class DetailRoom(RoomMixin, DetailView):
@@ -80,10 +78,8 @@ def login_room(request, room_id):
     input_password = request.POST.get('input_password')
     if current_room.members.filter(id=request.user.id):
         return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
-    if not current_room.password:
-        join_room(request, current_room)
-
-    if input_password == current_room.password:
-        join_room(request, current_room)
+    if (input_password == current_room.password) or (not current_room.password):
+        current_room.members.add(request.user)
+        return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
 
     return render(request, 'KamranGram/login_room.html', context={'room': current_room})

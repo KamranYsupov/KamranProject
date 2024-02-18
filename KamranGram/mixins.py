@@ -12,6 +12,7 @@ class RoomMixin(BaseMixin, ContextMixin, LoginRequiredMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['rooms'] = Room.objects.filter(members=self.request.user)
+        context['rooms'] = Room.objects.prefetch_related('members').filter(members=self.request.user)
+        context['KamranGram'] = True
 
         return context

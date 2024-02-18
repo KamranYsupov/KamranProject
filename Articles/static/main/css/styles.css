@@ -220,12 +220,33 @@ form {
 
 
 .background-chat {
-   height: 450px;
+   height: 400px;
    background-color: black;
-   padding: 10px;
-   width: 770px;
-   /*background-image: url("https://avatars.mds.yandex.net/i?id=8868dcc8abd96f16c271d8aef9d037ff8278da11-9683943-images-thumbs&n=13");
-   */}
+   margin:0;
+   padding:0;
+   width: 725px;
+   background-image: url("https://avatars.mds.yandex.net/i?id=8868dcc8abd96f16c271d8aef9d037ff8278da11-9683943-images-thumbs&n=13");
+   }
+
+.own-message {
+   padding: 5px;
+   background: #7543d9;
+   max-width: 380px;
+   font-size: 15px;
+}
+
+.stranger-message {
+   padding: 5px;
+   background: #437de0;
+   max-width: 380px;
+   font-size: 14px;
+
+}
+
+.bottom-inline {
+   display: inline-block;
+   vertical-align:bottom;
+   }
 
 .post-image {
    width: 100px;
@@ -374,17 +395,17 @@ input, textarea {
     text-align: right;
 }
 
-.first-chat-div{
-   width: 220px;
-   height: 90px;
+.first-chat-div {
+   width: 234px;
+   height: 85px;
    background: #383838;
    border-bottom: 2px solid gray;
    border-right: 3px solid gray;
 }
 
 .chat-div {
-   width: 220px;
-   height: 90px;
+   width: 234px;
+   height: 85px;
    background: #141214;
    border-bottom: 2px solid gray;
    border-right: 3px solid gray;
@@ -396,16 +417,23 @@ input, textarea {
 
 
 .chat-aside {
-    width: 225px;
-    margin-left: 21%;
+    width: 205px;
+    margin: 0 0 0 21%;
 }
 
 .chat {
-    position: fixed;
-    top: 74.3px;
-    bottom: 1px;
-    left: 475px;
-    max-width: 300px;
+   position: fixed;
+   top:74.3px;
+   left:489px;
+   height: 300px;
+}
+
+.text-right {
+  margin-left:500px;
+}
+
+.text-left {
+  text-align: left;
 }
 
 .footer{

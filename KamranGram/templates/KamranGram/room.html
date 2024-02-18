@@ -28,34 +28,77 @@
 <div class="chat-aside inline">
     {% for room in rooms %}
        <a href="{% url 'room' room.id %}" class="text-none text-white">
+
            <div class="{% if room == rooms|first %}first-chat-div{% else %}chat-div{% endif %}">
-               <div style="font-weight:bold">{{room.name}}</div><br>
+               <span>
+                   <img src="{{ room.room_avatar.url }}" width="70px" class="rounded-full inline" style="margin:6px 0 0 0;">
+                   <div style="margin-top:10px;" class="inline">
+                       <span style="font-weight:bold;">{{room.name}}</span>
+                       <br>
+                       <span class="text-muted" style="font-size:13px;">
+                           {% if room.room_messages.all.last.sender == request.user %}
+                               Вы:
+                           {% else %}
+                              {{ room.room_messages.all.last.sender.username }}:
+                           {% endif %}
+                           {{ room.room_messages.all.last.content|slice:16 }}{% if room.room_messages.all.last.content|length > 16 %}...{% endif %}
+
+                       </span>
+                   </div>
+                   <br>
+               </span>
            </div>
        </a>
     {% endfor %}
 </div>
-<div class="chat">
+<div class="chat inline">
             <form>
-                <div class="form-group">
-                  <div class="background-chat {% include 'KamranGram/choice-theme.html' %}" id="chatbox" style="max-height: 90%;overflow-y: scroll;">
+                <div>
+                  <div class="background-chat {% include 'KamranGram/choice-theme.html' %}" id="chatbox" style="overflow-y: scroll;">
                       {% if messages %}
                       <b class="text-muted text-break">{{room.description}}</b>
                       {% for message in messages %}
-                        <span class="{% if message.user == request.user %}text-right{% else %}text-left{% endif %}">
-                          <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="position:static;top:25px;"><b class="inline">{{message.sender.username}}</b> : {{ message.content }}<br>
-                        </span>
+                        {% if message.sender == request.user %}
+                          <div>
+                              <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="margin:4.5px 0 0 0;">
+                              <span class="text-break own-message rounded-xl inline" style="margin:0" >
+                                  <span class="text-muted" style="font-size:13px">
+                                      {{ message.sender.username }}
+                                  </span>
+                                      <br>
+                                  {{ message.content }}
+                              </span>
+                              <br>
+                          </div>
+                          <br>
+                      {% else %}
+                          <div style="text-align:right;">
+                              <span class="text-break stranger-message rounded-xl inline">
+                                  <span class="text-muted" style="font-size:13px">
+                                      {{ message.sender.username }}
+                                  </span>
+                                  <br>
+                                  {{ message.content }}
+                              </span>
+                              <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="margin:2.5px 0 0 1.5px;"><br>
+                          </div>
+                          <br>
+                      {% endif %}
 
-                        {% endfor %}
+                      {% endfor %}
                       {% else %}
                       <span class="rounded-full" style="margin-left:150px;background:">Поздоровайтесь со всеми!</span>
                       {% endif %}
                   </div>
-
-
-                <br/>
-
+                    <br/>
             </form>
 </div>
+<ul id="create-div" class="rounded-xl border border-gray-300 hidden">
+        <h5>Создать</h5>
+           <a href="{% url 'add_page' %}" class="text-none null"><li class="li-text null">📃 Статью</li></a>
+           <a href="{% url 'create_video' %}" class="text-none null"><li class="li-text null">🎥 Видео</li></a>
+           <a href="{% url 'create_room' %}" class="text-none null"><li class="li-text null">🗨 Комнату</li></a>
+</ul>
 <div class="footer rounded-xl">
     <div class="inline"><input class="form-control" placeholder="Сообщение" id="my_input" type="text" style="width:690px;margin-top:20px;" required></div><div class="inline"><button class="btn btn-primary inline" id="submit_button" type="button" style="width:50px">↑</button></div>
 </div>
@@ -117,14 +160,14 @@
       chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         var span = document.createElement("span");
-        span.innerHTML = `<img class='rounded-full inline' width='27px' src=${data.avatar} style='position:static;top:25px;'>` + "<b class='inline'>" + data.sender + "</b> : " + data.message + "<br>";
+
         console.log(`${data.sender}: ${data.message}`)
 
-        // Add class based on user authentication
-        if (data.username === "{{ request.user.username }}") {
-          span.classList.add("text-right");
+
+        if (data.sender === "{{ request.user.username }}") {
+          span.innerHTML = `<div><img class="rounded-full inline" width="27px" src=${data.avatar} style="margin:4.5px 0 0 0;"><span class="text-break own-message rounded-xl inline" style="margin:0" ><span class="text-muted" style="font-size:13px";>${data.sender}</span><br>${data.message}</span><br></div><br>`;
         } else {
-          span.classList.add("text-left");
+          span.innerHTML = `<div style="text-align:right;"><span class="text-break stranger-message rounded-xl inline"><span class="text-muted" style="font-size:13px">${data.sender}</span><br>${data.message}</span><img class="rounded-full inline" width="27px" src=${data.avatar} style="margin:2.5px 0 0 1.5px;"><br></div><br>`;
         }
 
         document.querySelector("#my_input").value = "";
