@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.views.generic import DetailView
 
-from Articles.my_mixins import BaseMixin
+from Articles.mixins import BaseMixin
 from .models import User
 
 

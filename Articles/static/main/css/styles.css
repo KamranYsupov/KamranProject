@@ -220,7 +220,7 @@ form {
 
 
 .background-chat {
-   height: 400px;
+   height: 444.5px;
    background-color: black;
    margin:0;
    padding:0;
@@ -232,7 +232,7 @@ form {
    padding: 5px;
    background: #7543d9;
    max-width: 380px;
-   font-size: 15px;
+   font-size: 14px;
 }
 
 .stranger-message {
@@ -349,7 +349,6 @@ input, textarea {
 
 
 #create-div {
-
    position:fixed;
    left:1010px;
    top: 5px;
@@ -399,7 +398,8 @@ input, textarea {
    width: 234px;
    height: 85px;
    background: #383838;
-   border-bottom: 2px solid gray;
+   border-top: 1px solid gray;
+   border-bottom: 1px solid gray;
    border-right: 3px solid gray;
 }
 
@@ -407,7 +407,8 @@ input, textarea {
    width: 234px;
    height: 85px;
    background: #141214;
-   border-bottom: 2px solid gray;
+   border-top: 1px solid gray;
+   border-bottom: 1px solid gray;
    border-right: 3px solid gray;
    }
 
@@ -437,12 +438,11 @@ input, textarea {
 }
 
 .footer{
-    height: 70px;
     width: 765px;
     position: fixed;
-    left:490px;
-    bottom: 10px;
-    background: black;
+    left:498.5px;
+    bottom: 3px;
+
 
     }
 
@@ -547,4 +547,25 @@ input, textarea {
    color: white;
    background: #141214;
    border-color: #141214;
+}
+
+.profile-menu-div {
+   position:fixed;
+   left:1050px;
+   top: 45px;
+   padding: 10px 5px 10px 5px;
+   width: 170px;
+   background: #342c36;
+}
+
+
+.profile-menu-span {
+   color: white;
+   border-top: 1px solid gray;
+}
+
+.profile-menu-span:hover {
+   background: #242424;
+   color: #02cc7f;
+   border-top: 1px solid gray;
 }

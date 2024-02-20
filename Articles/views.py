@@ -19,7 +19,7 @@ from django.conf import settings
 from KAMRAN.service import like
 from comments.service import deferred_comment_fields
 from comments.views import comments
-from .my_mixins import BaseMixin, ArticlesMixin
+from .mixins import BaseMixin, ArticlesMixin
 from .forms import AddPageForm, EditPageForm
 from .models import Article
 

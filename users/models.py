@@ -19,5 +19,3 @@ class User(AbstractUser):
     def get_username(self):
         return self.username
 
-    def get_rooms(self):
-        return self.rooms.all()

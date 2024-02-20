@@ -14,7 +14,6 @@ class RoomSerializer(serializers.ModelSerializer):
     link = serializers.HyperlinkedIdentityField(
         view_name='api:room',
         lookup_field='pk'
-
     )
 
     class Meta:

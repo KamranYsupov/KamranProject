@@ -8,7 +8,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from Articles.views import comments
 from django.conf import settings
-from Articles.my_mixins import BaseMixin
+from Articles.mixins import BaseMixin
 from KAMRAN.service import like
 from comments.forms import ReplyCommentForm
 from comments.service import deferred_comment_fields

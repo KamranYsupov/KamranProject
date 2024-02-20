@@ -10,7 +10,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 
 from django.conf import settings
-from Articles.my_mixins import BaseMixin
+from Articles.mixins import BaseMixin
 from .mixins import RoomMixin
 from .forms import AddRoomForm
 from .models import Room, Message
@@ -25,8 +25,8 @@ class Rooms(RoomMixin, ListView):
 
 
 class DetailRoom(RoomMixin, DetailView):
-    template_name = 'KamranGram/room.html'
     model = Room
+    template_name = 'KamranGram/room.html'
     context_object_name = 'room'
     pk_url_kwarg = 'room_id'
 
@@ -36,9 +36,7 @@ class DetailRoom(RoomMixin, DetailView):
             raise forms.ValidationError(
                 f'Чтобы зайти в комнату {room.name}, найдите ее в поиске и нажмите "Пресоединится"!'
             )
-        room.last_visit = datetime.datetime.now()
-        room.save()
-        messages = Message.objects.select_related('sender', 'room').filter(room=room)
+        messages = room.room_messages.select_related('sender')
         context = super().get_context_data(**kwargs)
         context['messages'] = messages
         return context

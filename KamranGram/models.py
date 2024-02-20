@@ -25,24 +25,26 @@ class Room(models.Model):
         ('#ab09e0', PURPLE),
     ]
 
-    name = models.CharField(verbose_name='Название', db_index=True,  max_length=20, unique=True)
+    name = models.CharField(verbose_name='Название', db_index=True, max_length=20, unique=True)
     creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, related_name='rooms',
                                 verbose_name='Создатель')
     members = models.ManyToManyField(get_user_model(), related_name='current_rooms', verbose_name='Участники')
     description = models.TextField(verbose_name='Описание', max_length=300, blank=True)
     theme = models.CharField(verbose_name='Тема', max_length=20, choices=THEME_CHOICES, default=BLUE)
     time_create = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
-    last_visit = models.DateTimeField(verbose_name='Последнее посещение', default=datetime.datetime.now())
     password = models.CharField(verbose_name='Пароль комнаты', max_length=20, blank=True)
     limit_members = models.PositiveIntegerField(verbose_name='Лимит участников', default=2)
     is_searchable = models.BooleanField(verbose_name='Доступна для поиска', db_index=True, default=True)
-    room_avatar = my_models.AvatarImageField(upload_to='KamranGram/room_avatars',
-                                             validators=[FileExtensionValidator(
-                                                 allowed_extensions=['jpg', 'jpeg', 'png', 'svg'])],
-                                             default='KamranGram/room_avatars/default_group.png')
+    room_avatar = my_models.AvatarImageField(
+        upload_to='KamranGram/room_avatars',
+        validators=[FileExtensionValidator(
+            allowed_extensions=['jpg', 'jpeg', 'png', 'svg']
+        )],
+        default='KamranGram/room_avatars/default_group.png'
+    )
 
     class Meta:
-        ordering = ['-last_visit']
+        ordering = ['-time_create']
         verbose_name = 'Комната'
         verbose_name_plural = 'Комнаты'
 
@@ -62,11 +64,7 @@ class Message(models.Model):
         verbose_name_plural = 'Сообщения'
 
     def __str__(self):
-        if len(str(self.content)) > 15:
-            return f'{self.sender}: {self.content[:15]}..'
-        return f'{self.sender}: {self.content}'
-
-    def get_sender_rooms(self):
-        return self.sender.rooms.all()
-
-
+        return self.content
+        # if len(str(self.content)) > 15:
+        #    return f'{self.sender}: {self.content[:15]}..'
+        # return f'{self.sender}: {self.content}'

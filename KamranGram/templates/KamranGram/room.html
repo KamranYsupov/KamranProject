@@ -10,7 +10,7 @@
 {% block title %}{{room.name}}{% endblock %}
 
 {% block header %}
-<span><br><br></span>
+<span class="fs-2" style="font-weight:bold">KamranGram</span>
    <form action="{% url 'room_search' %}" method="get" class="search">
        <input style="height:36.5px;width:450px;background:white;" type="text" name="room_search" placeholder="   Поиск" class="rounded-l-lg">
        <button class=" search-div border border-gray-300 rounded-r-lg"><p style="position:relative;bottom:4px;">🔍</p></button>
@@ -29,19 +29,13 @@
     {% for room in rooms %}
        <a href="{% url 'room' room.id %}" class="text-none text-white">
 
-           <div class="{% if room == rooms|first %}first-chat-div{% else %}chat-div{% endif %}">
+           <div id="chat_intro_{{room.id}}" class="chat-div">
                <span>
                    <img src="{{ room.room_avatar.url }}" width="70px" class="rounded-full inline" style="margin:6px 0 0 0;">
                    <div style="margin-top:10px;" class="inline">
                        <span style="font-weight:bold;">{{room.name}}</span>
                        <br>
-                       <span class="text-muted" style="font-size:13px;">
-                           {% if room.room_messages.all.last.sender == request.user %}
-                               Вы:
-                           {% else %}
-                              {{ room.room_messages.all.last.sender.username }}:
-                           {% endif %}
-                           {{ room.room_messages.all.last.content|slice:16 }}{% if room.room_messages.all.last.content|length > 16 %}...{% endif %}
+                       <span id="last_message_{{room.id}}" class="text-muted" style="font-size:13px">
 
                        </span>
                    </div>
@@ -49,6 +43,7 @@
                </span>
            </div>
        </a>
+
     {% endfor %}
 </div>
 <div class="chat inline">
@@ -66,19 +61,21 @@
                                       {{ message.sender.username }}
                                   </span>
                                       <br>
-                                  {{ message.content }}
+                                  {{ message.content }}<br>
+                                  <span class="text-muted" style="font-size:10px;text-align:right;">{{ message.time_send|timesince }}</span>
                               </span>
                               <br>
                           </div>
                           <br>
                       {% else %}
-                          <div style="text-align:right;">
-                              <span class="text-break stranger-message rounded-xl inline">
+                          <div style="text-align:right">
+                              <span class="text-break stranger-message rounded-xl inline" style="text-align:left">
                                   <span class="text-muted" style="font-size:13px">
                                       {{ message.sender.username }}
                                   </span>
                                   <br>
-                                  {{ message.content }}
+                                  {{ message.content }}<br>
+                                  <span class="text-muted" style="font-size:10px;text-align:right;">{{ message.time_send|timesince }}</span>
                               </span>
                               <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="margin:2.5px 0 0 1.5px;"><br>
                           </div>
@@ -86,8 +83,6 @@
                       {% endif %}
 
                       {% endfor %}
-                      {% else %}
-                      <span class="rounded-full" style="margin-left:150px;background:">Поздоровайтесь со всеми!</span>
                       {% endif %}
                   </div>
                     <br/>
@@ -100,7 +95,7 @@
            <a href="{% url 'create_room' %}" class="text-none null"><li class="li-text null">🗨 Комнату</li></a>
 </ul>
 <div class="footer rounded-xl">
-    <div class="inline"><input class="form-control" placeholder="Сообщение" id="my_input" type="text" style="width:690px;margin-top:20px;" required></div><div class="inline"><button class="btn btn-primary inline" id="submit_button" type="button" style="width:50px">↑</button></div>
+    <div class="inline"><input class="form-control" maxlength="2050" placeholder="Сообщение" id="my_input" type="text" style="width:675px;margin-top:20px;" required></div><div class="inline" style="margin-top:19px;"><button class="btn inline" id="submit_button" type="button" style="width:50px;background:#0afca0;"><i class="fa-solid fa-paper-plane"></i></button></div>
 </div>
 {{ room.id|json_script:"room-id" }}
 {{ room.name|json_script:"room-name" }}
@@ -117,6 +112,11 @@
 
 
       const roomID = JSON.parse(document.getElementById('room-id').textContent);
+      const lastMessageSpan = document.querySelector("#last_message_{{room.id}}")
+      const currentRoomChatIntro = document.querySelector("#chat_intro_{{room.id}}")
+
+      currentRoomChatIntro.classList.add('first-chat-div')
+      currentRoomChatIntro.classList.remove('chat-div')
 
       const chatSocket = new WebSocket(
          'ws://'
@@ -159,10 +159,21 @@
 
       chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
+        var last_message = document.createElement("span");
         var span = document.createElement("span");
 
         console.log(`${data.sender}: ${data.message}`)
 
+        var message = data.message
+        if (data.message.length > 15) {
+           message = data.message.substr(0, 15) + "..."
+        }
+
+        if (data.sender === "{{ request.user.username }}") {
+          last_message.innerHTML = `<span class="text-muted inline" style="font-size:13px;;margin-top:7px">Вы: ${message}</span>`;
+          } else {
+          last_message.innerHTML = `<span class="text-muted inline" style="font-size:13px;;margin-top:7px">${data.sender}: ${message}</span>`;
+        }
 
         if (data.sender === "{{ request.user.username }}") {
           span.innerHTML = `<div><img class="rounded-full inline" width="27px" src=${data.avatar} style="margin:4.5px 0 0 0;"><span class="text-break own-message rounded-xl inline" style="margin:0" ><span class="text-muted" style="font-size:13px";>${data.sender}</span><br>${data.message}</span><br></div><br>`;
@@ -172,6 +183,9 @@
 
         document.querySelector("#my_input").value = "";
         document.querySelector("#chatbox").appendChild(span);
+
+        lastMessageSpan.removeChild(lastMessageSpan.lastChild);
+        lastMessageSpan.appendChild(last_message);
         document.querySelector("#chatbox").scrollTo(0, document.querySelector("#chatbox").scrollHeight);
        };
     </script>

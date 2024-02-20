@@ -9,7 +9,7 @@ from django.views.generic import CreateView, UpdateView, DetailView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from Articles.models import Article
-from Articles.my_mixins import BaseMixin
+from Articles.mixins import BaseMixin
 from django.conf import settings
 from .forms import LoginUserForm, RegisterUserForm, ProfileUserForm, PasswordChangeUserForm
 
