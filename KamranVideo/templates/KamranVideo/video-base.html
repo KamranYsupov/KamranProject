@@ -12,21 +12,37 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/453680fd58.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
 </head>
 <body style="background:#342c36">
 <div style="max-height:73.8px" class=" fixed right-2 w-full top-2 p-2 bg-black border border-lime rounded-full">
-    {% block header %}{% endblock %}
+    <p class="page">{% block header %}{% endblock %}
     {% if user.is_authenticated %}
-    <button id="open-create-div" class="rounded-full create-div-button">➕</button>
-    <button id="close-create-div" class="rounded-full create-div-button hidden">➕</button>{% include 'users/mini-avatar.html' %}</p>
-    <ul id="create-div" class="rounded-xl border border-gray-300 hidden">
-        <h5>Создать</h5>
-           <a href="{% url 'add_page' %}" class="text-none"><li class="li-text">📃 Статью</li></a>
-           <a href="{% url 'create_video' %}" class="text-none"><li class="li-text">🎥 Видео</li></a>
-           <a href="{% url 'create_room' %}" class="text-none"><li class="li-text">🗨 Комнату</li></a>
-    </ul>
+       <button id="open-create-div" class="rounded-full create-div-button">➕</button>
+       <button id="open-profile-menu-submit"><img class="avatar-mini rounded-full" src="{{ user.avatar.url }}"></button>
+
+     </p>
+       {% if not KamranGram %}
+           <div id="create-div" class="rounded-xl border border-gray-300 hidden">
+               <span class="fs-5" style="font-weight:bold;margin:0;padding:0;">Создать</span>
+               <button id="close-create-div" class="x-btn rounded-xl hidden" style="position:relative;bottom:5px;left:22px;"><i class="fa-solid fa-xmark text-white"></i></button>
+               <a href="{% url 'add_page' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-newspaper"></i> Статью</div></a>
+               <a href="{% url 'create_video' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-circle-play"></i> Видео</div></a>
+               <a href="{% url 'create_room' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-comments" ></i> Комнату</div></a>
+           </div>
+           <div id="profile-menu-div" class="profile-menu-div rounded-xl border border-gray hidden">
+               <img src="{{ request.user.avatar.url }}" class="rounded-full inline" width="27px" style="position:relative;bottom:2.5px;">
+               <h6 class="inline">{{ user.username }}</h6>
+               <button id="close-profile-menu-submit" class="x-btn rounded-xl hidden" style="position:relative;bottom:5px;left:67px;"><i class="fa-solid fa-xmark text-white"></i></button>
+               <a href="{% url 'articles-channel' request.user.id %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-house"></i> Мой канал</div></a>
+               <a href="{% url 'profile' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-pencil"></i> Изменить профиль</div></a>
+               <a href="{% url 'session_logout' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-right-from-bracket"></i> Выйти</div></a>
+           </div>
+
+       {% endif %}
     {% else %}
-   <span style="position:absolute;left:1070px;top:20px;"><a href="{% url 'login' %}">Войти</a> | <a href="{% url 'register' %}">Регистрация</a></span></p>
+       <span style="position:absolute;left:1070px;top:20px;"><a href="{% url 'session_login' %}">Войти</a> | <a href="{% url 'register' %}">Регистрация</a></span></p>
     {% endif %}
 </div>
 <div id="mini-aside" class="">
@@ -36,20 +52,20 @@
     <ul>
         <a href="{% url 'articles_by_time' %}" class="mini-menu">
             <li style="font-weight:bold;margin-top:15px;">
-                <img style="margin-left:25px"src="/media/menu_icons/newspaper-solid-reversed.svg" width=35px">
+                <i style="font-size:35px;margin-left:26px;" class="fa-solid fa-newspaper"></i>
                 <span style="font-size:14px;margin-left:16.8px">Новости</span>
             </li>
         </a>
         <a href="{% url 'videos' %}" class="mini-menu">
             <li style="font-weight:bold;margin-top:30px;">
-                <img style="margin-left:25px" src="/media/menu_icons/circle-play-solid.svg" width=35px">
+                <i style="font-size:35px;margin-left:25px;" class="fa-solid fa-circle-play"></i>
                 <span style="font-size:14px;margin-left:23px">Видео</span>
             </li>
         </a>
 
         <a href="{% url 'rooms' %}" class="mini-menu">
             <li style="font-weight:bold;margin-top:30px;">
-                <img style="margin-left:25px" src="/media/menu_icons/comments-solid.svg" width=35px">
+                <i style="font-size:35px;margin-left:20px;" class="fa-solid fa-comments"></i>
                 <span style="font-size:14px;margin-left:2px">Мессенджер</span>
             </li>
         </a>

@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.conf import settings
 
@@ -9,6 +10,7 @@ comments = (Comment.objects
             .prefetch_related('likes', 'replies__author', 'replies__likes'))
 
 
+@login_required
 def like_comment(request, object_id, comment_id):
     comment = comments.get(id=comment_id)
     liked_comments = comment.likes.filter(id=request.user.id)
@@ -20,6 +22,7 @@ def like_comment(request, object_id, comment_id):
     return redirect(settings.PROJECT_URL + request.POST.get('url_from'))
 
 
+@login_required
 def reply_comment(request, object_id, parent_id):
     parent_obj = comments.filter(id=parent_id).first()
 

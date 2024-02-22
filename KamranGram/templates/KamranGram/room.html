@@ -12,7 +12,7 @@
 {% block header %}
 <span class="fs-2" style="font-weight:bold">KamranGram</span>
    <form action="{% url 'room_search' %}" method="get" class="search">
-       <input style="height:36.5px;width:450px;background:white;" type="text" name="room_search" placeholder="   Поиск" class="rounded-l-lg">
+       <input style="height:36.5px;width:450px;background:#141214;" type="text" name="room_search" placeholder="   Поиск комнаты" class=" border border-gray rounded-l-lg">
        <button class=" search-div border border-gray-300 rounded-r-lg"><p style="position:relative;bottom:4px;">🔍</p></button>
    </form>
 {% endblock %}
@@ -47,26 +47,39 @@
     {% endfor %}
 </div>
 <div class="chat inline">
-            <form>
-                <div>
                   <div class="background-chat {% include 'KamranGram/choice-theme.html' %}" id="chatbox" style="overflow-y: scroll;">
                       {% if messages %}
                       <b class="text-muted text-break">{{room.description}}</b>
                       {% for message in messages %}
                         {% if message.sender == request.user %}
-                          <div>
-                              <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="margin:4.5px 0 0 0;">
-                              <span class="text-break own-message rounded-xl inline" style="margin:0" >
-                                  <span class="text-muted" style="font-size:13px">
-                                      {{ message.sender.username }}
+                           <blockquote>
+                              <div>
+                                  <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="margin:4.5px 0 0 0;">
+                                  <span class="text-break own-message rounded-xl inline" style="margin:0" >
+                                      <span class="text-muted" style="font-size:13px;">
+                                          {{ message.sender.username }}{% if message.is_changed %}<span style="font-size:13px;color:gray" > (изменено)</span>{% endif %}
+                                      </span>
+
+                                          <button class="message-menu-btn rounded-full"><span style="position:relative;bottom:7.5px;">...</span></button>
+                                          <br>
+                                          {{ message.content }}
+                                          <br>
+                                          <span class="text-muted" style="font-size:10px;float:right;">{{ message.time_send|timesince }}</span>
+
+
+
                                   </span>
-                                      <br>
-                                  {{ message.content }}<br>
-                                  <span class="text-muted" style="font-size:10px;text-align:right;">{{ message.time_send|timesince }}</span>
-                              </span>
-                              <br>
-                          </div>
-                          <br>
+                                  <span class="message-menu rounded-xl inline hidden">
+                                              <button id="open_change_message_btn" class="change_message_btn">Изменить</button>
+                                              <a href="{% url 'delete_message' message.id %}" class="delete_message_btn" style="text-decoration: none;">Удалить</a>
+                                  </span>
+                                  <form action="{% url 'change_message' message.id %}" method="post" class="change_message_form hidden">
+                                      {% csrf_token %}
+                                      <input type="text" value="{{ message.content }}" name="changed_message" maxlength="2050" class="form-control inline" placeholder="Сообщение" style="background: #141214;border-color: #141214;color:white;width:150px;height:30px;">
+                                      <button type="submit" name="govno" class="btn btn-sm btn-dark inline">Изменить</button>
+                                  </form>
+                              </div>
+                           </blockquote>
                       {% else %}
                           <div style="text-align:right">
                               <span class="text-break stranger-message rounded-xl inline" style="text-align:left">
@@ -75,28 +88,125 @@
                                   </span>
                                   <br>
                                   {{ message.content }}<br>
-                                  <span class="text-muted" style="font-size:10px;text-align:right;">{{ message.time_send|timesince }}</span>
+                                  <span class="text-muted" style="font-size:10px;float:right;">{{ message.time_send|timesince }}</span>
                               </span>
                               <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="margin:2.5px 0 0 1.5px;"><br>
                           </div>
                           <br>
                       {% endif %}
-
                       {% endfor %}
                       {% endif %}
+                      <div class="footer rounded-xl">
+                          <div class="inline">
+                              <input maxlength="2050" class="form-control" placeholder="Сообщение" id="my_input" type="text" style="background: #141214;border-color: #141214;color:white;width:677px;" required>
+                          </div>
+                          <div class="inline" style="position:relative;right:4px;">
+                              <button class="btn text-white inline" id="submit_button" type="button" style="width:50px;background:#0afca0;">
+                                  <i class="fa-solid fa-paper-plane"></i>
+                              </button>
+                          </div>
+                      </div>
                   </div>
                     <br/>
-            </form>
+
 </div>
-<ul id="create-div" class="rounded-xl border border-gray-300 hidden">
-        <h5>Создать</h5>
-           <a href="{% url 'add_page' %}" class="text-none null"><li class="li-text null">📃 Статью</li></a>
-           <a href="{% url 'create_video' %}" class="text-none null"><li class="li-text null">🎥 Видео</li></a>
-           <a href="{% url 'create_room' %}" class="text-none null"><li class="li-text null">🗨 Комнату</li></a>
-</ul>
-<div class="footer rounded-xl">
-    <div class="inline"><input class="form-control" maxlength="2050" placeholder="Сообщение" id="my_input" type="text" style="width:675px;margin-top:20px;" required></div><div class="inline" style="margin-top:19px;"><button class="btn inline" id="submit_button" type="button" style="width:50px;background:#0afca0;"><i class="fa-solid fa-paper-plane"></i></button></div>
+<button id="open_room_info_btn" class="rounded-full btn btn-dark" style="position:fixed;left:1216.5px;top:75px;"><span style="font-weight:bold;font-size:20px;position:relative;bottom:5px;">...</span></button>
+<div class=" rounded-xl room_info_div border border-gray">
+    <img src="{{ room.room_avatar.url }}" width="70px" class="rounded-full inline" style="margin:6px 0 0 0;">
+    <span style="font-size:20px;font-weight:bold;position:relative;top:20px">{{ room.name }}</span>
+
+    <p style="font-size:8px;font-weight:bold;position:relative;left:75px;bottom:23px;">Дата создания: {{ room.time_create }}</p>
+
+    <form action="" method="post">
+        {% if user == room.creator %}
+        <span style="margin-bottom:3px">Описание:</span>
+        <textarea class="form-control" name="description" cols="25" rows="2" maxlength="300">{{room.description}}</textarea>
+
+        <div style="margin-top:15px;">
+        <span class="bottom-inline" style="margin-bottom:3px">Тема:</span>
+        <span class="inline">
+            <select class="form-control form-control-sm" name="theme" style="width:100px;height:10px;">
+                <option value="#1bc3e0">Голубая</option>
+
+                <option value="#cc1d1f">Красная</option>
+
+                <option value="#141214">Темная</option>
+
+                <option value="#06d606">Зеленая</option>
+
+                <option value="#ab09e0">Фиолетовая</option>
+            </select>
+        </span>
+        </div>
+        <div style="margin-top:15px;">
+            <span class="bottom-inline" style="margin-bottom:3px;">Доступность для поиска</span>
+            {% if room.is_searchable %}
+                 <input type="checkbox" name="is_searchable" checked >
+            {% else %}
+                 <input type="checkbox" name="is_searchable" checked >
+            {% endif %}
+        </div>
+        {% else %}
+            <span style="margin-bottom:3px">Описание:</span>
+            <textarea class="form-control" name="description" cols="25" rows="2" maxlength="300" disabled id="id_description">{{room.description}}</textarea>
+
+            <div style="margin-top:15px;">
+                <span class="bottom-inline" style="margin-bottom:3px">Тема:</span>
+                <span class="inline">
+                    <select class="form-control form-control-sm" name="theme" id="id_theme" disabled style="width:100px;height:10px;">
+                        <option value="#1bc3e0">Голубая</option>
+
+                        <option value="#cc1d1f">Красная</option>
+
+                        <option value="#141214">Темная</option>
+
+                        <option value="#06d606">Зеленая</option>
+
+                        <option value="#ab09e0">Фиолетовая</option>
+                    </select>
+                </span>
+            </div>
+        <div style="margin-top:15px;">
+            <span class="bottom-inline" style="margin-bottom:3px;">Доступность для поиска</span>
+            {% if room.is_searchable %}
+                 <input type="checkbox" name="is_searchable" disabled checked >
+            {% else %}
+                 <input type="checkbox" name="is_searchable" disabled checked >
+            {% endif %}
+        </div>
+        {% endif %}
+        <div style="margin-top:10px;">
+            <span class="bottom-inline" style="margin-bottom:3px;">Количевство участников: {{ room.members.count }}</span>
+        </div>
+        <a href="#">Подробнее</a>
+
+    </form>
+    <br>
+    <br>
+    <a href="#"  class="enter-room-btn">
+        <i class="fa-solid fa-right-from-bracket"></i> Выйти из комнаты
+    </a>
+
 </div>
+<div id="create-div" class="rounded-xl border border-gray-300 hidden">
+    <span class="fs-5" style="font-weight:bold;margin:0;padding:0;">Создать</span>
+    <button id="close-create-div" class="x-btn rounded-xl hidden" style="position:relative;bottom:5px;left:22px;"><i class="fa-solid fa-xmark text-white"></i></button>
+    <a href="{% url 'add_page' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-newspaper"></i> Статью</div></a>
+    <a href="{% url 'create_video' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-circle-play"></i> Видео</div></a>
+    <a href="{% url 'create_room' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-comments" ></i> Комнату</div></a>
+</div>
+<div id="profile-menu-div" class="profile-menu-div rounded-xl border border-gray hidden">
+    <img src="{{ request.user.avatar.url }}" class="rounded-full inline" width="27px" style="position:relative;bottom:2.5px;">
+    <h6 class="inline">{{ user.username }}</h6>
+    <button id="close-profile-menu-submit" class="x-btn rounded-xl hidden" style="position:relative;bottom:5px;left:67px;"><i class="fa-solid fa-xmark text-white"></i></button>
+    <a href="{% url 'articles-channel' request.user.id %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-house"></i> Мой канал</div></a>
+    <a href="{% url 'profile' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-pencil"></i> Изменить профиль</div></a>
+    <a href="{% url 'session_logout' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-right-from-bracket"></i> Выйти</div></a>
+</div>
+
+
+
+
 {{ room.id|json_script:"room-id" }}
 {{ room.name|json_script:"room-name" }}
 
@@ -107,13 +217,17 @@
 {% endblock %}
 
 {% block scripts %}
+
+{% load static %}
+
+    <script src="{% static 'main/js/room.js' %}"></script>
+
     <script>
-
-
-
       const roomID = JSON.parse(document.getElementById('room-id').textContent);
       const lastMessageSpan = document.querySelector("#last_message_{{room.id}}")
       const currentRoomChatIntro = document.querySelector("#chat_intro_{{room.id}}")
+
+
 
       currentRoomChatIntro.classList.add('first-chat-div')
       currentRoomChatIntro.classList.remove('chat-div')

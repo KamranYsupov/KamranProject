@@ -22,7 +22,7 @@ class AddCommentForm(forms.ModelForm):
         widgets = {
             'comment': forms.Textarea(attrs={
                 'class': 'form-control',
-                'style': 'background: black;border-color: black',
+                'style': 'background: black;border-color: black;color:white;',
                 'rows': 1,
                 'placeholder': 'Комментарий',
             }),

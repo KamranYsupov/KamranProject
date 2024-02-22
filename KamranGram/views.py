@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Q
@@ -71,6 +72,7 @@ class RoomSearch(BaseMixin, ListView):
         return context
 
 
+@login_required
 def login_room(request, room_id):
     current_room = Room.objects.get(id=room_id)
     input_password = request.POST.get('input_password')
@@ -81,3 +83,27 @@ def login_room(request, room_id):
         return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
 
     return render(request, 'KamranGram/login_room.html', context={'room': current_room})
+
+
+@login_required
+def delete_message(request, message_id):
+    message = Message.objects.get(id=message_id)
+    if request.user != message.sender and not request.user.is_staff:
+        raise forms.ValidationError('Вы не можете удалять чужие сообщения')
+    room_id = message.room.id
+    message.delete()
+    return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
+
+
+@login_required
+def change_message(request, message_id):
+    message = Message.objects.get(id=message_id)
+    if request.user != message.sender and not request.user.is_staff:
+        raise forms.ValidationError('Вы не можете изменять чужие сообщения')
+    room_id = message.room.id
+    message.content = request.POST.get('changed_message', 'None')
+    message.is_changed = True
+    message.save()
+    return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
+
+

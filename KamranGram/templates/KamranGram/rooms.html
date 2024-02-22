@@ -5,8 +5,8 @@
 {% block header %}
    <span class="fs-3" style="margin-left:10px;">{{title}}</span>
    <form action="{% url 'room_search' %}" method="get" class="search">
-       <input style="height:36.5px;width:450px;background:white;" type="text" name="room_search" placeholder="   Поиск комнаты" class="rounded-l-lg">
-       <button class=" search-div border border-gray-300 rounded-r-lg"><p style="position:relative;bottom:4px;">🔍</p></button>
+       <input style="height:36.5px;width:450px;background:#141214;" type="text" name="room_search" placeholder="   Поиск комнаты" class="border border-gray rounded-l-lg">
+       <button class=" search-div border border-gray rounded-r-lg"><p style="position:relative;bottom:4px;">🔍</p></button>
    </form>
 {% endblock %}
 
@@ -31,7 +31,21 @@
    <p class="text-white fs-1" style="margin-left:370px;font-weight:bold;">Пусто!</p>
 {% endif %}
 
-
+<div id="create-div" class="rounded-xl border border-gray-300 hidden">
+    <span class="fs-5" style="font-weight:bold;margin:0;padding:0;">Создать</span>
+    <button id="close-create-div" class="x-btn rounded-xl hidden" style="position:relative;bottom:5px;left:22px;"><i class="fa-solid fa-xmark text-white"></i></button>
+    <a href="{% url 'add_page' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-newspaper"></i> Статью</div></a>
+    <a href="{% url 'create_video' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-circle-play"></i> Видео</div></a>
+    <a href="{% url 'create_room' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-comments" ></i> Комнату</div></a>
+</div>
+<div id="profile-menu-div" class="profile-menu-div rounded-xl border border-gray hidden">
+    <img src="{{ request.user.avatar.url }}" class="rounded-full inline" width="27px" style="position:relative;bottom:2.5px;">
+    <h6 class="inline">{{ user.username }}</h6>
+    <button id="close-profile-menu-submit" class="x-btn rounded-xl hidden" style="position:relative;bottom:5px;left:67px;"><i class="fa-solid fa-xmark text-white"></i></button>
+    <a href="{% url 'articles-channel' request.user.id %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-house"></i> Мой канал</div></a>
+    <a href="{% url 'profile' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-pencil"></i> Изменить профиль</div></a>
+    <a href="{% url 'session_logout' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-right-from-bracket"></i> Выйти</div></a>
+</div>
 {% endblock %}
 
 <!--style="margin-bottom:6px;margin-right:100px;height:35px;"

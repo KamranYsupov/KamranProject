@@ -57,13 +57,10 @@ class RegisterUserForm(UserCreationForm):
             'email': 'E-mail',
             'first_name': 'Имя',
             'last_name': 'Фамилия',
-            'date_birth': 'Дата рождения',
-            'is_subscribed_on_quotes': 'Подписка на рассылку цитат',
-            'is_subscribed_on_weather': 'Подписка на рассылку KamranWeather',
         }
 
         widgets = {
-            'email': forms.TextInput(attrs=default_widget | {'placeholder': 'Электронная почта'}),
+            'email': forms.TextInput(attrs=default_widget | {'placeholder': 'name@example.com'}),
             'first_name': forms.TextInput(attrs=default_widget | {'placeholder': 'Имя'}),
             'last_name': forms.TextInput(attrs=default_widget | {'placeholder': 'Фамилия'}),
             'is_subscribed_on_quotes': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -72,18 +69,52 @@ class RegisterUserForm(UserCreationForm):
 
 
 class ProfileUserForm(forms.ModelForm):
-    username = forms.CharField(disabled=True)
-    email = forms.EmailField(disabled=True)
-    current_year = datetime.date.today().year
-    date_birth = forms.DateField(widget=forms.SelectDateWidget(years=tuple(range(current_year - 150, current_year))))
+    username = forms.CharField(
+        label='Имя пользователя',
+        disabled=True,
+        widget=forms.TextInput(attrs=default_widget | {'placeholder': 'Имя пользователя'})
+    )
+    email = forms.EmailField(
+        label='E-mail',
+        disabled=True,
+        widget=forms.EmailInput(attrs=default_widget)
+    )
+    date_birth = forms.DateField(
+        label='Дата рождения',
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'form-control',
+            'style':
+                'margin-top:5px;'
+                'background: #141214;'
+                'border-color: #141214;'
+                'color:white;',
+        }))
 
     class Meta:
         model = get_user_model()
         fields = ['avatar', 'username', 'email', 'first_name', 'last_name', 'date_birth',
                   'is_subscribed_on_quotes', 'is_subscribed_on_weather']
 
+        widgets = {
+            'avatar': forms.FileInput(attrs=default_widget | {'class': 'form-control-sm'}),
+            'first_name': forms.TextInput(attrs=default_widget | {'placeholder': 'Имя'}),
+            'last_name': forms.TextInput(attrs=default_widget | {'placeholder': 'Фамилия'}),
+            'is_subscribed_on_quotes': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_subscribed_on_weather': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
 
 class PasswordChangeUserForm(PasswordChangeForm):
-    old_password = forms.CharField(label="Старый пароль:", min_length=6, max_length=20, widget=forms.PasswordInput)
-    new_password1 = forms.CharField(label="Новый пароль:", min_length=6, max_length=20, widget=forms.PasswordInput)
-    new_password2 = forms.CharField(label="Повторите пароль:", min_length=6, max_length=20, widget=forms.PasswordInput)
+    old_password = forms.CharField(label="Старый пароль",
+                                   min_length=6,
+                                   max_length=20,
+                                   widget=forms.PasswordInput(attrs=default_widget))
+    new_password1 = forms.CharField(label="Новый пароль",
+                                    min_length=6,
+                                    max_length=20,
+                                    widget=forms.PasswordInput(attrs=default_widget))
+    new_password2 = forms.CharField(label="Повторите пароль",
+                                    min_length=6,
+                                    max_length=20,
+                                    widget=forms.PasswordInput(attrs=default_widget))

@@ -220,7 +220,7 @@ form {
 
 
 .background-chat {
-   height: 444.5px;
+   height: 490.5px;
    background-color: black;
    margin:0;
    padding:0;
@@ -440,11 +440,9 @@ input, textarea {
 .footer{
     width: 765px;
     position: fixed;
-    left:498.5px;
-    bottom: 3px;
-
-
-    }
+    left:490px;
+    bottom: 0px;
+}
 
 .channel-piece {
    background: #090d0a;
@@ -552,14 +550,25 @@ input, textarea {
 .profile-menu-div {
    position:fixed;
    left:1050px;
-   top: 45px;
+   top: 5px;
    padding: 10px 5px 10px 5px;
-   width: 170px;
+   width: 200px;
    background: #342c36;
 }
 
+.create-menu-span {
+   width: 135px;
+   color: white;
+   border-top: 1px solid gray;
+}
 
+.create-menu-span:hover {
+   background: #242424;
+   color: #02cc7f;
+   border-top: 1px solid gray;
+}
 .profile-menu-span {
+   width: 190px;
    color: white;
    border-top: 1px solid gray;
 }
@@ -568,4 +577,90 @@ input, textarea {
    background: #242424;
    color: #02cc7f;
    border-top: 1px solid gray;
+}
+
+.x-btn {
+   width: 30px;
+   height: 30px;
+}
+
+.x-btn:hover {
+   background: #242424;
+}
+
+.message-menu-btn {
+   float:right;
+   position: relative;
+   top: 4px;
+   width: 14px;
+   height: 14px;
+   background: #7a48db;
+/*#56398f;*/
+
+}
+
+.message-menu-btn:hover {
+   background: #56398f;
+}
+
+.message-menu {
+   width: 234px;
+   height: 85px;
+   background: #1a1e26;
+   font-size:14px;
+
+}
+
+.change_message_btn {
+   color: white;
+
+}
+
+.change_message_btn:hover {
+   color: #26a9d1
+
+}
+
+.delete_message_btn {
+   color: white;
+
+}
+
+.delete_message_btn:hover {
+   color: red;
+
+}
+
+.change_message_form {
+   padding: 10px;
+   width: 200px;
+   background: #1a1e26;
+   font-size:14px;
+}
+
+.room_info_div {
+   padding: 10px;
+   background: #212529;
+   border-color: #212529;
+   position:fixed;
+   width: 240px;
+   height: 450px;
+   left:958px;
+   top:74px;
+}
+
+.enter-room-btn {
+   color: white;
+   text-decoration: none;
+   font-size:14.5px;
+   font-weight:bold;
+   margin: 100px 0 0 65px;
+
+}
+
+.enter-room-btn:hover {
+   color: #c542f5}
+
+.a {
+text-decoration: none;
 }

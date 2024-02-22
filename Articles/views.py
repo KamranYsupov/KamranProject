@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -139,6 +140,7 @@ class ArticleSearch(BaseMixin, ListView):
         return context
 
 
+@login_required
 def like_post(request, post_slug):
     article = articles.get(slug=post_slug)
     return like(request, article)

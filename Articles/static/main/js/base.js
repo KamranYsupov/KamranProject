@@ -10,7 +10,6 @@ const profileMenuDiv = document.querySelector('#profile-menu-div')
 createDivOpen.onclick = function(e) {
     e.preventDefault()
 
-    createDivOpen.classList.add('hidden')
     createDivClose.classList.remove('hidden')
     createDiv.classList.remove('hidden')
 
@@ -35,7 +34,6 @@ createDivClose.onclick = function(e) {
 profileMenuOpenSubmit.onclick = function(e) {
     e.preventDefault()
 
-    profileMenuOpenSubmit.classList.add('hidden')
     profileMenuCloseSubmit.classList.remove('hidden')
     profileMenuDiv.classList.remove('hidden')
 

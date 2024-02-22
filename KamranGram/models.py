@@ -57,6 +57,7 @@ class Message(models.Model):
     sender = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_messages')
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, related_name='room_messages')
     time_send = models.DateTimeField(auto_now_add=True)
+    is_changed = models.BooleanField(default=False  )
 
     class Meta:
         ordering = ['time_send']

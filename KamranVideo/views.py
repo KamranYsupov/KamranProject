@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
@@ -40,7 +41,7 @@ class CreateVideo(BaseMixin, CreateView):
 
 
 class WatchVideo(DetailView, BaseMixin, CreateView):
-    queryset = Video.objects.select_related('author').prefetch_related('likes')
+    queryset = related_video_queryset
     form_class = AddCommentForm
     template_name = 'KamranVideo/watch.html'
     context_object_name = 'video'
@@ -95,6 +96,7 @@ class VideoSearch(BaseMixin, ListView):
         return context
 
 
+@login_required
 def like_video(request, video_id):
     video = Video.objects.get(id=video_id)
 

@@ -1,17 +1,51 @@
 {% extends 'Articles/base.html' %}
+{% load filters %}
+
 
 {% block title %}{{title}}{% endblock %}
 
-{% block header %}<span class="page fs-3">{{title}}</span>{% endblock %}
+{% block header %}<span class="page fs-3" xmlns="http://www.w3.org/1999/html">{{title}}</span>{% endblock %}
 
 {% block content %}
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {% include 'users/avatar.html' %}
-    {{ form.as_p }}
-    <p><button type="submit" class="btn btn-success">Сохранить</button></p>
+    <div class="auth-form border-gray rounded-xl">
+        <div style="margin-left:117px;">{% include 'users/avatar.html' %}</div>
+        <br>
+        <p>
+            <label for="{{ form.avatar.id }}">{{ form.avatar.label }}</label>
+            <input type="file" name="{{ form.avatar.name }}" value="{{ form.avatar.value }}" class="form-control" style="color: white;background: #141214;border-color: #141214;" required id="{{ form.avatar.id }}">
+        </p>
+          {% for i in form %}
+             {% if i != form.is_subscribed_on_quotes and i != form.is_subscribed_on_weather and i != form.avatar %}
+                  {% if i != form.date_birth %}
+                      <p>
+                          <label for="{{ i.id }}">{{ i.label }}</label>
+                          <input type="{{ i.type }}" name="{{ i.name }}" value="{{ i.value }}" class="form-control" style="color: white;background: #141214;border-color: #141214;" required id="{{ i.id }}">
+                      </p>
+                  {% else %}
+                      <p>
+                          <label for="{{ form.date_birth.id }}">{{ form.date_birth.label }}</label>
+                          <input type="date" name="{{ form.date_birth.name }}" value="{{ form.date_birth.value|date_format }}" class="form-control" style="color: white;background: #141214;border-color: #141214;" required id="{{ form.date_birth.id }}">
+                      </p>
+
+                  {% endif %}
+             {% endif %}
+          {% endfor %}
+        <p>Подписка на рассылку цитат: {{ form.is_subscribed_on_quotes }}</p>
+        <p>Подписка на рассылку KamranWeather: {{ form.is_subscribed_on_weather }}</p>
+
+
+
+
+        <input type="hidden" name="next" value="{{ next }}" />
+
+        <button type="submit" class="btn btn-dark active">Сохранить</button>
+        <br>
+        <hr>
+        <a href="{% url 'password-change' %}">Сменить пароль</a>
+
+    </div>
 </form>
-<hr>
-<a class="btn btn-primary" href="{% url 'password-change' %}">Сменить пароль</a>
-<hr>
+
 {% endblock %}

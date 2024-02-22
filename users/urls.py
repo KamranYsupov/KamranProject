@@ -7,9 +7,8 @@ from . import views
 channel_prefix = 'channel/<int:owner_id>/'
 
 urlpatterns = [
-    # MAIN
     path('login/', views.LoginUser.as_view(), name='session_login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('logout/', LogoutView.as_view(), name='session_logout'),
     path('register/', views.RegisterUser.as_view(), name='register'),
     path('profile/', views.ProfileUser.as_view(), name='profile'),
     path('password-change/', views.PasswordChange.as_view(), name='password-change'),

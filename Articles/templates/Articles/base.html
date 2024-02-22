@@ -21,22 +21,24 @@
      <p class="page">{% block header %}{% endblock %}
     {% if user.is_authenticated %}
        <button id="open-create-div" class="rounded-full create-div-button">➕</button>
-       <button id="close-create-div" class="rounded-full create-div-button hidden">➕</button>
        <button id="open-profile-menu-submit"><img class="avatar-mini rounded-full" src="{{ user.avatar.url }}"></button>
-       <button id="close-profile-menu-submit" class="hidden"><img class="avatar-mini rounded-full" src="{{ user.avatar.url }}"></button>
+
      </p>
        {% if not KamranGram %}
-           <ul id="create-div" class="rounded-xl border border-gray-300 hidden">
-               <h5>Создать</h5>
-               <a href="{% url 'add_page' %}" class="text-none null"><li class="li-text null">📃 Статью</li></a>
-               <a href="{% url 'create_video' %}" class="text-none null"><li class="li-text null">🎥 Видео</li></a>
-               <a href="{% url 'create_room' %}" class="text-none null"><li class="li-text null">🗨 Комнату</li></a>
-           </ul>
+           <div id="create-div" class="rounded-xl border border-gray-300 hidden">
+               <span class="fs-5" style="font-weight:bold;margin:0;padding:0;">Создать</span>
+               <button id="close-create-div" class="x-btn rounded-xl hidden" style="position:relative;bottom:5px;left:22px;"><i class="fa-solid fa-xmark text-white"></i></button>
+               <a href="{% url 'add_page' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-newspaper"></i> Статью</div></a>
+               <a href="{% url 'create_video' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-circle-play"></i> Видео</div></a>
+               <a href="{% url 'create_room' %}" class="text-none null"><div class="create-menu-span text-white"><i class="fa-solid fa-comments" ></i> Комнату</div></a>
+           </div>
            <div id="profile-menu-div" class="profile-menu-div rounded-xl border border-gray hidden">
-               <h6>{{ user.username }}</h6>
-               <a href="{% url 'articles-channel' request.user.id %}" style="text-decoration:none;"><div class="profile-menu-span text-white">Мой канал</div></a>
-               <!--<div class="profile-menu-span text-white"></div>-->
-               <a href="{% url 'profile'%}" style="text-decoration:none;"><div class="profile-menu-span text-white">Изменить профиль</div></a>
+               <img src="{{ request.user.avatar.url }}" class="rounded-full inline" width="27px" style="position:relative;bottom:2.5px;">
+               <h6 class="inline">{{ user.username }}</h6>
+               <button id="close-profile-menu-submit" class="x-btn rounded-xl hidden" style="position:relative;bottom:5px;left:67px;"><i class="fa-solid fa-xmark text-white"></i></button>
+               <a href="{% url 'articles-channel' request.user.id %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-house"></i> Мой канал</div></a>
+               <a href="{% url 'profile' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-pencil"></i> Изменить профиль</div></a>
+               <a href="{% url 'session_logout' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-right-from-bracket"></i> Выйти</div></a>
            </div>
 
        {% endif %}
@@ -55,28 +57,20 @@
     <ul style="margin-top:15px;">
         <a href="{% url 'articles_by_time' %}" class="menu">
             <span class="inline"  style="margin-top: 4.8px;padding:0;">
-                <img src="/media/menu_icons/newspaper-solid-reversed.svg" width=17px">
-            </span>
-            <span class="inline" style="margin:0;padding:0;">
-                Новости
+                <i class="fa-solid fa-newspaper"></i> Новости
             </span>
         </a>
         <br>
         <a href="{% url 'videos' %}" class="menu">
-            <span class="inline"  style="margin-top: 4.8px;padding:0;">
-                <img src="/media/menu_icons/circle-play-solid.svg" width=17px">
-            </span>
             <span class="inline" style="margin:0;padding:0;">
-                Видео
+                <i class="fa-solid fa-circle-play"></i> Видео
             </span>
         </a>
         <br>
         <a href="{% url 'rooms' %}" class="menu">
-            <span class="inline"  style="margin-top: 4.8px;padding:0;">
-                <img src="/media/menu_icons/comments-solid.svg" width=17px">
-            </span>
-            <span class="inline" style="margin:0;padding:0;">
-                Месенджер
+
+            <span class="inline" style="position:relative;right:3px;">
+               <i class="fa-solid fa-comments" ></i> Месенджер
             </span>
         </a>
     </ul>
