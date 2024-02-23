@@ -134,7 +134,7 @@ form {
    margin-left: 70px;
    width: 500px;
    background: #141214;
-   padding: 20px;
+   padding: 20px 20px 0 20px;
    border-width: 0.1px;
    border-color: gray;
 
@@ -220,7 +220,7 @@ form {
 
 
 .background-chat {
-   height: 490.5px;
+   height: 470.5px;
    background-color: black;
    margin:0;
    padding:0;
@@ -381,9 +381,6 @@ input, textarea {
     padding: 28px 20px;
 }
 
-.jumbotron{
-     background-color: black;
-}
 
 .inline {
     display: inline-block;
@@ -645,7 +642,7 @@ input, textarea {
    position:fixed;
    width: 240px;
    height: 450px;
-   left:958px;
+   left:974px;
    top:74px;
 }
 
@@ -654,13 +651,70 @@ input, textarea {
    text-decoration: none;
    font-size:14.5px;
    font-weight:bold;
-   margin: 100px 0 0 65px;
+   position: absolute;
+   bottom: 3px;
+   right: 3px;
+
 
 }
 
 .enter-room-btn:hover {
-   color: #c542f5}
-
-.a {
-text-decoration: none;
+   color: #b3322e
 }
+
+.save-room-btn {
+   padding: 5px;
+   color: white;
+}
+
+.members-div {
+   padding: 10px;
+   background: #212529;
+   border-color: #212529;
+   position:fixed;
+   width: 240px;
+   height: 300px;
+   left:735px;
+   top:74px;
+}
+
+.member-div {
+    margin-top:5px;
+}
+
+.member-div:hover {
+    background: #3b3a3b;
+}
+
+
+html {
+::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.9);
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar
+{
+	width: 12px;
+
+}
+
+::-webkit-scrollbar-thumb
+{
+	border-top: 10px solid inset 0 0 6px;
+	border-bottom: 10px solid inset 0 0 6px;
+	background-color: inset 0 0 6px ;
+	background-image:-webkit-linear-gradient(90deg,
+											  transparent,
+											  rgba(0, 0, 0, 0.4) 50%,
+											  transparent,
+											  transparent)
+}
+
+}
+}]
+
+
+
+

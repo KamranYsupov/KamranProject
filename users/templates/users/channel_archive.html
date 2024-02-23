@@ -5,10 +5,10 @@
 <div class="channel_right_aside rounded-xl inline">
     <div class="followers_menu rounded-xl" style="margin-left:20px">
       <p class="rounded-xl" style="margin:0;padding:0;">Подписчики {{owner.followers.count}}</p>
-        {% if owner.followers %}
-        {% for i in owner.followers.all|slice:10 %}
-        <div class="follower">
-            <a href="{% url 'articles-channel' i.id %}" style="text-decoration:none">
+        {% if followers %}
+        {% for i in followers %}
+        <a href="{% url 'articles-channel' i.id %}" style="text-decoration:none">
+            <div class="follower">
                 <img src="{{ i.avatar.url }}" style="width:27px" class="inline rounded-full">
                 <span class="inline rounded-full">
                     {% if i.username|length > 12 %}
@@ -17,8 +17,8 @@
                        {{ i.username }}
                     {% endif %}
                 </span>
-            </a>
-        </div>
+            </div>
+        </a>
         {% endfor %}
         {% else %}
         <p>У {{ owner.username }} 0 подписчиков(</p>
@@ -26,10 +26,10 @@
     </div>
     <div class="followed_by_menu rounded-xl" style="margin-left:20px;margin-top:10px;">
       <p class="rounded-xl" style="margin:0;padding:0;">Подписки {{owner.followed_by.count}}</p>
-        {% if owner.followed_by %}
-        {% for i in owner.followed_by.all|slice:10 %}
-        <div class="follower">
-            <a href="{% url 'articles-channel' i.id %}" style="text-decoration:none">
+        {% if followed_by %}
+        {% for i in followed_by %}
+        <a href="{% url 'articles-channel' i.id %}" style="text-decoration:none">
+            <div class="follower">
                 <img src="{{ i.avatar.url }}" style="width:27px" class="inline rounded-full">
                 <span class="inline rounded-full">
                     {% if i.username|length > 12 %}
@@ -38,8 +38,8 @@
                        {{ i.username }}
                     {% endif %}
                 </span>
-            </a>
-        </div>
+            </div>
+        </a>
         {% endfor %}
         {% else %}
         <p>{{ owner.username }} ни на кого подписан(</p>

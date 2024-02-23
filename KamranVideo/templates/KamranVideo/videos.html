@@ -6,7 +6,7 @@
 
 <span class="fs-3" style="font-weight:bold;position:relative;margin-left:135px;top:5px" >{{title}}</span>
 <form action="{% url 'video_search' %}" method="get" style="position:absolute;left:380px;bottom:17px;">
-        <input style="height:36.5px;width:450px;background:#141214;" type="text" name="video_search" placeholder="   Поиск видео" class="border border-gray rounded-l-lg">
+        <input style="height:36.5px;width:450px;background:#141214;color:white;" type="text" name="video_search" placeholder="   Поиск видео" class="border border-gray rounded-l-lg">
         <button class=" search-div border border-gray rounded-r-lg"><p style="position:relative;bottom:4px;">Поиск</p></button>
 </form>
 
@@ -30,8 +30,7 @@
 </a>
 {% endfor %}
 {% else %}
-<p>Ни одного видео не загруженно!</p>
-{% endif %}
+<p class="text-muted" style="font-size:15px;margin-left:10px">По запросу "{{ video_search }}" ничего не найдено</p>{% endif %}
 
 
 {% endblock %}

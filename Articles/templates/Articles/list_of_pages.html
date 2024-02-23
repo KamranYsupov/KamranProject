@@ -12,7 +12,7 @@
 {% block header %}
    <span class="fs-3" style="margin-left:270px;">{{title}}</span>
    <form action="{% url 'article_search' %}" method="get" style="position:absolute;left:810px;bottom:22px;">
-       <input style="position:relative;bottom:0.5px;height:30px;width:200px;background:#141214;" type="text" name="article_search" placeholder="   Поиск статьи " class="border border-gray rounded-l-lg">
+       <input style="position:relative;bottom:0.5px;height:30px;width:200px;background:#141214;color:white;" type="text" name="article_search" placeholder="   Поиск статьи " class="border border-gray rounded-l-lg">
        <button class="border border-gray rounded-r-lg" style="position:absolute;bottom:0.50011px;height:30px;background:#141214;padding:10px;">
            <p style="position:relative;bottom:5px;font-size:14px;">🔍</p>
        </button>
@@ -59,7 +59,7 @@
                   Просмотр
                {% endif %}
             </span>
-            <div class="inline">
+            <div class="inline" style="margin-bottom:15px;">
                {% if user == post.author %}
                    <a href="{% url 'edit-page' post.slug %}" class="btn btn-sm  btn-outline-success" style="margin-left:90px;">
                        Изменить
@@ -72,7 +72,9 @@
                       Читать пост
                   </a>
                {% endif %}
+
             </div>
+            <span style="margin-left:320px;font-size:13px;" class="text-muted">{{ post.time_create|timesince }} назад</span>
         </p>
         </div>
       </li><br>

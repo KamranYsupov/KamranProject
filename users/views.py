@@ -13,7 +13,7 @@ from Articles.mixins import BaseMixin
 from django.conf import settings
 from .forms import LoginUserForm, RegisterUserForm, ProfileUserForm, PasswordChangeUserForm
 
-from .mixins import ChannelMixin
+from .mixins import ChannelMixin, ArticlesChannelMixin
 # from .serializers import UserSerializer
 from .tasks import send_mail_by_register, send_random_quotes, send_weather_mail
 
@@ -62,14 +62,13 @@ class Channel(DetailView):
     pk_url_kwarg = 'owner_id'
 
 
-class ArticlesChannel(ChannelMixin):
+class ArticlesChannel(ArticlesChannelMixin):
     template_name = 'users/channel_articles.html'
     order = 'news'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['articles'] = (context['owner'].articles
-                               .select_related('author')
                                .filter(is_published=True)
                                .prefetch_related('likes'))
         return context
@@ -81,20 +80,18 @@ class VideoChannel(ChannelMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['videos'] = (context['owner'].videos
-                             .select_related('author')
-                             .prefetch_related('likes'))
+        context['videos'] = context['owner'].videos.all()
+
         return context
 
 
-class ArchiveChannel(ChannelMixin):
+class ArchiveChannel(ArticlesChannelMixin):
     template_name = 'users/channel_archive.html'
     order = 'archive'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['archived_articles'] = (context['owner'].articles
-                                        .select_related('author')
                                         .filter(is_published=False)
                                         .prefetch_related('likes'))
         return context

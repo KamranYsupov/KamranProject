@@ -22,3 +22,11 @@ class ChannelMixin(BaseMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['owner'] = owner
         return context
+
+
+class ArticlesChannelMixin(ChannelMixin):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['followed_by'] = context['owner'].followed_by.all()[:10]
+        context['followers'] = context['owner'].followers.all()[:10]
+        return context

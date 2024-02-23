@@ -12,7 +12,7 @@
 {% block header %}
 <span class="fs-2" style="font-weight:bold">KamranGram</span>
    <form action="{% url 'room_search' %}" method="get" class="search">
-       <input style="height:36.5px;width:450px;background:#141214;" type="text" name="room_search" placeholder="   Поиск комнаты" class=" border border-gray rounded-l-lg">
+       <input style="height:36.5px;width:450px;background:#141214;color:white;" type="text" name="room_search" placeholder="   Поиск комнаты" class=" border border-gray rounded-l-lg">
        <button class=" search-div border border-gray-300 rounded-r-lg"><p style="position:relative;bottom:4px;">🔍</p></button>
    </form>
 {% endblock %}
@@ -76,7 +76,7 @@
                                   <form action="{% url 'change_message' message.id %}" method="post" class="change_message_form hidden">
                                       {% csrf_token %}
                                       <input type="text" value="{{ message.content }}" name="changed_message" maxlength="2050" class="form-control inline" placeholder="Сообщение" style="background: #141214;border-color: #141214;color:white;width:150px;height:30px;">
-                                      <button type="submit" name="govno" class="btn btn-sm btn-dark inline">Изменить</button>
+                                      <button type="submit" class="btn btn-sm btn-dark inline">Изменить</button>
                                   </form>
                               </div>
                            </blockquote>
@@ -110,15 +110,20 @@
                     <br/>
 
 </div>
-<button id="open_room_info_btn" class="rounded-full btn btn-dark" style="position:fixed;left:1216.5px;top:75px;"><span style="font-weight:bold;font-size:20px;position:relative;bottom:5px;">...</span></button>
-<div class=" rounded-xl room_info_div border border-gray">
+
+<button id="open-room-info-btn" class="rounded btn-dark " style="padding: 0.375rem .75rem ;position:fixed;left:1216.5px;top:75px;"><span style="font-weight:bold;font-size:20px;position:relative;bottom:5px;">...</span></button>
+
+<button id="close-room-info-btn" class="rounded btn-dark hidden" style="padding: 0.375rem .75rem ;position:fixed;left:1216.5px;top:75px;"><span style="font-weight:bold;font-size:20px;position:relative;bottom:5px;">...</span></button>
+
+<div id="room-info-div" class="rounded-l-lg room_info_div border border-gray hidden">
     <img src="{{ room.room_avatar.url }}" width="70px" class="rounded-full inline" style="margin:6px 0 0 0;">
     <span style="font-size:20px;font-weight:bold;position:relative;top:20px">{{ room.name }}</span>
 
     <p style="font-size:8px;font-weight:bold;position:relative;left:75px;bottom:23px;">Дата создания: {{ room.time_create }}</p>
 
-    <form action="" method="post">
+    <form action="{% url 'update_room' room.id %}" method="post">
         {% if user == room.creator %}
+        {% csrf_token %}
         <span style="margin-bottom:3px">Описание:</span>
         <textarea class="form-control" name="description" cols="25" rows="2" maxlength="300">{{room.description}}</textarea>
 
@@ -126,25 +131,29 @@
         <span class="bottom-inline" style="margin-bottom:3px">Тема:</span>
         <span class="inline">
             <select class="form-control form-control-sm" name="theme" style="width:100px;height:10px;">
-                <option value="#1bc3e0">Голубая</option>
-
-                <option value="#cc1d1f">Красная</option>
-
-                <option value="#141214">Темная</option>
-
-                <option value="#06d606">Зеленая</option>
-
-                <option value="#ab09e0">Фиолетовая</option>
+                {% for i in theme_values %}
+                     {% if i != room.theme %}
+                     <option value="{{ i }}">{% include 'KamranGram/choice-theme-option.html' %}</option>
+                     {% else %}
+                         <option value="{{ i }}" selected>{% include 'KamranGram/choice-theme-option.html' %}</option>
+                     {% endif %}
+                {% endfor %}
             </select>
         </span>
         </div>
         <div style="margin-top:15px;">
             <span class="bottom-inline" style="margin-bottom:3px;">Доступность для поиска</span>
             {% if room.is_searchable %}
-                 <input type="checkbox" name="is_searchable" checked >
+                 <input class="form-check-input" type="checkbox" name="is_searchable" checked >
             {% else %}
-                 <input type="checkbox" name="is_searchable" checked >
+                 <input class="form-check-input" type="checkbox" name="is_searchable">
             {% endif %}
+        </div>
+        <div style="margin-top:10px;">
+            <span class="bottom-inline" style="margin-bottom:3px;">Лимит учасников:</span>
+            <span class="inline">
+                <input type="number" name="limit_members" value="{{ room.limit_members }}" class="form-control" min="{{ room.members.count }}" required style="width:66.5px;height:25px">
+            </span>
         </div>
         {% else %}
             <span style="margin-bottom:3px">Описание:</span>
@@ -153,40 +162,79 @@
             <div style="margin-top:15px;">
                 <span class="bottom-inline" style="margin-bottom:3px">Тема:</span>
                 <span class="inline">
-                    <select class="form-control form-control-sm" name="theme" id="id_theme" disabled style="width:100px;height:10px;">
-                        <option value="#1bc3e0">Голубая</option>
+                    <select class="form-control form-control-sm" name="theme" style="width:100px;height:10px;" disabled>
+                        {% for i in theme_values %}
+                            {% if i != room.theme %}
+                                <option value="{{ i }}">{% include 'KamranGram/choice-theme-option.html' %}</option>
+                        {% else %}
+                                <option value="{{ i }}" selected>{% include 'KamranGram/choice-theme-option.html' %}</option>
+                        {% endif %}
 
-                        <option value="#cc1d1f">Красная</option>
-
-                        <option value="#141214">Темная</option>
-
-                        <option value="#06d606">Зеленая</option>
-
-                        <option value="#ab09e0">Фиолетовая</option>
+                        {% endfor %}
                     </select>
                 </span>
             </div>
         <div style="margin-top:15px;">
             <span class="bottom-inline" style="margin-bottom:3px;">Доступность для поиска</span>
             {% if room.is_searchable %}
-                 <input type="checkbox" name="is_searchable" disabled checked >
+                 <input class="form-check-input" type="checkbox" name="is_searchable" disabled checked >
             {% else %}
-                 <input type="checkbox" name="is_searchable" disabled checked >
+                 <input class="form-check-input" type="checkbox" name="is_searchable" disabled>
             {% endif %}
         </div>
-        {% endif %}
         <div style="margin-top:10px;">
-            <span class="bottom-inline" style="margin-bottom:3px;">Количевство участников: {{ room.members.count }}</span>
+            <span class="bottom-inline" style="margin-bottom:3px;">Лимит учасников:</span>
+            <span class="inline">
+                <input type="number" name="limit_members" value="{{ room.limit_members }}" class="form-control" min="{{ room.members.count }}" disabled required style="width:66.5px;height:25px">
+            </span>
         </div>
-        <a href="#">Подробнее</a>
+        {% endif %}
 
+        <a id="open-members-info-btn" href="" style="font-size:14px;">Подробнее</a>
+        <a id="close-members-info-btn" href="" style="font-size:14px;" class="hidden">Подробнее</a>
+        <br>
+        <br>
+        {% if user == room.creator %}
+                <button type="submit" class="btn-sm btn text-white" style="background:#7543d9;">Сохранить изменения</button>
+        {% endif %}
     </form>
     <br>
-    <br>
-    <a href="#"  class="enter-room-btn">
+    <a href="{% url 'logout_room' room.id %}"  class="enter-room-btn">
         <i class="fa-solid fa-right-from-bracket"></i> Выйти из комнаты
     </a>
 
+</div>
+<div id="room-members-info-div" class="rounded-l-lg border border-gray members-div section hidden" style="overflow-y: scroll;">
+    <span class="fs-6" style="font-weight:bold">Все участники {{ room.members.count }}</span>
+    <span class="text-muted" style="margin:0;padding:0;">________________________________</span>
+    <div>
+    {% for member in room.members.all %}
+        <a href="{% url 'articles-channel' member.id %}" style="text-decoration:none">
+            <div class="member-div rounded text-white ">
+                <span class="inline">
+                    <img src="{{ member.avatar.url }}" width="27px;" class="rounded-full">
+                </span>
+                <span>
+                    {{ member.username }}
+                </span>
+                {% if member == room.creator %}
+                <span style="">
+                     <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
+                </span>
+                {% else %}
+                  {% if user == room.creator %}
+                     <span >
+                         <a href="{% url 'delete_member' room.id member.id %}" style="position:absolute;right:15px;">
+                             <i class="fa-regular fa-trash-can fa-beat" style="color: #b22424;"></i>
+                         </a>
+                     </span>
+                {% endif %}
+                {% endif %}
+            </div>
+        </a>
+
+    {% endfor %}
+   </div>
 </div>
 <div id="create-div" class="rounded-xl border border-gray-300 hidden">
     <span class="fs-5" style="font-weight:bold;margin:0;padding:0;">Создать</span>
@@ -198,7 +246,7 @@
 <div id="profile-menu-div" class="profile-menu-div rounded-xl border border-gray hidden">
     <img src="{{ request.user.avatar.url }}" class="rounded-full inline" width="27px" style="position:relative;bottom:2.5px;">
     <h6 class="inline">{{ user.username }}</h6>
-    <button id="close-profile-menu-submit" class="x-btn rounded-xl hidden" style="position:relative;bottom:5px;left:67px;"><i class="fa-solid fa-xmark text-white"></i></button>
+    <button id="close-profile-menu-submit" class="x-btn rounded-xl hidden" style="position:absolute;top:4px;right:5px;"><i class="fa-solid fa-xmark text-white"></i></button>
     <a href="{% url 'articles-channel' request.user.id %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-house"></i> Мой канал</div></a>
     <a href="{% url 'profile' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-pencil"></i> Изменить профиль</div></a>
     <a href="{% url 'session_logout' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-right-from-bracket"></i> Выйти</div></a>
@@ -222,6 +270,62 @@
 
     <script src="{% static 'main/js/room.js' %}"></script>
 
+    <script>
+      const openRoomInfoButton = document.querySelector("#open-room-info-btn")
+      const closeRoomInfoButton = document.querySelector("#close-room-info-btn")
+
+      const openRoomMembersInfoButton = document.querySelector("#open-members-info-btn")
+      const closeRoomMembersInfoButton = document.querySelector("#close-members-info-btn")
+
+
+      const roomInfoDiv = document.querySelector("#room-info-div")
+      const roomMembersInfoDiv = document.querySelector("#room-members-info-div")
+
+      console.log(openRoomInfoButton)
+      console.log(closeRoomInfoButton)
+      console.log(roomInfoDiv)
+
+      openRoomInfoButton.onclick = function(e) {
+         e.preventDefault()
+
+         closeRoomInfoButton.classList.remove('hidden')
+         openRoomInfoButton.classList.add('hidden')
+         roomInfoDiv.classList.remove('hidden')
+
+         return false
+      }
+
+      closeRoomInfoButton.onclick = function(e) {
+         e.preventDefault()
+
+         closeRoomInfoButton.classList.add('hidden')
+         openRoomInfoButton.classList.remove('hidden')
+         roomMembersInfoDiv.classList.add('hidden')
+         roomInfoDiv.classList.add('hidden')
+
+         return false
+      }
+
+      openRoomMembersInfoButton.onclick = function(e) {
+         e.preventDefault()
+
+         roomMembersInfoDiv.classList.remove('hidden')
+         openRoomMembersInfoButton.classList.add('hidden')
+         closeRoomMembersInfoButton.classList.remove('hidden')
+
+         return false
+      }
+
+      closeRoomMembersInfoButton.onclick = function(e) {
+         e.preventDefault()
+
+         roomMembersInfoDiv.classList.add('hidden')
+         openRoomMembersInfoButton.classList.remove('hidden')
+         closeRoomMembersInfoButton.classList.add('hidden')
+
+         return false
+      }
+    </script>
     <script>
       const roomID = JSON.parse(document.getElementById('room-id').textContent);
       const lastMessageSpan = document.querySelector("#last_message_{{room.id}}")

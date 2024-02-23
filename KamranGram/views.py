@@ -86,6 +86,34 @@ def login_room(request, room_id):
 
 
 @login_required
+def logout_room(request, room_id):
+    current_room = Room.objects.get(id=room_id)
+    if current_room.members.get(id=request.user.id):
+        current_room.members.remove(request.user)
+    return HttpResponseRedirect(reverse('rooms'))
+
+
+@login_required
+def delete_member(request, room_id, member_id):
+    current_room = Room.objects.get(id=room_id)
+    if current_room.members.get(id=member_id):
+        member = current_room.members.get(id=member_id)
+        current_room.members.remove(member)
+    return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
+
+
+def update_room(request, room_id):
+    current_room = Room.objects.get(id=room_id)
+
+    current_room.is_searchable = True if request.POST.get('is_searchable') == 'on' else False
+    current_room.limit_members = request.POST.get('limit_members')
+    current_room.description = request.POST.get('description')
+    current_room.theme = request.POST.get('theme')
+    current_room.save()
+    return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
+
+
+@login_required
 def delete_message(request, message_id):
     message = Message.objects.get(id=message_id)
     if request.user != message.sender and not request.user.is_staff:
@@ -101,9 +129,8 @@ def change_message(request, message_id):
     if request.user != message.sender and not request.user.is_staff:
         raise forms.ValidationError('Вы не можете изменять чужие сообщения')
     room_id = message.room.id
-    message.content = request.POST.get('changed_message', 'None')
-    message.is_changed = True
-    message.save()
+    if request.method == 'POST':
+        message.content = request.POST.get('changed_message', 'None')
+        message.is_changed = True
+        message.save()
     return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
-
-

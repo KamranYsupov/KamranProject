@@ -23,7 +23,7 @@ class RoomMixin(BaseMixin, LoginRequiredMixin):
                             .annotate(last_message=Max('room_messages'))
                             .order_by('-last_message')
                             )
-
+        context['theme_values'] = ['#141214', '#1bc3e0', '#cc1d1f', '#06d606', '#ab09e0']
         context['KamranGram'] = True
 
         return context
