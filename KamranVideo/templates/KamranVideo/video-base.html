@@ -34,13 +34,12 @@
            <div id="profile-menu-div" class="profile-menu-div rounded-xl border border-gray hidden">
                <img src="{{ request.user.avatar.url }}" class="rounded-full inline" width="27px" style="position:relative;bottom:2.5px;">
                <h6 class="inline">{{ user.username }}</h6>
-               <button id="close-profile-menu-submit" class="x-btn rounded-xl hidden" style="position:relative;bottom:5px;left:67px;"><i class="fa-solid fa-xmark text-white"></i></button>
+               <button id="close-profile-menu-submit" class="x-btn rounded-xl hidden" style="position:absolute;top:4px;right:5px;"><i class="fa-solid fa-xmark text-white"></i></button>
                <a href="{% url 'articles-channel' request.user.id %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-house"></i> Мой канал</div></a>
                <a href="{% url 'profile' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-pencil"></i> Изменить профиль</div></a>
                <a href="{% url 'session_logout' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-right-from-bracket"></i> Выйти</div></a>
            </div>
-
-       {% endif %}
+    {% endif %}
     {% else %}
        <span style="position:absolute;left:1070px;top:20px;"><a href="{% url 'session_login' %}">Войти</a> | <a href="{% url 'register' %}">Регистрация</a></span></p>
     {% endif %}

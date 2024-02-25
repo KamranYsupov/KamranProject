@@ -21,10 +21,8 @@
 
 {% endblock %}
 
-{% block more %}
-<br>
-<br>
-<br>
+{% block rooms %}
+
 <div class="chat-aside inline">
     {% for room in rooms %}
        <a href="{% url 'room' room.id %}" class="text-none text-white">
@@ -83,8 +81,8 @@
                       {% else %}
                           <div style="text-align:right">
                               <span class="text-break stranger-message rounded-xl inline" style="text-align:left">
-                                  <span class="text-muted" style="font-size:13px">
-                                      {{ message.sender.username }}
+                                  <span class="text-muted" style="font-size:13px;">
+                                          {{ message.sender.username }}{% if message.is_changed %}<span style="font-size:13px;color:gray" > (изменено)</span>{% endif %}
                                   </span>
                                   <br>
                                   {{ message.content }}<br>

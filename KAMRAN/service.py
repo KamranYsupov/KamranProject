@@ -11,5 +11,7 @@ def like(request, obj):
         obj.likes.remove(request.user)
     else:
         obj.likes.add(request.user)
+        obj.views += 1
+        obj.save()
 
     return redirect(settings.PROJECT_URL + request.POST.get('url_from'))

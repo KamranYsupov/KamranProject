@@ -133,6 +133,7 @@ class ArticleSearch(BaseMixin, ListView):
                             .filter(Q(is_published=True) &
                                     (Q(title__iregex=article_search) |
                                      Q(slug__iregex=article_search) |
+                                     Q(content__iregex=article_search) |
                                      Q(author__username__iregex=article_search)))
                             )
         context['article_search'] = article_search

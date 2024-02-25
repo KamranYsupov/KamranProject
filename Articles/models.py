@@ -14,6 +14,7 @@ class Article(models.Model):
         (1, PUBLISHED),
         (0, ARCHIVE),
     )
+
     title = models.CharField(max_length=50, db_index=True, verbose_name='Заголовок')
     slug = models.SlugField(unique=True, db_index=True, max_length=50, verbose_name='URL')
     content = models.TextField(verbose_name='Контент')

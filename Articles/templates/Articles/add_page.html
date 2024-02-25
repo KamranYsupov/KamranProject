@@ -7,11 +7,14 @@
 {% block content %}
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <hr>
-    <p>
-        <button type="submit" class="btn btn-success">Добавить</button>
-    </p>
+    <div class="add-object-form rounded-xl">
+        {{ form.as_p }}
+        <hr>
+        <p>
+            <button type="submit" class="btn btn-dark active">Добавить</button>
+        </p>
+    </div>
+
 </form>
 <hr>
 {% endblock %}

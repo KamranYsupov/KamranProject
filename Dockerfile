@@ -2,10 +2,12 @@ FROM python:3.10
 
 
 COPY . /KAMRAN
+COPY ./requirements.txt /temp/requirements.txt
 WORKDIR /KAMRAN
 EXPOSE 8000
 
-#RUN apk add postgresql-client build-base postgresql-dev
-RUN pip install -r ./requirements.txt
+RUN  pip install --upgrade pip
 
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN pip install -r /temp/requirements.txt
+
+

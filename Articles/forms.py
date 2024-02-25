@@ -1,11 +1,10 @@
-from captcha.fields import CaptchaField
 from django import forms
 
+from users.forms import default_widget
 from .models import Article
 
 
 class AddPageForm(forms.ModelForm):
-   # captcha = CaptchaField(label="Введите текст с картинки")
 
     class Meta:
         model = Article
@@ -19,9 +18,18 @@ class AddPageForm(forms.ModelForm):
         }
 
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'slug': forms.TextInput(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'cols': 40, 'rows': 3}),
+            'title': forms.TextInput(attrs=default_widget | {'placeholder': 'Заголовок'}),
+            'slug': forms.TextInput(attrs=default_widget | {'placeholder': 'URL'}),
+            'content': forms.Textarea(
+                attrs=default_widget |
+                      {
+                          'placeholder': 'Контент(не обязательно):',
+                          'cols': 40,
+                          'rows': 3
+                      }
+            ),
+            'photo': forms.FileInput(attrs=default_widget | {'class': 'form-control-sm'}),
+            'is_published': forms.Select(attrs=default_widget | {'class': 'form-control-sm'}),
         }
 
 
@@ -44,19 +52,3 @@ class EditPageForm(AddPageForm):
             'slug': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control', 'cols': 40, 'rows': 20}),
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

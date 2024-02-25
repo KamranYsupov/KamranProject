@@ -9,7 +9,7 @@
 {% block content %}
     {% if post.content %}
        {% if post.photo %}
-            <a href="{{ post.photo.url }}">
+            <a href="{{ post.photo.url }}" style="text-decoration: none;">
                 <span class="inline"><img src="{{ post.photo.url }}" style="width:300px;vertical-align:top;" class="rounded-xl "></span>
             </a>
             <span class="text-white text-break inline" style="width:550px;">{{ post.content }}</span>

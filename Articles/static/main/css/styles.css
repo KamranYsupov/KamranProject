@@ -96,7 +96,7 @@ ul {
 .title {
    position: relative;
    margin-left: 75px;
-   }
+}
 
 
 .main-main {
@@ -222,7 +222,6 @@ form {
 .background-chat {
    height: 470.5px;
    background-color: black;
-   margin:0;
    padding:0;
    width: 725px;
    background-image: url("https://avatars.mds.yandex.net/i?id=8868dcc8abd96f16c271d8aef9d037ff8278da11-9683943-images-thumbs&n=13");
@@ -392,21 +391,21 @@ input, textarea {
 }
 
 .first-chat-div {
-   width: 234px;
+   width: 223px;
    height: 85px;
    background: #383838;
    border-top: 1px solid gray;
    border-bottom: 1px solid gray;
-   border-right: 3px solid gray;
+   border-right: 2.5px solid gray;
 }
 
 .chat-div {
-   width: 234px;
+   width: 223px;
    height: 85px;
    background: #141214;
    border-top: 1px solid gray;
    border-bottom: 1px solid gray;
-   border-right: 3px solid gray;
+   border-right: 2.5px solid gray;
    }
 
 .chat-div:hover {
@@ -416,7 +415,7 @@ input, textarea {
 
 .chat-aside {
     width: 205px;
-    margin: 0 0 0 21%;
+    margin-top: 74px;
 }
 
 .chat {
@@ -531,6 +530,13 @@ input, textarea {
 }
 
 .auth-form {
+   padding: 20px;
+   width: 500px;
+   margin: 0 0 0 140px;
+   background: #242424;
+}
+
+.add-object-form {
    padding: 20px;
    width: 500px;
    margin: 0 0 0 140px;

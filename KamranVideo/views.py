@@ -41,15 +41,12 @@ class CreateVideo(BaseMixin, CreateView):
 
 
 class WatchVideo(DetailView, BaseMixin, CreateView):
-    queryset = related_video_queryset
+    model = Video
     form_class = AddCommentForm
     template_name = 'KamranVideo/watch.html'
     context_object_name = 'video'
     pk_url_kwarg = 'video_id'
     title = 'Просмотр видео'
-    extra_context = {
-        'videos': related_video_queryset,
-    }
 
     def get_context_data(self, **kwargs):
         video = kwargs['object']
@@ -65,6 +62,7 @@ class WatchVideo(DetailView, BaseMixin, CreateView):
                           .order_by('-likes_count'))
 
         context = super().get_context_data(**kwargs)
+        context['videos'] = related_video_queryset
         context['video_comments'] = video_comments
         context['reply_form'] = ReplyCommentForm
         return context

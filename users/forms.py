@@ -51,7 +51,7 @@ class RegisterUserForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'email', 'first_name', 'last_name', 'date_birth', 'password1', 'password2',
+        fields = ['username', 'email', 'first_name', 'last_name', 'avatar', 'date_birth', 'password1', 'password2',
                   'is_subscribed_on_quotes', 'is_subscribed_on_weather']
         labels = {
             'email': 'E-mail',
@@ -60,11 +60,13 @@ class RegisterUserForm(UserCreationForm):
         }
 
         widgets = {
+            'avatar': forms.FileInput(attrs=default_widget | {'class': 'form-control-sm'}),
             'email': forms.TextInput(attrs=default_widget | {'placeholder': 'name@example.com'}),
             'first_name': forms.TextInput(attrs=default_widget | {'placeholder': 'Имя'}),
             'last_name': forms.TextInput(attrs=default_widget | {'placeholder': 'Фамилия'}),
             'is_subscribed_on_quotes': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_subscribed_on_weather': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+
         }
 
 

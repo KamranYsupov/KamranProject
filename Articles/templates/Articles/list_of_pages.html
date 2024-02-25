@@ -38,7 +38,8 @@
         {% else %}
             <p class="text-white inline">Пользователь удален {% include 'Articles/like_percent.html' %}</p>
         {% endif %}
-        <h4 class="text-white">{{ post.title }}</h4>
+       <span style="float:right;font-size:13px;" class="text-muted bottom-inline">{{ post.time_create|timesince }} назад</span>
+            <h4 class="text-white">{{ post.title }}</h4>
             <div class="text-white text-break">
                 {% if post.content|length > 500 %}
                      {{ post.content|slice:497|truncatewords:35 }}...
@@ -48,7 +49,7 @@
             </div>
         <p>
           {% if post.photo %}
-                 <img src="{{ post.photo.url }}" style="margin:10px 0 0 10px;width:420px;" class="rounded-xl">
+                 <img src="{{ post.photo.url }}" style="margin:10px 0 0 10px;width:435px;" class="rounded-xl">
           {% endif %}
            {% include 'Articles/like-form.html' %}
             <span style="margin-left:5px;font-size:15px;" class="text-muted">
@@ -74,7 +75,6 @@
                {% endif %}
 
             </div>
-            <span style="margin-left:320px;font-size:13px;" class="text-muted">{{ post.time_create|timesince }} назад</span>
         </p>
         </div>
       </li><br>

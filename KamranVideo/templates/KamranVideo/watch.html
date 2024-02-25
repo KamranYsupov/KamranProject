@@ -32,17 +32,17 @@
         <hr>
         {% if video.description %}
            <h4>Описание</h4>
-              <div id="desc">
-                  {% if ' ' not in video.description %}
-                      {{video.description|slice:50}}
-                  {% else %}
-                      {{video.description|linebreaks|truncatewords:30}}
+              <div id="desc" class="text-white">
                   {% if video.description|length > 200 %}
-                      <button id="show-desc">Открыть</button>
-                  {% endif %}
+                  <span class="text-break inline">{{video.description|slice:200}}...
+                      <button id="show-desc" class="text-muted" style="font-size:14px;">Открыть</button>
+                  </span>
+
                   {% endif %}
               </div>
-        <div id="full-desc" class="hidden">{{video.description|linebreaks}}<button id="hide-desc">Скрыть</button></div>
+        <span id="full-desc" class="text-break inline hidden">{{video.description}}<br>
+                      <button id="hide-desc" class="text-muted" style="font-size:14px;">Скрыть</button>
+        </span>
         {% endif %}
 <p class="text-muted">_____________________________________________________________________________________________________________</p>
 <h3 style="position:static">Комментарии</h3>
@@ -159,7 +159,7 @@
 
 {% block more %}
 <aside class="video-menu">
-{% if videos|length > 1 %}
+{% if videos %}
     {% for i in videos %}
     {% if video.id != i.id %}
     <a href="{% url 'watch' i.id %}" style="text-decoration: none;">

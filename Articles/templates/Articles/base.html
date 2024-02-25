@@ -80,8 +80,9 @@
 </div>
 {% block more %}{% endblock %}
 <main class="main-main">
+{% block rooms %}{% endblock %}
 {% include 'Articles/br.html' %}
-{% block content %} {% endblock %}
+{% block content %}{% endblock %}
 </main>
     <script src="{% static 'main/js/base.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

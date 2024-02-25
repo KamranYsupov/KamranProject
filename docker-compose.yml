@@ -7,15 +7,23 @@ services:
     volumes:
       - ./:/KAMRAN
     environment:
-      - DB_HOST=database
+      - DB_HOST=postgres
       - DB_NAME=dbname
       - DB_USER=dbuser
       - DB_PASS=pass
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
     depends_on:
+      - postgres
       - redis
 
+  postgres:
+    image: postgres:14.6-alpine
+    environment:
+      - POSTGRES_DB=dbname
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_HOST_AUTH_METHOD=trust
 
   redis:
     image: redis:7.0.11-alpine
@@ -32,7 +40,7 @@ services:
       - ./:/KAMRAN
 
     environment:
-      - DB_HOST=database
+      - DB_HOST=postgres
       - DB_NAME=dbname
       - DB_USER=dbuser
       - DB_PASS=pass
@@ -42,6 +50,7 @@ services:
     links:
       - redis
     depends_on:
+      - postgres
       - redis
 
   flower:
@@ -55,6 +64,7 @@ services:
     links:
       - redis
     depends_on:
+      - postgres
       - redis
     ports:
       - '5555:5555'
