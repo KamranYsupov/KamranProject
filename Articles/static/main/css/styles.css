@@ -137,7 +137,7 @@ form {
    padding: 20px 20px 0 20px;
    border-width: 0.1px;
    border-color: gray;
-
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .channel-post {
@@ -147,6 +147,7 @@ form {
    padding: 20px;
    border-width: 0.1px;
    border-color: gray;
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .chat-page{
@@ -224,8 +225,9 @@ form {
    background-color: black;
    padding:0;
    width: 725px;
-   background-image: url("https://avatars.mds.yandex.net/i?id=8868dcc8abd96f16c271d8aef9d037ff8278da11-9683943-images-thumbs&n=13");
-   }
+   /*background-image: url("https://avatars.mds.yandex.net/i?id=8868dcc8abd96f16c271d8aef9d037ff8278da11-9683943-images-thumbs&n=13");
+   */
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;}
 
 .own-message {
    padding: 5px;
@@ -262,8 +264,8 @@ form {
    padding: 10px;
    margin-left: 20px ;
    vertical-align: top;
-
-   }
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
 
 .video-div-for-channel {
    display: inline-block;
@@ -272,6 +274,7 @@ form {
    padding: 10px;
    margin: 10px 0 0 25px;
    vertical-align: top;
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .search-div {
    position: absolute;
@@ -311,7 +314,7 @@ form {
 }
 
 .theme-green {
-   background-image: url('/media/KamranGram/chat-themes/green-theme.jpg')
+   background-image: url('/media/KamranGram/chat-themes/green-theme.png')
 }
 
 .theme-purple {
@@ -692,7 +695,22 @@ input, textarea {
     background: #3b3a3b;
 }
 
+.search-chat {
+   background: #141214;
+   padding: 5px;
+   width: 650px;
+   height: 80px;
+   margin: 2.5px 0 0 120px;
 
+
+}
+
+.room_description {
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+   font-size: 14px;
+   width: 250px;
+   margin: 20px 0 0 175px;
+}
 html {
 ::-webkit-scrollbar-track
 {
@@ -720,6 +738,8 @@ html {
 
 }
 }]
+
+
 
 
 

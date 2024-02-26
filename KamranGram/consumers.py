@@ -13,7 +13,6 @@ class KamranGramConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_id = int(self.scope['url_route']['kwargs']['room_id'])
         self.room_group_name = f'room_{self.room_id}'
-        print(self.room_group_name)
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -56,7 +55,6 @@ class KamranGramConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def save_message(self, message, username, room_id):
-        print(username, room_id, "----------------------", message)
         sender = get_user_model().objects.get(username=username)
         room = Room.objects.get(id=room_id)
 

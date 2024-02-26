@@ -16,7 +16,7 @@ class User(AbstractUser):
         upload_to='users/avatars/',
         validators=[FileExtensionValidator(
             allowed_extensions=['jpg', 'jpeg', 'png', 'svg']
-        )], default='users/avatars_default/nursultan.jpeg',
+        )], default='users/avatars_default/default_avatar.png',
         verbose_name='Фото профиля')
     date_birth = models.DateField('Дата рождения', null=True)
     is_subscribed_on_quotes = models.BooleanField(

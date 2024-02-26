@@ -17,7 +17,7 @@ class LoginUserForm(AuthenticationForm):
 
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(
         attrs=default_widget | {'placeholder': 'Пароль'}))
- 
+
     class Meta:
         model = get_user_model()
         fields = ['username', 'password']
@@ -27,6 +27,9 @@ class RegisterUserForm(UserCreationForm):
     username = forms.CharField(label='Имя пользователя', max_length=50, min_length=3,
                                widget=forms.TextInput(
                                    attrs=default_widget | {'placeholder': 'Имя пользователя'}))
+    email = forms.EmailField(label='E-mail', required=True,
+                             widget=forms.EmailInput(
+                                 attrs=default_widget | {'placeholder': 'name@example.com'}))
 
     password1 = forms.CharField(label='Пароль', max_length=20, min_length=6,
                                 widget=forms.PasswordInput(

@@ -46,8 +46,8 @@
 </div>
 <div class="chat inline">
                   <div class="background-chat {% include 'KamranGram/choice-theme.html' %}" id="chatbox" style="overflow-y: scroll;">
+                      <div class="room_description text-white text-break">{{room.description}}</div>
                       {% if messages %}
-                      <b class="text-muted text-break">{{room.description}}</b>
                       {% for message in messages %}
                         {% if message.sender == request.user %}
                            <blockquote>
@@ -71,7 +71,7 @@
                                               <button id="open_change_message_btn" class="change_message_btn">Изменить</button>
                                               <a href="{% url 'delete_message' message.id %}" class="delete_message_btn" style="text-decoration: none;">Удалить</a>
                                   </span>
-                                  <form action="{% url 'change_message' message.id %}" method="post" class="change_message_form hidden">
+                                  <form action="{% url 'change_message' message.id %}" method="post" class="change_message_form rounded-xl hidden">
                                       {% csrf_token %}
                                       <input type="text" value="{{ message.content }}" name="changed_message" maxlength="2050" class="form-control inline" placeholder="Сообщение" style="background: #141214;border-color: #141214;color:white;width:150px;height:30px;">
                                       <button type="submit" class="btn btn-sm btn-dark inline">Изменить</button>
@@ -197,8 +197,11 @@
         {% endif %}
     </form>
     <br>
+    <button id="enter-room-btn">     </button>
     <a href="{% url 'logout_room' room.id %}"  class="enter-room-btn">
-        <i class="fa-solid fa-right-from-bracket"></i> Выйти из комнаты
+
+            <i class="fa-solid fa-right-from-bracket"></i> Выйти из комнаты
+
     </a>
 
 </div>

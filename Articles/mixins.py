@@ -3,20 +3,16 @@ import datetime
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 
-from KAMRAN import settings
-
 
 class BaseMixin:
     login_url = reverse_lazy('session_login')
 
-    default_avatar = settings.DEFAULT_AVATAR
     title = None
     extra_context = {}
 
     def __init__(self):
         if self.title:
             self.extra_context['title'] = self.title
-        self.extra_context['default_avatar'] = self.default_avatar
 
 
 class ArticlesMixin(BaseMixin, ListView):

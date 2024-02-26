@@ -58,7 +58,7 @@ class CreateRoom(BaseMixin, CreateView):
 
 class RoomSearch(BaseMixin, ListView):
     model = Room
-    template_name = 'KamranGram/rooms.html'
+    template_name = 'KamranGram/search_rooms.html'
     title = 'KamranGram'
 
     def get_context_data(self, *, object_list=None, **kwargs):

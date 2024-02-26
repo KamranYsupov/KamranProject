@@ -92,8 +92,12 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3'
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('DB_HOST'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
+
     }
 }
 
@@ -155,7 +159,7 @@ REST_FRAMEWORK = {
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
-DEFAULT_AVATAR = MEDIA_URL + '/users/avatars_default/nursultan.jpeg'
+DEFAULT_AVATAR = MEDIA_URL + '/users/avatars_default/default_avatar.jpeg'
 
 MAX_IMAGE_MEMORY_SIZE = 2621440
 MAX_VIDEO_MEMORY_SIZE = 214958080

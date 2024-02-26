@@ -40,7 +40,7 @@ class Room(models.Model):
         validators=[FileExtensionValidator(
             allowed_extensions=['jpg', 'jpeg', 'png', 'svg']
         )],
-        default='KamranGram/room_avatars/default_group.png'
+        default='KamranGram/room_avatars/default_group.jpg'
     )
 
     class Meta:

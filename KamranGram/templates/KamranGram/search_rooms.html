@@ -1,0 +1,39 @@
+{% extends 'Articles/base.html' %}
+
+{% block title %}Поиск "{{room_search}}"{% endblock %}
+
+{% block header %}
+   <span class="fs-3" style="margin-left:10px;">{{title}}</span>
+   <form action="{% url 'room_search' %}" method="get" class="search">
+       <input style="height:36.5px;width:450px;background:#141214;color:white;" type="text" name="room_search" placeholder="   Поиск комнаты" class="border border-gray rounded-l-lg">
+       <button class=" search-div border border-gray rounded-r-lg"><p style="position:relative;bottom:4px;">🔍</p></button>
+   </form>
+{% endblock %}
+
+{% block rooms %}
+<br>
+<br>
+<br>
+
+{% if rooms %}
+<div>
+    {% for room in rooms %}
+       <a href="{% url 'login_room' room.id %}" class="text-none text-white">
+
+           <div class="search-chat rounded-xl">
+               <span>
+                   <img src="{{ room.room_avatar.url }}" width="70px" class="rounded-full inline">
+                   <div class="inline">
+                       <span style="font-weight:bold;">{{room.name}}</span>
+                       <br>
+                       <span>Пресоединиться</span>
+                   </div>
+               </span>
+           </div>
+       </a>
+
+    {% endfor %}
+</div>
+{% else %}
+{% endif %}
+{% endblock %}
