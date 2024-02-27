@@ -1,5 +1,7 @@
+from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import Group
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
@@ -16,6 +18,8 @@ from .forms import LoginUserForm, RegisterUserForm, ProfileUserForm, PasswordCha
 from .mixins import ChannelMixin, ArticlesChannelMixin
 # from .serializers import UserSerializer
 from .tasks import send_mail_by_register, send_random_quotes, send_weather_mail
+
+User = get_user_model()
 
 
 class LoginUser(BaseMixin, LoginView):

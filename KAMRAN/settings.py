@@ -4,6 +4,7 @@ from pathlib import Path
 import debug_toolbar.middleware
 import django.core.mail.backends.smtp
 import rest_framework.renderers
+import social_core.backends.github
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,7 +18,7 @@ SECRET_KEY = 'django-insecure-g$&-jl*k^#pxbccd0s*43vua6jm_sc@_b_h7is^60jaj83+_gm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1']
 INTERNAL_IPS = ['127.0.0.1']
 
 PROJECT_URL = 'http://localhost:8000'
@@ -37,7 +38,8 @@ INSTALLED_APPS = [
     'captcha',
     'djoser',
     'debug_toolbar',
-    # 'cachalot',
+    'social_django',
+    'cachalot',
 
     'Articles',
     'KamranGram',
@@ -101,6 +103,7 @@ DATABASES = {
     }
 }
 
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -121,6 +124,30 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'users.User'
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.github.GithubOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+SOCIAL_AUTH_GITHUB_KEY = '8d6e7d4cbec9cd11c060'
+SOCIAL_AUTH_GITHUB_SECRET = 'f1371ae4d62a726500a821d018f407fc96636b3a'
+
+SOCIAL_AUTH_GITHUB_SCOPE = ['user:email']
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'users.pipeline.auth_user_form_social',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

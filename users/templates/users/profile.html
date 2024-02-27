@@ -16,17 +16,25 @@
             <label for="{{ form.avatar.id }}">{{ form.avatar.label }}</label>
             <input type="file" name="{{ form.avatar.name }}" value="{{ form.avatar.value }}" class="form-control" style="color: white;background: #141214;border-color: #141214;" required id="{{ form.avatar.id }}">
         </p>
+        <p>
+            <label for="{{ form.username.id }}">{{ form.username.label }}</label>
+            <input type="{{ form.username.type }}" name="{{ form.username.name }}" value="{{ form.username.value }}" class="form-control" style="color: white;background: #141214;border-color: #141214;" disabled id="{{ form.username.id }}">
+        </p>
+        <p>
+            <label for="{{ form.email.id }}">{{ form.email.label }}</label>
+            <input type="{{ form.email.type }}" name="{{ form.email.name }}" value="{{ form.email.value }}" class="form-control" style="color: white;background: #141214;border-color: #141214;" disabled id="{{ form.email.id }}">
+        </p>
           {% for i in form %}
-             {% if i != form.is_subscribed_on_quotes and i != form.is_subscribed_on_weather and i != form.avatar %}
+             {% if i != form.is_subscribed_on_quotes and i != form.is_subscribed_on_weather and i != form.avatar and i != form.username and i != form.email %}
                   {% if i != form.date_birth %}
                       <p>
                           <label for="{{ i.id }}">{{ i.label }}</label>
-                          <input type="{{ i.type }}" name="{{ i.name }}" value="{{ i.value }}" class="form-control" style="color: white;background: #141214;border-color: #141214;" required id="{{ i.id }}">
+                          <input type="{{ i.type }}" name="{{ i.name }}" value="{{ i.value }}" class="form-control" style="color: white;background: #141214;border-color: #141214;"  required id="{{ i.id }}">
                       </p>
                   {% else %}
                       <p>
                           <label for="{{ form.date_birth.id }}">{{ form.date_birth.label }}</label>
-                          <input type="date" name="{{ form.date_birth.name }}" value="{{ form.date_birth.value|date_format }}" class="form-control" style="color: white;background: #141214;border-color: #141214;" required id="{{ form.date_birth.id }}">
+                          <input type="date" name="{{ form.date_birth.name }}" value="{{ form.date_birth.value|date_format }}"   class="form-control" style="color: white;background: #141214;border-color: #141214;" required id="{{ form.date_birth.id }}">
                       </p>
 
                   {% endif %}
@@ -43,7 +51,9 @@
         <button type="submit" class="btn btn-dark active">Сохранить</button>
         <br>
         <hr>
-        <a href="{% url 'password-change' %}">Сменить пароль</a>
+        {% if user not in perms.users.oauth %}
+            <a href="{% url 'password-change' %}">Сменить пароль</a>
+        {% endif %}
 
     </div>
 </form>

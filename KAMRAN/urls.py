@@ -16,6 +16,7 @@ urlpatterns = [
     path('KamranGram/', include('KamranGram.urls')),
     path('comments/', include('comments.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
+    path('social-auth/', include('social_django.urls', namespace='social')),
     # API
     path('api/v1/kamran-project/', include('api.urls', namespace='api')),
     path('api/v1/session_auth/', include('rest_framework.urls')),
