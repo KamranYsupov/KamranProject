@@ -3,7 +3,7 @@ import random
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 
-from KAMRAN.celery import app
+from kamranproject.celery import app
 from .lists import quotes_list
 
 

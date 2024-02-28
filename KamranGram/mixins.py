@@ -3,7 +3,7 @@ from django.db.models import Q, F, Max
 from django.views.generic import ListView
 from django.views.generic.base import ContextMixin
 
-from Articles.mixins import BaseMixin
+from articles.mixins import BaseMixin
 from KamranGram.models import Room
 
 

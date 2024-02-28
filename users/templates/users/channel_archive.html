@@ -3,7 +3,7 @@
 {% block channel_content %}
 {% include 'users/channel-menu.html' %}
 <div class="channel_right_aside rounded-xl inline">
-    <div class="followers_menu rounded-xl" style="margin-left:20px">
+    <div class="followers_menu rounded-xl" style="margin-left:20px;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
       <p class="rounded-xl" style="margin:0;padding:0;">Подписчики {{owner.followers.count}}</p>
         {% if followers %}
         {% for i in followers %}
@@ -23,7 +23,7 @@
         {% else %}
         {% endif %}
     </div>
-    <div class="followed_by_menu rounded-xl" style="margin-left:20px;margin-top:10px;">
+    <div class="followed_by_menu rounded-xl" style="margin-left:20px;margin-top:10px;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;  ">
       <p class="rounded-xl" style="margin:0;padding:0;">Подписки {{owner.followed_by.count}}</p>
         {% if followed_by %}
         {% for i in followed_by %}

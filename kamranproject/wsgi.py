@@ -1,5 +1,5 @@
 """
-WSGI config for KAMRAN project.
+WSGI config for kamranproject project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'KAMRAN.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kamranproject.settings')
 
 application = get_wsgi_application()

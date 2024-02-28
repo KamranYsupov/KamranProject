@@ -5,17 +5,20 @@
 {% block header %}
 <span class="page fs-3">{{title}}</span>
 <form action="{% url 'video_search' %}" method="get" style="position:absolute;left:380px;bottom:17px;">
-        <input style="height:36.5px;width:450px;background:#141214;" type="text" name="video_search" placeholder="   Поиск видео" class="rounded-l-lg">
-        <button class=" search-div border border-gray-300 rounded-r-lg"><p style="position:relative;bottom:4px;">Поиск</p></button>
+        <input style="height:36.5px;width:450px;background:#141214;" type="text" name="video_search" placeholder="   Поиск видео" class="border border-gray rounded-l-lg">
+        <button class=" search-div border border-gray rounded-r-lg"><p style="position:relative;bottom:4px;">Поиск</p></button>
 </form>
 {% endblock %}
 
 {% block content %}
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <hr>
-    <button class="btn btn-primary">Опубликовать</button>
+    <div class="rounded-xl auth-form">
+        {{ form.as_p }}
+        <hr>
+        <button class="btn btn-dark active">Опубликовать</button>
+    </div>
+
 </form>
 <hr>
 

@@ -112,15 +112,21 @@ class ProfileUserForm(forms.ModelForm):
 
 
 class PasswordChangeUserForm(PasswordChangeForm):
-    old_password = forms.CharField(label="Старый пароль",
-                                   min_length=6,
-                                   max_length=20,
-                                   widget=forms.PasswordInput(attrs=default_widget))
-    new_password1 = forms.CharField(label="Новый пароль",
-                                    min_length=6,
-                                    max_length=20,
-                                    widget=forms.PasswordInput(attrs=default_widget))
-    new_password2 = forms.CharField(label="Повторите пароль",
-                                    min_length=6,
-                                    max_length=20,
-                                    widget=forms.PasswordInput(attrs=default_widget))
+    old_password = forms.CharField(
+        label="Старый пароль",
+        min_length=6,
+        max_length=20,
+        widget=forms.PasswordInput(attrs=default_widget)
+    )
+    new_password1 = forms.CharField(
+        label="Новый пароль",
+        min_length=6,
+        max_length=20,
+        widget=forms.PasswordInput(attrs=default_widget)
+    )
+    new_password2 = forms.CharField(
+        label="Повторите пароль",
+        min_length=6,
+        max_length=20,
+        widget=forms.PasswordInput(attrs=default_widget)
+    )

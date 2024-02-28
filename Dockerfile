@@ -1,9 +1,9 @@
 FROM python:3.10
 
 
-COPY . /KAMRAN
+COPY . /kamranproject
 COPY ./requirements.txt /temp/requirements.txt
-WORKDIR /KAMRAN
+WORKDIR /kamranproject
 EXPOSE 8000
 
 RUN  pip install --upgrade pip

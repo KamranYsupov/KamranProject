@@ -4,7 +4,7 @@
 
 {% include 'users/channel-menu.html' %}
 <div class="channel_right_aside rounded-xl inline">
-    <div class="followers_menu rounded-xl" style="margin-left:20px;">
+    <div class="followers_menu rounded-xl" style="margin-left:20px;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
       <p class="rounded-xl" style="margin:0;padding:0;">Подписчики {{owner.followers.count}}</p>
         {% if followers %}
         {% for i in followers %}
@@ -23,7 +23,7 @@
         {% endfor %}
         {% endif %}
     </div>
-    <div class="followed_by_menu rounded-xl" style="margin-left:20px;margin-top:10px;">
+    <div class="followed_by_menu rounded-xl" style="margin-left:20px;margin-top:10px;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
       <p class="rounded-xl" style="margin:0;padding:0;">Подписки {{owner.followed_by.count}}</p>
         {% if followed_by %}
         {% for i in followed_by %}
@@ -49,7 +49,7 @@
        {% if post.is_published == True %}
         <div class="channel-post rounded-xl inline">
         <img src="{{ post.author.avatar.url }}" width="30px" class="inline rounded-full">
-            <p class="text-white inline"> {{ post.author.username }}<span style="margin-left:330px;"> {% include 'Articles/like_percent.html' %}</span></p>
+            <p class="inline"> {{ post.author.username }} {% include 'Articles/like_percent.html' %}</p><br>
         <h4 class="text-white">{{ post.title }}</h4>
         <p class="text-white text-break">{{ post.content|linebreaks|truncatewords:35 }}</p>
         <p>

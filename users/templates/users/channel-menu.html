@@ -1,10 +1,10 @@
 <div class="channel-menu">
-    <a href="{% url 'articles-channel' owner.id %}" class="channel-link rounded" style="{% if order == 'news' %}
+    <a href="{% url 'articles-channel' owner.id %}" class="channel-link rounded" style=" box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;{% if order == 'news' %}
     color:#0afca0{% endif %}">Новости</a>
-    <a href="{% url 'video-channel' owner.id %}" class="channel-link rounded" style="{% if order == 'videos' %}
+    <a href="{% url 'video-channel' owner.id %}" class="channel-link rounded" style=" box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;{% if order == 'videos' %}
     color:#0afca0{% endif %}">Видео</a>
     {% if request.user == owner %}
-       <a href="{% url 'archive-channel' owner.id %}" class="channel-link rounded" style="{% if order == 'archive' %}
+       <a href="{% url 'archive-channel' owner.id %}" class="channel-link rounded" style=" box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;{% if order == 'archive' %}
     color:#0afca0{% endif %}">Архив</a>
     {% endif %}
 </div>

@@ -10,8 +10,8 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, DetailView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from Articles.models import Article
-from Articles.mixins import BaseMixin
+from articles.models import Article
+from articles.mixins import BaseMixin
 from django.conf import settings
 from .forms import LoginUserForm, RegisterUserForm, ProfileUserForm, PasswordChangeUserForm
 

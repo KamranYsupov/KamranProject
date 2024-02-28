@@ -19,7 +19,7 @@ class ArticlesMixin(BaseMixin, ListView):
     paginate_by = 5
     queryset = None
     context_object_name = 'posts'
-    template_name = 'Articles/list_of_pages.html'
+    template_name = 'articles/list_of_pages.html'
     title = 'Новости'
     order = None
 

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from Articles.models import Article
-from api.Articles.mixins import read_article_url, base_fields, ArticleSerializerMixin
+from articles.models import Article
+from api.articles.mixins import read_article_url, base_fields, ArticleSerializerMixin
 
 
 class ArticlesListSerializer(ArticleSerializerMixin):

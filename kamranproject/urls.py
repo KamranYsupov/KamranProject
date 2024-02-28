@@ -9,7 +9,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('Articles.urls')),
+    path('', include('articles.urls')),
     path('users/', include('users.urls')),
     path('captcha/', include('captcha.urls')),
     path('KamranVideo/', include('KamranVideo.urls')),

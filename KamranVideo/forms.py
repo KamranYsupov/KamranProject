@@ -1,6 +1,7 @@
 from django import forms
 
 from comments.models import Comment
+from users.forms import default_widget
 from .models import Video
 
 
@@ -9,8 +10,20 @@ class AddVideoForm(forms.ModelForm):
         model = Video
         fields = ['title', 'video', 'preview', 'description']
 
+        widgets = {
+            'title': forms.TextInput(attrs=default_widget | {'placeholder': 'Название видео'}),
+            'video': forms.FileInput(
+                attrs=default_widget | {'placeholder': 'Видео'}),
+            'preview': forms.FileInput(
+                attrs=default_widget | {'placeholder': 'Превью'}),
+            'description': forms.Textarea(
+                attrs=default_widget | {'placeholder': 'Описание видео(необязательно)'}),
+        }
         labels = {
-
+            'title': 'Название',
+            'video': 'Видео',
+            'preview': 'Превью',
+            'description': 'Описание видео',
         }
 
 

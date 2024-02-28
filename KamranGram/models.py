@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
-from KAMRAN import settings
+from kamranproject import settings
 from users import my_models
 
 
@@ -25,8 +25,8 @@ class Room(models.Model):
         ('#ab09e0', PURPLE),
     ]
 
-    name = models.CharField(verbose_name='Название', db_index=True, max_length=20, unique=True)
-    creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, related_name='rooms',
+    name = models.CharField(verbose_name='Название', db_index=True, max_length=14, unique=True)
+    creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, related_name='rooms',
                                 verbose_name='Создатель')
     members = models.ManyToManyField(get_user_model(), related_name='current_rooms', verbose_name='Участники')
     description = models.TextField(verbose_name='Описание', max_length=300, blank=True)

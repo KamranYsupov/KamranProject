@@ -1,8 +1,8 @@
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
-from api.Articles import views
-from api.Articles import views
+from api.articles import views
+from api.articles import views
 
 
 urlpatterns = [

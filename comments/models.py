@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from Articles.models import Article
+from articles.models import Article
 from KamranVideo.models import Video
 
 

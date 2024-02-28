@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from Articles.models import Article
+from articles.models import Article
 from api.comments.serializers import CommentSerializer
 from api.mixins import BaseSerializerMixin
 

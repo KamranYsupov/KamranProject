@@ -7,10 +7,10 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from Articles.views import comments
+from articles.views import comments
 from django.conf import settings
-from Articles.mixins import BaseMixin
-from KAMRAN.service import like
+from articles.mixins import BaseMixin
+from kamranproject.service import like
 from comments.forms import ReplyCommentForm
 from comments.service import deferred_comment_fields
 from .forms import AddCommentForm

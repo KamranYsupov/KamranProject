@@ -44,7 +44,11 @@
 
        {% endif %}
     {% else %}
-       <span style="position:absolute;left:1070px;top:20px;"><a href="{% url 'session_login' %}">Войти</a> | <a href="{% url 'register' %}">Регистрация</a></span></p>
+       <b>
+           <span style="position:absolute;left:1070px;top:20px;" >
+               <a href="{% url 'session_login' %}" class="auth_btn">Войти</a> | <a href="{% url 'register' %}" class="auth_btn">Регистрация</a>
+           </span>
+       </b>
     {% endif %}
 </div>
 <div id="full-aside" class="flex">
@@ -71,7 +75,7 @@
         <a href="{% url 'rooms' %}" class="menu">
 
             <span class="inline" style="position:relative;right:3px;">
-               <i class="fa-solid fa-comments" ></i> Месенджер
+               <i class="fa-solid fa-comments" ></i> Месcенджер
             </span>
         </a>
     </ul>
@@ -82,7 +86,7 @@
 {% block more %}{% endblock %}
 <main class="main-main">
 {% block rooms %}{% endblock %}
-{% include 'Articles/br.html' %}
+{% include 'articles/br.html' %}
 {% block content %}{% endblock %}
 </main>
     <script src="{% static 'main/js/base.js' %}"></script>

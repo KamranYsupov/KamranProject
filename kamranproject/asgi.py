@@ -1,5 +1,5 @@
 """
-ASGI config for KAMRAN project.
+ASGI config for kamranproject project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -16,7 +16,7 @@ from django.core.asgi import get_asgi_application
 
 from KamranGram import routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'KAMRAN.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kamranproject.settings')
 
 
 application = ProtocolTypeRouter(

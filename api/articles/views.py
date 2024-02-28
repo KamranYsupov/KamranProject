@@ -3,9 +3,9 @@ from rest_framework import generics, viewsets
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from Articles.models import Article
+from articles.models import Article
 
-from api.Articles.serializers import (
+from api.articles.serializers import (
     ArticlesListSerializer,
     ArticleEditSerializer,
     ArticleCreateSerializer,

@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 
-from Articles.permissions import IsAdminOrReadOnly
+from articles.permissions import IsAdminOrReadOnly
 from api.pagination import ObjectsListAPIPagination
 from api.permissions import IsUserOrReadOnly
 from api.users.serializers import UserSerializer

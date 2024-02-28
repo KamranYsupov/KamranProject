@@ -11,7 +11,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 
 from django.conf import settings
-from Articles.mixins import BaseMixin
+from articles.mixins import BaseMixin
 from .mixins import RoomMixin
 from .forms import AddRoomForm
 from .models import Room, Message

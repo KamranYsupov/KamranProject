@@ -458,6 +458,7 @@ input, textarea {
   border-radius: 0.75rem;
   border-width: 0.1px;
   border-color: gray;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .channel-sub-button {
@@ -537,6 +538,7 @@ input, textarea {
    width: 500px;
    margin: 0 0 0 140px;
    background: #242424;
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .add-object-form {
@@ -649,9 +651,9 @@ input, textarea {
    background: #212529;
    border-color: #212529;
    position:fixed;
-   width: 240px;
+   width: 250px;
    height: 450px;
-   left:974px;
+   left:964px;
    top:74px;
 }
 
@@ -683,7 +685,7 @@ input, textarea {
    position:fixed;
    width: 240px;
    height: 300px;
-   left:735px;
+   left:725px;
    top:74px;
 }
 
@@ -724,6 +726,14 @@ html {
 
 }
 
+.auth_btn {
+  text-decoration: none;
+  color: white;
+}
+
+.auth-btn:hover {
+  color: #0afca0;
+}
 ::-webkit-scrollbar-thumb
 {
 	border-top: 10px solid inset 0 0 6px;

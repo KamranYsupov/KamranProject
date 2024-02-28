@@ -7,12 +7,16 @@
 {% block content %}
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <p><p class="text-white *">{{form.name.label|lower}}:</p> {{ form.name }}</p>
-    <p><p class="text-white *">{{form.description.label|lower}}:</p> {{ form.description }}</p>
-    <p><p class="text-white *">{{form.theme.label|lower}}:</p> {{ form.theme }}</p>
-    <p><p class="text-white *">{{form.password.label|lower}}:</p> {{ form.password }}</p>
-    <hr>
-    <button class="btn btn-primary">Создать чат</button>
+    <div class="auth-form">
+        {{ form.as_p }}
+        <hr>
+        <button class="btn btn-dark active">Создать чат</button>
+    </div>
+<!--    <p><p class="text-white *">{{form.name.label|lower}}:</p> {{ form.name }}</p>-->
+<!--    <p><p class="text-white *">{{form.description.label|lower}}:</p> {{ form.description }}</p>-->
+<!--    <p><p class="text-white *">{{form.theme.label|lower}}:</p> {{ form.theme }}</p>-->
+<!--    <p><p class="text-white *">{{form.password.label|lower}}:</p> {{ form.password }}</p>-->
+
 </form>
 <hr>
 

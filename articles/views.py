@@ -17,7 +17,7 @@ from rest_framework import viewsets, generics
 
 from django.conf import settings
 
-from KAMRAN.service import like
+from kamranproject.service import like
 from comments.service import deferred_comment_fields
 from comments.views import comments
 from .mixins import BaseMixin, ArticlesMixin
@@ -33,7 +33,7 @@ articles = (Article.objects.defer(*deferred_article_fields)
 
 
 class MainPage(BaseMixin, TemplateView):
-    template_name = 'Articles/main_page.html'
+    template_name = 'articles/main_page.html'
     title = 'Главная страница'
 
 
@@ -59,7 +59,7 @@ class ArticlesByTime(ArticlesMixin):
 
 class AddPage(BaseMixin, LoginRequiredMixin, CreateView):
     form_class = AddPageForm
-    template_name = 'Articles/add_page.html'
+    template_name = 'articles/add_page.html'
     success_url = reverse_lazy('articles_by_time')
     title = 'Добавление статьи'
 
@@ -72,7 +72,7 @@ class AddPage(BaseMixin, LoginRequiredMixin, CreateView):
 class EditPage(BaseMixin, LoginRequiredMixin, UpdateView):
     queryset = Article.objects.select_related('author').prefetch_related('likes')
     form_class = EditPageForm
-    template_name = 'Articles/edit-page.html'
+    template_name = 'articles/edit-page.html'
     success_url = reverse_lazy('articles_by_time')
     slug_url_kwarg = 'edit_post_slug'
     title = 'Редактирование статьи'
@@ -87,7 +87,7 @@ class EditPage(BaseMixin, LoginRequiredMixin, UpdateView):
 class ShowPost(DetailView, BaseMixin, CreateView):
     queryset = Article.objects.select_related('author').prefetch_related('likes')
     form_class = AddCommentForm
-    template_name = 'Articles/post.html'
+    template_name = 'articles/post.html'
     slug_url_kwarg = 'post_slug'
     context_object_name = 'post'
 
@@ -121,7 +121,7 @@ class ShowPost(DetailView, BaseMixin, CreateView):
 
 class ArticleSearch(BaseMixin, ListView):
     model = Article
-    template_name = 'Articles/list_of_pages.html'
+    template_name = 'articles/list_of_pages.html'
     title = 'Новости'
 
     def get_context_data(self, *, object_list=None, **kwargs):

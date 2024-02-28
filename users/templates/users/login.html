@@ -14,8 +14,10 @@
         {{ form.password }}
         <input type="hidden" name="next" value="{{next}}"/><br>
         <button type="submit" class="btn btn-dark active">Войти</button>
-        <br><br>
-        <span><a href="{% url 'social:begin' 'github' %}"><i class="fa-brands fa-github fa-2xl" style="color: #141414;"></i></a></span>
+
+        <span style="margin-left:350px;"><a href="{% url 'social:begin' 'github' %}"><i class="fa-brands fa-github fa-2xl" style="color: #ffffff;"></i></a></span>
+        <br>
+        <br>
         <span style="margin-left:5px">Нет аккаунта? <a href="{% url 'register' %}">Регистрация</a> </span>
         <br>
 
