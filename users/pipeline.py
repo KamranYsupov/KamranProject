@@ -1,12 +1,13 @@
 import requests
 from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def auth_user_form_social(backend, user, *args, **kwargs):
     response = None
     try:
         oauth_group = Group.objects.get(name='oauth')
-    except TypeError:
+    except (ObjectDoesNotExist, TypeError):
         Group.objects.create(name='oauth')
         oauth_group = Group.objects.get(name='oauth')
     github_avatar_url = 'https://avatars.githubusercontent.com/'
