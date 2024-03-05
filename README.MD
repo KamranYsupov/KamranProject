@@ -10,6 +10,9 @@
 <img src="media\README_images\channel-articles-for-github.png" style="margin:0">
 <img src="media\README_images\channel-videos-for-github.png" style="margin:0">
 
+
+<h2>Setup</h2>
+
 <h3>Настройка venv</h3>
 
 <h4>Windows</h4>
@@ -57,50 +60,6 @@ DATABASES = {
         'PASSWORD': os.environ.get('DB_PASS'),
     }
 }
-```
-
-<h5 style='color:#5279c7'>Dockerfile</h5>
-
-```Dockerfile
-FROM python:3.10
-
-COPY requirements.txt /temp/requirements.txt
-
-WORKDIR /django_tree
-EXPOSE 8000
-
-RUN pip install psycopg2
-RUN pip install -r /temp/requirements.txt
-```
-
-<h5 style='color:#5279c7'>docker-compose.yml</h5>
-
-```yaml
-services:
-  django_tree:
-    build:
-      context: .
-    ports:
-      - '8000:8000'
-    environment:
-      - DB_HOST=database
-      - DB_NAME=db_name
-      - DB_USER=db_user
-      - DB_PASS=db_pass
-    volumes:
-      - ./:/django_tree
-    command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
-    depends_on:
-      - database
-
-  database:
-    image: postgres:14.6-alpine
-    environment:
-      - POSTGRES_DB=db_name
-      - POSTGRES_USER=db_user
-      - POSTGRES_PASSWORD=db_pass
-      - POSTGRES_HOST_AUTH_METHOD=trust
 ```
 
 <h5>Команды:</h5>
