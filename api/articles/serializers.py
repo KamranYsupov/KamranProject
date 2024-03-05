@@ -1,7 +1,12 @@
 from rest_framework import serializers
 
 from articles.models import Article
-from api.articles.mixins import read_article_url, base_fields, ArticleSerializerMixin
+from api.articles.mixins import (
+    read_article_url,
+    base_fields,
+    ArticleSerializerMixin,
+    ArticleCreateEditSerializerMixin
+)
 
 
 class ArticlesListSerializer(ArticleSerializerMixin):
@@ -16,9 +21,12 @@ class ReadArticleSerializer(ArticleSerializerMixin):
         fields = base_fields + ['post_comments', 'post_comments_count']
 
 
-class ArticleCreateSerializer(serializers.ModelSerializer):
+class ArticleCreateSerializer(ArticleCreateEditSerializerMixin):
     link = read_article_url
-    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+
+class ArticleEditSerializer(ArticleCreateEditSerializerMixin):
+    slug = serializers.SlugField(read_only=True)
 
     class Meta:
         model = Article
@@ -28,9 +36,5 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
             'content',
             'photo',
             'is_published',
-            'link',
-            'author']
-
-
-class ArticleEditSerializer(ArticleCreateSerializer):
-    slug = serializers.SlugField(read_only=True)
+            'author',
+        ]

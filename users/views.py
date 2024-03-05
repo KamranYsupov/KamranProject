@@ -95,6 +95,8 @@ class ArchiveChannel(ArticlesChannelMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if self.request.user != context['owner']:
+            raise PermissionError('Ошибка доступа')
         context['archived_articles'] = (context['owner'].articles
                                         .filter(is_published=False)
                                         .prefetch_related('likes'))

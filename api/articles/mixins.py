@@ -37,3 +37,19 @@ class ArticleSerializerMixin(BaseSerializerMixin):
     @staticmethod
     def get_post_comments_count(instance):
         return instance.post_comments.count()
+
+
+class ArticleCreateEditSerializerMixin(BaseSerializerMixin):
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Article
+        fields = [
+            'title',
+            'slug',
+            'content',
+            'photo',
+            'is_published',
+            'link',
+            'author'
+        ]

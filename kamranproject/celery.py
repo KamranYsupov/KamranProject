@@ -6,7 +6,7 @@ from celery.schedules import crontab
 
 from users.lists import week_list, hour_list, minute_list
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'KAMRkamranprojectAN.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kamranproject.settings')
 
 app = Celery('kamranproject')
 app.config_from_object('django.conf:settings', namespace='CELERY')

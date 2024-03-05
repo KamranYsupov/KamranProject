@@ -1,8 +1,10 @@
 import datetime
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.forms import forms
 from django.http import HttpResponseRedirect, HttpResponse
@@ -134,3 +136,25 @@ def change_message(request, message_id):
         message.is_changed = True
         message.save()
     return HttpResponseRedirect(reverse('room', args=[str(room_id)]))
+
+
+def start_room(request, user_to_write_id):
+    user_to_write = get_object_or_404(get_user_model(), id=int(user_to_write_id))
+    try:
+        current_room = Room.objects.get(Q(is_one_to_one=True) & Q(name=f'{request.user}, {user_to_write}'))
+    except ObjectDoesNotExist:
+        current_room = Room.objects.create(
+            name=f'{request.user.username}, {user_to_write.username}',
+            creator=None,
+            description='',
+            theme='#141214',
+            is_searchable=False,
+            is_one_to_one=True
+        )
+        current_room.save()
+
+        current_room.members.add(request.user)
+        current_room.members.add(user_to_write)
+
+    return HttpResponseRedirect(reverse('room', args=[str(current_room.id)]))
+

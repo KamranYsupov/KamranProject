@@ -7,6 +7,7 @@ from django.db import models
 
 from kamranproject import settings
 from users import my_models
+from .validators import room_name_validator
 
 
 class Room(models.Model):
@@ -25,10 +26,24 @@ class Room(models.Model):
         ('#ab09e0', PURPLE),
     ]
 
-    name = models.CharField(verbose_name='Название', db_index=True, max_length=14, unique=True)
-    creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, related_name='rooms',
-                                verbose_name='Создатель')
-    members = models.ManyToManyField(get_user_model(), related_name='current_rooms', verbose_name='Участники')
+    name = models.CharField(
+        verbose_name='Название',
+        db_index=True,
+        max_length=14,
+        unique=True,
+        validators=[room_name_validator])
+    creator = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        null=True, related_name='rooms',
+        verbose_name='Создатель'
+    )
+    members = models.ManyToManyField(
+        get_user_model(),
+        db_index=True,
+        related_name='current_rooms',
+        verbose_name='Участники'
+    )
     description = models.TextField(verbose_name='Описание', max_length=300, blank=True)
     theme = models.CharField(verbose_name='Тема', max_length=20, choices=THEME_CHOICES, default=BLUE)
     time_create = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
@@ -42,6 +57,7 @@ class Room(models.Model):
         )],
         default='KamranGram/room_avatars/default_group.jpg'
     )
+    is_one_to_one = models.BooleanField(verbose_name='Только для двоих', db_index=True, default=False)
 
     class Meta:
         ordering = ['-time_create']
@@ -57,7 +73,7 @@ class Message(models.Model):
     sender = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_messages')
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, related_name='room_messages')
     time_send = models.DateTimeField(auto_now_add=True)
-    is_changed = models.BooleanField(default=False  )
+    is_changed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['time_send']

@@ -31,7 +31,7 @@
                <span>
                    <img src="{{ room.room_avatar.url }}" width="70px" class="rounded-full inline" style="margin:6px 0 0 0;">
                    <div style="margin-top:10px;" class="inline">
-                       <span style="font-weight:bold;">{{room.name}}</span>
+                       <span style="font-weight:bold;">{{ room.name|truncatechars:14 }}</span>
                        <br>
                        <span id="last_message_{{room.id}}" class="text-muted" style="font-size:13px">
 
@@ -52,7 +52,9 @@
                         {% if message.sender == request.user %}
                            <blockquote>
                               <div>
-                                  <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="margin:4.5px 0 0 0;">
+                                  <a href="{% url 'articles-channel' message.sender.id %}">
+                                      <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="margin:4.5px 0 0 0;">
+                                  </a>
                                   <span class="text-break own-message rounded-xl inline" style="margin:0" >
                                       <span class="text-muted" style="font-size:13px;">
                                           {{ message.sender.username }}{% if message.is_changed %}<span style="font-size:13px;color:gray" > (изменено)</span>{% endif %}
@@ -115,7 +117,7 @@
 
 <div id="room-info-div" class="rounded-l-lg room_info_div border border-gray hidden">
     <img src="{{ room.room_avatar.url }}" width="70px" class="rounded-full inline" style="margin:6px 0 0 0;">
-    <span style="font-size:20px;font-weight:bold;position:relative;top:20px">{{ room.name }}</span>
+    <span style="font-size:20px;font-weight:bold;position:relative;top:20px">{{ room.name|truncatechars:12 }}</span>
 
     <p style="font-size:8px;font-weight:bold;position:relative;left:75px;bottom:23px;">Дата создания: {{ room.time_create }}</p>
 

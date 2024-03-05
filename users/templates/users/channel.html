@@ -6,8 +6,6 @@
 
 {% block content %}
 
-<!--<img src="/media/users/channel-themes/back-theme-for-channel.jpg" width="79%" height="10%" style="position:absolute;bottom:321px;left:21%;" >-->
-
 <div class="channel-top-div">
       <span class="inline" >
             <a href="{{ owner.avatar.url }}">
@@ -43,6 +41,10 @@
                   {% endif %}
             </span>
       </span>
+     <a href="{% url 'start_room' owner.id %}" class="inline"
+        style="text-decoration:none;text-align:right;margin-left:490px;color:white">
+         <i class="fa-solid fa-paper-plane" ></i>
+     </a>
 </div>
 
 {% block channel_content %}

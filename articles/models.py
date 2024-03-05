@@ -17,7 +17,7 @@ class Article(models.Model):
 
     title = models.CharField(max_length=50, db_index=True, verbose_name='Заголовок')
     slug = models.SlugField(unique=True, db_index=True, max_length=50, verbose_name='URL')
-    content = models.TextField(verbose_name='Контент')
+    content = models.TextField(verbose_name='Контент', blank=True)
     photo = models.ImageField(upload_to='posts_images', verbose_name='Изображение', blank=True, null=True)
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     is_published = models.BooleanField(choices=IS_PUBLISHED, default=PUBLISHED, verbose_name='Статус', db_index=True)

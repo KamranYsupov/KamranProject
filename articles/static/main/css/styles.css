@@ -322,6 +322,7 @@ form {
 }
 
 
+
 .mini-video-div {
    width: 390px;
    background: #141214;
@@ -573,7 +574,7 @@ input, textarea {
 .create-menu-span:hover {
    background: #242424;
    color: #02cc7f;
-   border-top: 1px solid gray;
+
 }
 .profile-menu-span {
    width: 190px;
@@ -584,7 +585,6 @@ input, textarea {
 .profile-menu-span:hover {
    background: #242424;
    color: #02cc7f;
-   border-top: 1px solid gray;
 }
 
 .x-btn {
@@ -713,6 +713,16 @@ input, textarea {
    width: 250px;
    margin: 20px 0 0 175px;
 }
+
+.auth_btn {
+  text-decoration: none;
+  color: white;
+}
+
+.auth-btn:hover {
+  color: #0afca0;
+}
+
 html {
 ::-webkit-scrollbar-track
 {
@@ -726,14 +736,8 @@ html {
 
 }
 
-.auth_btn {
-  text-decoration: none;
-  color: white;
-}
 
-.auth-btn:hover {
-  color: #0afca0;
-}
+
 ::-webkit-scrollbar-thumb
 {
 	border-top: 10px solid inset 0 0 6px;

@@ -20,7 +20,7 @@
                <span>
                    <img src="{{ room.room_avatar.url }}" width="70px" class="rounded-full inline" style="margin:6px 0 0 0;">
                    <div style="margin-top:10px;" class="inline">
-                       <span style="font-weight:bold;">{{room.name}}</span>
+                       <span style="font-weight:bold;">{{ room.name|truncatechars:14 }}</span>
                        <br>
                        <span id="last_message_{{room.id}}" class="text-muted" style="font-size:13px">
 
@@ -34,10 +34,17 @@
     {% endfor %}
 </div>
 
-<div class="inline" style="position:fixed;background:#1f1d1d;margin:74px 0 0 20.75px;height:85%;width:60%;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+<div class="inline" style="position:fixed;background:#1f1d1d;margin:74px 0 0 18.9px;height:85%;width:60%;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
     <h4 style="margin:20% 0 30% 150px">Выберите комнату для переписки</h4>
+</div>
 {% else %}
-    <h4 style="margin:15% 0 30% 200px">Вступите или создайте свою комнату</h4>
+<div class="inline" style="position:fixed;background:#1f1d1d;margin:74px 0 0 4.5px;height:85%;width:90%;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+    <h4 style="margin:10% 0 30% 200px">Вступите или
+        <a href="{% url 'create_room' %}" style="text-decoration:none">
+            создайте
+        </a>
+        свою комнату
+    </h4>
 </div>
 {% endif %}
 
