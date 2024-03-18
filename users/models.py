@@ -22,10 +22,10 @@ class User(AbstractUser):
     is_subscribed_on_quotes = models.BooleanField(
         'Подписка на рассылку цитат',
         default=False,
-        blank=True)
+    )
     is_subscribed_on_weather = models.BooleanField(
         'Подписка на рассылку KamranWeather',
         default=False,
-        blank=True)
+    )
 
 

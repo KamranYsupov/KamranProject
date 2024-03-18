@@ -21,7 +21,7 @@ class Article(models.Model):
     photo = models.ImageField(upload_to='posts_images', verbose_name='Изображение', blank=True, null=True)
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     is_published = models.BooleanField(choices=IS_PUBLISHED, default=PUBLISHED, verbose_name='Статус', db_index=True)
-    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, default=0, null=True,
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True,
                                related_name='articles')
     likes = models.ManyToManyField(get_user_model(), related_name='posts_likes', blank=True)
     views = models.PositiveIntegerField(default=1)

@@ -11,7 +11,7 @@ from .models import Room, Message
 
 class KamranGramConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_id = int(self.scope['url_route']['kwargs']['room_id'])
+        self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = f'room_{self.room_id}'
 
         await self.channel_layer.group_add(
@@ -31,6 +31,7 @@ class KamranGramConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         sender = text_data_json['sender']
+        sender_id = text_data_json['sender_id']
         avatar = text_data_json['avatar']
         room_id = text_data_json['room_id']
 
@@ -42,6 +43,7 @@ class KamranGramConsumer(AsyncWebsocketConsumer):
                 'type': 'send_message',
                 'message': message,
                 'sender': sender,
+                'sender_id': sender_id,
                 'avatar': avatar,
                 'room_id': room_id,
             }
@@ -50,8 +52,16 @@ class KamranGramConsumer(AsyncWebsocketConsumer):
     async def send_message(self, event):
         message = event['message']
         sender = event['sender']
+        sender_id = event['sender_id']
         avatar = event['avatar']
-        await self.send(text_data=json.dumps({'message': message, 'sender': sender, 'avatar': avatar}))
+        await self.send(
+            text_data=json.dumps({
+                'message': message,
+                'sender': sender,
+                'sender_id': sender_id,
+                'avatar': avatar
+            })
+        )
 
     @sync_to_async
     def save_message(self, message, username, room_id):

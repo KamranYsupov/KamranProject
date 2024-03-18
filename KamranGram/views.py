@@ -139,6 +139,8 @@ def change_message(request, message_id):
 
 
 def start_room(request, user_to_write_id):
+    if request.user.id == user_to_write_id:
+        raise forms.ValidationError('Вы не можете написать сами себе')
     user_to_write = get_object_or_404(get_user_model(), id=int(user_to_write_id))
     try:
         current_room = Room.objects.get(Q(is_one_to_one=True) & Q(name=f'{request.user}, {user_to_write}'))

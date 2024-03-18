@@ -18,3 +18,13 @@ post_comments_prefetch = Prefetch('post_comments',
 video_comments_prefetch = Prefetch('video_comments',
                                    queryset=Comment.objects.select_related('author', )
                                    .prefetch_related('likes', 'replies'))
+
+prefetched_replies = Prefetch('replies',
+                              queryset=Comment.objects.select_related(
+                                  'author',
+                              )
+                              .prefetch_related(
+                                  'likes',
+                                  'replies_to_replies__author',
+                                  'replies_to_replies__likes'
+                              ))

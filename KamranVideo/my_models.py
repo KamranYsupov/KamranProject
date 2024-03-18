@@ -3,7 +3,7 @@ from django.db.models import ImageField, FileField
 from django import forms
 from django.template.defaultfilters import filesizeformat
 
-from kamranproject import settings
+from django.conf import settings
 
 
 class LimitedImageField(ImageField):

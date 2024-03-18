@@ -369,6 +369,16 @@ input, textarea {
    bottom: 24px;
 }
 
+.notifications-div-button {
+   position: absolute;
+   width: 30px;
+   height: 30px;
+   background: #141214;
+   right: 117px;
+   bottom: 24px;
+}
+
+
 .null {
    margin:0px;
    padding:0px
@@ -530,6 +540,7 @@ input, textarea {
 }
 
 .reply-comment {
+   width: 60%;
    border-left: 1.5px solid gray;
    margin: 0 0 0 50px;
 }
@@ -565,10 +576,18 @@ input, textarea {
    background: #342c36;
 }
 
+.notifications-div {
+   position:fixed;
+   left:870px;
+   top: 72.5px;
+   padding: 10px 0 10px 0;
+   width: 350px;
+   background: #342c36;
+}
+
 .create-menu-span {
    width: 135px;
    color: white;
-   border-top: 1px solid gray;
 }
 
 .create-menu-span:hover {
@@ -579,7 +598,6 @@ input, textarea {
 .profile-menu-span {
    width: 190px;
    color: white;
-   border-top: 1px solid gray;
 }
 
 .profile-menu-span:hover {
@@ -657,6 +675,35 @@ input, textarea {
    top:74px;
 }
 
+.enter_div {
+   padding: 10px;
+   background: #212529;
+   border-color: #212529;
+   position:fixed;
+   width: 175px;
+   height: 40px;
+   left:1040.5px;
+   top:75px;
+}
+
+.enter-room-btn-one-to-one {
+   color: white;
+   text-decoration:none;
+   font-size:14.5px;
+   font-weight:bold;
+   margin-bottom: 2.5px;
+}
+
+.enter-room-btn-one-to-one:hover {
+   color: #b3322e
+}
+
+.save-room-btn {
+   padding: 5px;
+   color: white;
+}
+
+
 .enter-room-btn {
    color: white;
    text-decoration: none;
@@ -721,6 +768,10 @@ input, textarea {
 
 .auth-btn:hover {
   color: #0afca0;
+}
+
+.notification:hover {
+  background: #242424;
 }
 
 html {

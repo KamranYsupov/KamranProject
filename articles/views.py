@@ -18,8 +18,9 @@ from rest_framework import viewsets, generics
 from django.conf import settings
 
 from kamranproject.service import like
-from comments.service import deferred_comment_fields
+from comments.service import deferred_comment_fields, prefetched_replies
 from comments.views import comments
+from notifications.tasks import send_notification
 from .mixins import BaseMixin, ArticlesMixin
 from .forms import AddPageForm, EditPageForm
 from .models import Article
@@ -99,15 +100,26 @@ class ShowPost(DetailView, BaseMixin, CreateView):
 
         article_comments = (article.post_comments
                             .defer(*deferred_comment_fields)
-                            .select_related('author')
-                            .prefetch_related('likes', 'replies__likes', 'replies__author')
+                            .select_related('author', 'parent')
+                            .prefetch_related('likes',
+                                              'replies__likes',
+                                              'replies__author',
+                                              'replies__user_to_reply')
                             .annotate(likes_count=Count('likes'))
-                            .order_by('-likes_count'))
-
+                            .order_by('-likes_count', '-time_create'))
         context = super().get_context_data(**kwargs)
         context['article_comments'] = article_comments
         context['reply_form'] = ReplyCommentForm
         return context
+
+    def post(self, request, *args, **kwargs):
+        send_notification.delay(
+            user_to_id=int(request.POST.get('user_to_id')),
+            user_from=request.user,
+            event_type='Комментирование статьи',
+            url=settings.PROJECT_URL + request.POST.get('url_from')
+        )
+        return super(CreateView, self).post(request, *args, **kwargs)
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('read', kwargs={'post_slug': self.kwargs['post_slug']})
@@ -136,6 +148,7 @@ class ArticleSearch(BaseMixin, ListView):
                                      Q(content__iregex=article_search) |
                                      Q(author__username__iregex=article_search)))
                             )
+
         context['article_search'] = article_search
         context['title_by_query'] = f'"{article_search}" Поиск'
         return context
@@ -144,4 +157,5 @@ class ArticleSearch(BaseMixin, ListView):
 @login_required
 def like_post(request, post_slug):
     article = articles.get(slug=post_slug)
+
     return like(request, article)

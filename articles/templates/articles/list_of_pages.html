@@ -51,7 +51,7 @@
           {% if post.photo %}
                  <img src="{{ post.photo.url }}" style="margin:10px 0 0 10px;width:435px;" class="rounded-xl">
           {% endif %}
-           {% include 'Articles/like-form.html' %}
+           {% include 'articles/like-form.html' %}
             <span style="margin-left:5px;font-size:15px;" class="text-muted">
                {{ post.views }}
                {% if post.views > 1 %}

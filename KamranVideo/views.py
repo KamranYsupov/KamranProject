@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView
 from rest_framework.viewsets import ReadOnlyModelViewSet
@@ -13,6 +13,7 @@ from articles.mixins import BaseMixin
 from kamranproject.service import like
 from comments.forms import ReplyCommentForm
 from comments.service import deferred_comment_fields
+from notifications.tasks import send_notification
 from .forms import AddCommentForm
 from .forms import AddVideoForm
 from .models import Video
@@ -41,7 +42,7 @@ class CreateVideo(BaseMixin, CreateView):
 
 
 class WatchVideo(DetailView, BaseMixin, CreateView):
-    model = Video
+    queryset = related_video_queryset
     form_class = AddCommentForm
     template_name = 'KamranVideo/watch.html'
     context_object_name = 'video'
@@ -66,6 +67,15 @@ class WatchVideo(DetailView, BaseMixin, CreateView):
         context['video_comments'] = video_comments
         context['reply_form'] = ReplyCommentForm
         return context
+
+    def post(self, request, *args, **kwargs):
+        send_notification.delay(
+            user_to_id=int(request.POST.get('user_to_id')),
+            user_from=request.user,
+            event_type='Комментирование видео',
+            url=settings.PROJECT_URL + request.POST.get('url_from')
+        )
+        return super(CreateView, self).post(request, *args, **kwargs)
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('watch', kwargs={'video_id': self.kwargs['video_id']})

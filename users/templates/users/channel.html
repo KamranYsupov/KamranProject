@@ -12,13 +12,14 @@
                   <img class="avatar-img rounded-full" src="{{ owner.avatar.url}}">
             </a>
       </span>
-      <span class="inline" style="margin-top:15px">
+      <span class="inline" style="margin:15px 470px 0 0">
             <div class="fs-1" style="font-weight:bold;">
                   {{owner.username}}
             </div>
             <form action="{% url 'follow' owner.id %}" method="post" class="inline" style="width:115px;margin-top:10px">
                   {% csrf_token %}
                   <input type="hidden" name="url_from" value="{{ request.path }}">
+                  <input type="hidden" name="user_to_id" value="{{ owner.id }}">
                   <button type="submit" style="margin-top:10px">
                   {% if request.user in owner.followers.all %}
 
@@ -41,10 +42,11 @@
                   {% endif %}
             </span>
       </span>
-     <a href="{% url 'start_room' owner.id %}" class="inline"
-        style="text-decoration:none;text-align:right;margin-left:490px;color:white">
-         <i class="fa-solid fa-paper-plane" ></i>
-     </a>
+     {% if request.user != owner %}
+         <a href="{% url 'start_room' owner.id %}" style="text-align:right;color:white">
+             <i class="fa-solid fa-paper-plane" ></i>
+         </a>
+    {% endif %}
 </div>
 
 {% block channel_content %}

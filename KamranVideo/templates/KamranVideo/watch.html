@@ -51,6 +51,8 @@
     <p style="margin-left:5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы оставить комментарий</p>
 {% else %}
     <form action="" method="post">
+        <input type="hidden" name="url_from" value="{{ request.path }}">
+        <input type="hidden" name="user_to_id" value="{{ video.author.id }}">
         {% csrf_token %}
         {{ form.comment }}
         <button style="margin-top:5px;margin-left:620px;" type="submit" class="btn "><span>Отправить</span></button>
@@ -65,7 +67,7 @@
         <blockquote>
             <footer class="inline">
                 {% if comment.author %}
-                   <a href="{% url 'video-channel' comment.author.id %}" style="text-decoration:none">
+                   <a href="{% url 'articles-channel' comment.author.id %}" style="text-decoration:none">
                        <span class="inline"><img src="{{ comment.author.avatar.url }}" width="27.5px" class="rounded-full inline"></span>
                        <h5 style="margin-bottom:20px;" class="inline">{{ comment.author }}</h5>
                    </a>
@@ -75,7 +77,7 @@
                 {% endif %}
                 <div style="margin-left:33px;font-size:16x;" class="text_break">{{comment.comment|linebreaks}}</div>
                 <span class="inline">
-                    <form action="{% url 'like_comment' video.id comment.id %}" method="post" style="margin-left:30px;margin-bottom:15px;">
+                    <form action="{% url 'like_comment' video.id comment.id comment.author.id %}" method="post" style="margin-left:30px;margin-bottom:15px;">
                         {% include 'comments/like-comment-form.html' %}
                     </form>
                 </span>
@@ -98,7 +100,7 @@
                     </span>
                 {% endif %}
                 {% if user.is_authenticated %}
-                    <form action="{% url 'reply_comment' video.id comment.id %}" method="post" style="margin:10px 0 0 51.2px">
+                    <form action="{% url 'reply_comment' video.id comment.id comment.author.id %}" method="post" style="margin:10px 0 0 51.2px">
                         {% csrf_token %}
                         <span class="inline">{{ reply_form.comment }}</span>
                         <input type="hidden" name="url_from" value="{{ request.path }}">
@@ -125,9 +127,31 @@
                     <span class="inline"><img src="{{ default_avatar }}" width="27.5px" class="rounded-full inline"></span>
                     <p style="margin-bottom:10px;" class="inline">Пользователь удален</p>
                     {% endif %}
-                    <div style="margin-left:33px;font-size:14.5px;" class="text_break">{{ reply.comment|linebreaks }}</div>
+                    {% if reply.is_reply_to_reply %}
+                    <span class="text-muted" style="font-size:13.5px;">
+                        Ответил
+                        {% if reply.user_to_reply == reply.author %}
+                              самому себе
+                        {% else %}
+                              {{ reply.user_to_reply.username }}
+                        {% endif %}
+                    </span>
+                    {% endif %}
+                    <div style="margin-left:33px;font-size:14.5px;" class="text-break">
+                        {% if reply.user_to_reply %}
+                             <a href="{% url 'articles-channel' reply.user_to_reply.id %}" style="text-decoration:none">
+                                 {{ reply.user_to_reply.username }}
+                             </a>
+                        {% else %}
+                             <a href="{% url 'articles-channel' reply.parent.author.id %}" style="text-decoration:none">
+                                 {{ reply.parent.author.username }}
+                             </a>
+                        {% endif %}
+
+                        , {{ reply.comment }}
+                    </div>
                     <span class="inline">
-                        <form action="{% url 'like_comment' video.id reply.id %}" method="post" style="margin: 0 0 10px 33px;">
+                        <form action="{% url 'like_comment' video.id reply.id reply.author.id %}" method="post" style="margin: 0 0 10px 33px;">
                             {% csrf_token %}
                             <input type="hidden" name="url_from" value="{{ request.path }}">
 
@@ -141,6 +165,20 @@
                             </button>
                         </form>
                     </span>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'reply_to_reply' post.id comment.id reply.author.id %}" method="post" style="margin:10px 0 0 51.2px">
+                        {% csrf_token %}
+                        {{ reply_form }}
+                        <input type="hidden" name="url_from" value="{{ request.path }}">
+                        <span class="inline">
+                            <button type="submit" class="btn btn-dark">
+                                <span>Ответить</span>
+                            </button>
+                        </span>
+                    </form>
+                {% else %}
+                    <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
+                {% endif %}
                     <p style="margin: 0 0 0 20px;padding:0;font-size:10px;" class="text-muted">{{ reply.time_create|timesince }} назад</p>
                     <p class="text-muted" style="margin:0;padding:0">__________________________________________________________________________________________</p>
                      </blockquote>
@@ -148,14 +186,14 @@
                 </div>
             </div>
         </blockquote>
-        <p class="text-muted" style="margin: 0 0 10px 0;padding:0">___________________________________________________________________________________________________________</p>
+        <p class="text-muted" style="margin: 0 0 10px 0;padding:0">_____________________________________________________________________________________________________________________________________________</p>
      </div>
 {% endfor %}
 {% else %}
     <p class="text-muted" style="font-size:15px;">Комментариев нет.Будте первым!</p>
 {% endif %}
-
 {% endblock %}
+
 
 {% block more %}
 <aside class="video-menu">

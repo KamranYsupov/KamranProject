@@ -6,19 +6,65 @@ from KamranVideo.models import Video
 
 
 class Comment(models.Model):
-    comment = models.TextField(max_length=10000, verbose_name='Комментарий')
-    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
-    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True,
-                               related_name='comments')
-    post = models.ForeignKey(Article, on_delete=models.SET_NULL, default=None, null=True,
-                             related_name='post_comments', blank=True)
-    video = models.ForeignKey(Video, on_delete=models.SET_NULL, default=None, null=True,
-                              related_name='video_comments', blank=True)
-    parent = models.ForeignKey('self', blank=True, null=True, related_name='replies', on_delete=models.CASCADE)
-    likes = models.ManyToManyField(get_user_model(), related_name='likes_comments')
+    comment = models.TextField(
+        verbose_name='Комментарий',
+        max_length=10000
+    )
+    time_create = models.DateTimeField(
+        verbose_name='Дата публикации',
+        auto_now_add=True
+    )
+    author = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='comments',
+        verbose_name='Автор',
+    )
+    post = models.ForeignKey(
+        Article,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='post_comments',
+        blank=True,
+        verbose_name='Публикация',
+    )
+    video = models.ForeignKey(
+        Video,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='video_comments',
+        blank=True,
+        verbose_name='Видео',
+    )
+    parent = models.ForeignKey(
+        'self',
+        blank=True,
+        null=True,
+        related_name='replies',
+        on_delete=models.CASCADE,
+        verbose_name='Родительский коментарий'
+    )
+    user_to_reply = models.ForeignKey(
+        get_user_model(),
+        blank=True,
+        null=True,
+        related_name='answers',
+        on_delete=models.SET_NULL,
+        verbose_name='Ответ пользователю'
+        )
+    likes = models.ManyToManyField(
+        get_user_model(),
+        related_name='likes_comments',
+        verbose_name='Лайки'
+    )
+    is_reply_to_reply = models.BooleanField(
+        default=False,
+        verbose_name='Является ли ответом на ответ'
+    )
 
     class Meta:
-        ordering = ['-time_create']
+        ordering = ['time_create']
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 

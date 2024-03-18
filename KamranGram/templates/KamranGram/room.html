@@ -10,7 +10,7 @@
 {% block title %}{{room.name}}{% endblock %}
 
 {% block header %}
-<span class="fs-2" style="font-weight:bold">KamranGram</span>
+<span class="fs-2" style="font-weight:bold;margin-left:1.5px;">KamranGram</span>
    <form action="{% url 'room_search' %}" method="get" class="search">
        <input style="height:36.5px;width:450px;background:#141214;color:white;" type="text" name="room_search" placeholder="   Поиск комнаты" class=" border border-gray rounded-l-lg">
        <button class=" search-div border border-gray-300 rounded-r-lg"><p style="position:relative;bottom:4px;">🔍</p></button>
@@ -90,7 +90,9 @@
                                   {{ message.content }}<br>
                                   <span class="text-muted" style="font-size:10px;float:right;">{{ message.time_send|timesince }}</span>
                               </span>
-                              <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="margin:2.5px 0 0 1.5px;"><br>
+                              <a href="{% url 'articles-channel' message.sender.id %}">
+                                  <img class="rounded-full inline" width="27px" src="{{ message.sender.avatar.url }}" style="margin:2.5px 0 0 1.5px;"><br>
+                              </a>
                           </div>
                           <br>
                       {% endif %}
@@ -115,47 +117,56 @@
 
 <button id="close-room-info-btn" class="rounded btn-dark hidden" style="padding: 0.375rem .75rem ;position:fixed;left:1216.5px;top:75px;"><span style="font-weight:bold;font-size:20px;position:relative;bottom:5px;">...</span></button>
 
-<div id="room-info-div" class="rounded-l-lg room_info_div border border-gray hidden">
-    <img src="{{ room.room_avatar.url }}" width="70px" class="rounded-full inline" style="margin:6px 0 0 0;">
-    <span style="font-size:20px;font-weight:bold;position:relative;top:20px">{{ room.name|truncatechars:12 }}</span>
+{% if room.is_one_to_one %}
+    <div id="room-info-div" class="rounded-l-lg enter_div border border-gray hidden">
+        <a href="{% url 'logout_room' room.id %}" class="enter-room-btn-one-to-one">
+            <i class="fa-solid fa-right-from-bracket"></i> Выйти из комнаты
 
-    <p style="font-size:8px;font-weight:bold;position:relative;left:75px;bottom:23px;">Дата создания: {{ room.time_create }}</p>
+        </a>
+    </div>
+{% else %}
+    <div id="room-info-div" class="rounded-l-lg room_info_div border border-gray hidden">
+        <img src="{{ room.room_avatar.url }}" width="70px" class="rounded-full inline" style="margin:6px 0 0 0;">
+        <span style="font-size:20px;font-weight:bold;position:relative;top:20px">{{ room.name|truncatechars:12 }}</span>
 
-    <form action="{% url 'update_room' room.id %}" method="post">
-        {% if user == room.creator %}
-        {% csrf_token %}
-        <span style="margin-bottom:3px">Описание:</span>
-        <textarea class="form-control" name="description" cols="25" rows="2" maxlength="300">{{room.description}}</textarea>
+        <p style="font-size:8px;font-weight:bold;position:relative;left:75px;bottom:23px;">Дата создания: {{ room.time_create }}</p>
 
-        <div style="margin-top:15px;">
-        <span class="bottom-inline" style="margin-bottom:3px">Тема:</span>
-        <span class="inline">
-            <select class="form-control form-control-sm" name="theme" style="width:100px;height:10px;">
-                {% for i in theme_values %}
-                     {% if i != room.theme %}
-                     <option value="{{ i }}">{% include 'KamranGram/choice-theme-option.html' %}</option>
-                     {% else %}
-                         <option value="{{ i }}" selected>{% include 'KamranGram/choice-theme-option.html' %}</option>
-                     {% endif %}
-                {% endfor %}
-            </select>
-        </span>
-        </div>
-        <div style="margin-top:15px;">
-            <span class="bottom-inline" style="margin-bottom:3px;">Доступна для поиска</span>
-            {% if room.is_searchable %}
-                 <input class="form-check-input" type="checkbox" name="is_searchable" checked >
+        <form action="{% url 'update_room' room.id %}" method="post">
+            {% if user == room.creator %}
+            {% csrf_token %}
+            <span style="margin-bottom:3px">Описание:</span>
+
+            <textarea class="form-control" name="description" cols="25" rows="2" maxlength="300">{{room.description}}</textarea>
+
+            <div style="margin-top:15px;">
+                <span class="bottom-inline" style="margin-bottom:3px">Тема:</span>
+                <span class="inline">
+                    <select class="form-control form-control-sm" name="theme" style="width:100px;height:10px;">
+                        {% for i in theme_values %}
+                            {% if i != room.theme %}
+                                <option value="{{ i }}">{% include 'KamranGram/choice-theme-option.html' %}</option>
+                            {% else %}
+                                <option value="{{ i }}" selected>{% include 'KamranGram/choice-theme-option.html' %}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </span>
+            </div>
+            <div style="margin-top:15px;">
+                <span class="bottom-inline" style="margin-bottom:3px;">Доступна для поиска</span>
+                {% if room.is_searchable %}
+                    <input class="form-check-input" type="checkbox" name="is_searchable" checked >
+                {% else %}
+                     <input class="form-check-input" type="checkbox" name="is_searchable">
+                {% endif %}
+            </div>
+            <div style="margin-top:10px;">
+                <span class="bottom-inline" style="margin-bottom:3px;">Лимит учасников:</span>
+                <span class="inline">
+                    <input type="number" name="limit_members" value="{{ room.limit_members }}" class="form-control" min="{{ room.members.count }}" required style="width:66.5px;height:25px">
+                </span>
+            </div>
             {% else %}
-                 <input class="form-check-input" type="checkbox" name="is_searchable">
-            {% endif %}
-        </div>
-        <div style="margin-top:10px;">
-            <span class="bottom-inline" style="margin-bottom:3px;">Лимит учасников:</span>
-            <span class="inline">
-                <input type="number" name="limit_members" value="{{ room.limit_members }}" class="form-control" min="{{ room.members.count }}" required style="width:66.5px;height:25px">
-            </span>
-        </div>
-        {% else %}
             <span style="margin-bottom:3px">Описание:</span>
             <textarea class="form-control" name="description" cols="25" rows="2" maxlength="300" disabled id="id_description">{{room.description}}</textarea>
 
@@ -174,39 +185,39 @@
                     </select>
                 </span>
             </div>
-        <div style="margin-top:15px;">
-            <span class="bottom-inline" style="margin-bottom:3px;">Доступность для поиска</span>
-            {% if room.is_searchable %}
-                 <input class="form-check-input" type="checkbox" name="is_searchable" disabled checked >
-            {% else %}
-                 <input class="form-check-input" type="checkbox" name="is_searchable" disabled>
+            <div style="margin-top:15px;">
+                <span class="bottom-inline" style="margin-bottom:3px;">Доступность для поиска</span>
+                 {% if room.is_searchable %}
+                <input class="form-check-input" type="checkbox" name="is_searchable" disabled checked >
+                {% else %}
+                <input class="form-check-input" type="checkbox" name="is_searchable" disabled>
             {% endif %}
-        </div>
-        <div style="margin-top:10px;">
-            <span class="bottom-inline" style="margin-bottom:3px;">Лимит учасников:</span>
-            <span class="inline">
-                <input type="number" name="limit_members" value="{{ room.limit_members }}" class="form-control" min="{{ room.members.count }}" disabled required style="width:66.5px;height:25px">
-            </span>
-        </div>
-        {% endif %}
+            </div>
+            <div style="margin-top:10px;">
+                <span class="bottom-inline" style="margin-bottom:3px;">Лимит учасников:</span>
+                <span class="inline">
+                    <input type="number" name="limit_members" value="{{ room.limit_members }}" class="form-control" min="{{ room.members.count }}" disabled required style="width:66.5px;height:25px">
+                </span>
+            </div>
+            {% endif %}
 
-        <a id="open-members-info-btn" href="" style="font-size:14px;">Подробнее</a>
-        <a id="close-members-info-btn" href="" style="font-size:14px;" class="hidden">Подробнее</a>
-        <br>
-        <br>
-        {% if user == room.creator %}
+            <a id="open-members-info-btn" href="" style="font-size:14px;">Подробнее</a>
+
+            <a id="close-members-info-btn" href="" style="font-size:14px;" class="hidden">Подробнее</a>
+            <br>
+            <br>
+            {% if user == room.creator %}
                 <button type="submit" class="btn-sm btn text-white" style="background:#7543d9;">Сохранить изменения</button>
-        {% endif %}
-    </form>
-    <br>
-    <button id="enter-room-btn">     </button>
-    <a href="{% url 'logout_room' room.id %}"  class="enter-room-btn">
-
+            {% endif %}
+        </form>
+        <br>
+        <a href="{% url 'logout_room' room.id %}"  class="enter-room-btn">
             <i class="fa-solid fa-right-from-bracket"></i> Выйти из комнаты
 
-    </a>
+        </a>
+    </div>
+{% endif %}
 
-</div>
 <div id="room-members-info-div" class="rounded-l-lg border border-gray members-div section hidden" style="overflow-y: scroll;">
     <span class="fs-6" style="font-weight:bold">Все участники {{ room.members.count }}</span>
     <span class="text-muted" style="margin:0;padding:0;">________________________________</span>
@@ -284,10 +295,6 @@
       const roomInfoDiv = document.querySelector("#room-info-div")
       const roomMembersInfoDiv = document.querySelector("#room-members-info-div")
 
-      console.log(openRoomInfoButton)
-      console.log(closeRoomInfoButton)
-      console.log(roomInfoDiv)
-
       openRoomInfoButton.onclick = function(e) {
          e.preventDefault()
 
@@ -338,6 +345,7 @@
 
       currentRoomChatIntro.classList.add('first-chat-div')
       currentRoomChatIntro.classList.remove('chat-div')
+      document.querySelector("#chatbox").scrollTo(0, document.querySelector("#chatbox").scrollHeight);
 
       const chatSocket = new WebSocket(
          'ws://'
@@ -371,10 +379,15 @@
             }
          else
             {
-             chatSocket.send(JSON.stringify({ message: messageInput, sender : "{{request.user.username}}", avatar: "{{request.user.avatar.url}}", room_id: "{{room.id}}"}));
+             chatSocket.send(JSON.stringify({
+              message: messageInput,
+              sender : "{{request.user.username}}",
+              sender_id: "{{request.user.id}}",
+              avatar: "{{request.user.avatar.url}}",
+              room_id: "{{room.id}}"
+                }));
 
-
-             }
+              }
 
       };
 
@@ -383,7 +396,7 @@
         var last_message = document.createElement("span");
         var span = document.createElement("span");
 
-        console.log(`${data.sender}: ${data.message}`)
+        console.log(`${data.sender}: ${data.message} | ${data.sender_id}`)
 
         var message = data.message
         if (data.message.length > 15) {
@@ -397,9 +410,9 @@
         }
 
         if (data.sender === "{{ request.user.username }}") {
-          span.innerHTML = `<div><img class="rounded-full inline" width="27px" src=${data.avatar} style="margin:4.5px 0 0 0;"><span class="text-break own-message rounded-xl inline" style="margin:0" ><span class="text-muted" style="font-size:13px";>${data.sender}</span><br>${data.message}</span><br></div><br>`;
+          span.innerHTML = `<div><a href="http://${window.location.host}/users/channel/${data.sender_id}/articles/"><img class="rounded-full inline" width="27px" src=${data.avatar} style="margin:4.5px 0 0 0;"></a><span class="text-break own-message rounded-xl inline" style="margin:0" ><span class="text-muted" style="font-size:13px";>${data.sender}</span><br>${data.message}</span><br></div><br>`;
         } else {
-          span.innerHTML = `<div style="text-align:right;"><span class="text-break stranger-message rounded-xl inline"><span class="text-muted" style="font-size:13px">${data.sender}</span><br>${data.message}</span><img class="rounded-full inline" width="27px" src=${data.avatar} style="margin:2.5px 0 0 1.5px;"><br></div><br>`;
+          span.innerHTML = `<div style="text-align:right;"><span class="text-break stranger-message rounded-xl inline"><span class="text-muted" style="font-size:13px">${data.sender}</span><br>${data.message}</span><a href="http://${window.location.host}/users/channel/${data.sender_id}/articles/"><img class="rounded-full inline" width="27px" src=${data.avatar} style="margin:2.5px 0 0 1.5px;"></a><br></div><br>`;
         }
 
         document.querySelector("#my_input").value = "";

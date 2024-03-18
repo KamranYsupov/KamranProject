@@ -1,9 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 
-from .forms import AddCommentForm
+from .forms import ReplyCommentForm
 from .models import Comment
+
+from notifications.tasks import send_notification
 
 comments = (Comment.objects
             .select_related('author', 'post', 'parent', 'video')
@@ -11,7 +14,8 @@ comments = (Comment.objects
 
 
 @login_required
-def like_comment(request, object_id, comment_id):
+def like_comment(request, object_id, comment_id, user_to_reply_id):
+    url = settings.PROJECT_URL + request.POST.get('url_from')
     comment = comments.get(id=comment_id)
     liked_comments = comment.likes.filter(id=request.user.id)
     if liked_comments:
@@ -19,19 +23,42 @@ def like_comment(request, object_id, comment_id):
     else:
         comment.likes.add(request.user)
 
-    return redirect(settings.PROJECT_URL + request.POST.get('url_from'))
+    send_notification.delay(
+        user_to_id=int(user_to_reply_id),
+        user_from=request.user,
+        event_type='Понравился комментарий',
+        url=url
+    )
+
+    return redirect(url)
 
 
 @login_required
-def reply_comment(request, object_id, parent_id):
-    parent_obj = comments.filter(id=parent_id).first()
+def create_reply(request, parent_id, user_to_reply_id, is_reply_to_reply=False):
+    url = settings.PROJECT_URL + request.POST.get('url_from')
+    form = ReplyCommentForm(request.POST)
+    if not form.is_valid():
+        return redirect(settings.PROJECT_URL + request.POST.get('url_from'))
 
-    form = AddCommentForm(request.POST)
-    if form.is_valid():
-        Comment.objects.get_or_create(author=request.user,
-                                      comment=form.cleaned_data.get('comment'),
-                                      parent=parent_obj)
+    user_to_reply = get_object_or_404(get_user_model(), id=int(user_to_reply_id))
+    parent = get_object_or_404(Comment, id=int(parent_id))
 
-    return redirect(settings.PROJECT_URL + request.POST.get('url_from'))
+    comment_text = form.cleaned_data.get('comment')
+
+    Comment.objects.get_or_create(
+        author=request.user,
+        comment=comment_text,
+        parent=parent,
+        user_to_reply=user_to_reply,
+        is_reply_to_reply=is_reply_to_reply,
+    )
+
+    return redirect(url)
 
 
+def reply_comment(request, object_id, parent_id, user_to_reply_id):
+    return create_reply(request, parent_id, user_to_reply_id)
+
+
+def reply_to_reply(request, object_id, parent_id, user_to_reply_id):
+    return create_reply(request, parent_id, user_to_reply_id, is_reply_to_reply=True)
