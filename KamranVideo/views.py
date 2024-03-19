@@ -68,14 +68,6 @@ class WatchVideo(DetailView, BaseMixin, CreateView):
         context['reply_form'] = ReplyCommentForm
         return context
 
-    def post(self, request, *args, **kwargs):
-        send_notification.delay(
-            user_to_id=int(request.POST.get('user_to_id')),
-            user_from=request.user,
-            event_type='Комментирование видео',
-            url=settings.PROJECT_URL + request.POST.get('url_from')
-        )
-        return super(CreateView, self).post(request, *args, **kwargs)
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('watch', kwargs={'video_id': self.kwargs['video_id']})

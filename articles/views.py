@@ -33,9 +33,8 @@ articles = (Article.objects.defer(*deferred_article_fields)
             .select_related('author').prefetch_related('likes')).filter(is_published=True)
 
 
-class MainPage(BaseMixin, TemplateView):
-    template_name = 'articles/main_page.html'
-    title = 'Главная страница'
+def redirect_from_main_to_news(request):
+    return redirect('articles_by_time')
 
 
 class ArticlesByLikes(ArticlesMixin):
@@ -112,14 +111,6 @@ class ShowPost(DetailView, BaseMixin, CreateView):
         context['reply_form'] = ReplyCommentForm
         return context
 
-    def post(self, request, *args, **kwargs):
-        send_notification.delay(
-            user_to_id=int(request.POST.get('user_to_id')),
-            user_from=request.user,
-            event_type='Комментирование статьи',
-            url=settings.PROJECT_URL + request.POST.get('url_from')
-        )
-        return super(CreateView, self).post(request, *args, **kwargs)
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('read', kwargs={'post_slug': self.kwargs['post_slug']})

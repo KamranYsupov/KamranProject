@@ -22,7 +22,7 @@ notificationSocket.onmessage = function(e) {
      console.log(document.querySelector("#notifications-div"))
 
      var notification_span = document.createElement('span');
-     notification_span.innerHTML = `<p>${data.user_to}: ${data.user_from} | ${data.event_type}`;
+     notification_span.innerHTML = `<p>${data.user_from_username}</p>`;
 
      document.querySelector("#notifications-div").appendChild(notification_span);
 };

@@ -55,29 +55,65 @@
         <input type="hidden" name="user_to_id" value="{{ video.author.id }}">
         {% csrf_token %}
         {{ form.comment }}
-        <button style="margin-top:5px;margin-left:620px;" type="submit" class="btn "><span>Отправить</span></button>
+        <button id="add-comment-btn" style="margin-top:5px;margin-left:620px;" type="submit" class="btn "><span>Отправить</span></button>
+        <button id="OPEN">OPEN</button>
     </form>
+    <script>
+        const OPEN = document.querySelector("#OPEN")
+
+        console.log(OPEN)
+        const addCommentInput = document.querySelector("#add-comment-input")
+        const addCommentBtn = document.querySelector("#add-comment-btn")
+
+
+
+        addCommentBtn.onclick = function(e) {
+            if (addCommentInput.value == '')
+            {
+               alert("Нельзя отправлять пустые комментарии!")
+
+               console.log(`Input: ${addCommentInput}`)
+               console.log(`Btn: ${addCommentBtn}`)
+            }
+            else
+            {
+               notificationSocket.send(JSON.stringify({
+                    user_to_id: "{{ video.author.id }}",
+                    user_from_id : "{{ request.user.id }}",
+                    user_from_username: "{{ request.user.username }}",
+                    user_from_avatar: "{{ request.user.avatar }}",
+                    post_id: null,
+                    post_title: null,
+                    video_id: "{{ video.id }}",
+                    video_name: ""{{ video.title }}"",
+                    event_type: "Комментирование видео",
+                    text: addCommentInput.value,
+                    url: window.location.href,
+                    }));
+               }
+        };
+    </script>
 {% endif %}
 <p class="text-muted" style="margin:5;padding:0">_____________________________________________________________________________________________________________</p>
 
 {% if video_comments %}
     {% for comment in video_comments %}
-     <div style="margin-left:20px;">
+     <div style="margin:5px 0 0 20px;">
 
-        <blockquote>
+        <blockquote style="margin:0;padding:0;">
             <footer class="inline">
                 {% if comment.author %}
                    <a href="{% url 'articles-channel' comment.author.id %}" style="text-decoration:none">
-                       <span class="inline"><img src="{{ comment.author.avatar.url }}" width="27.5px" class="rounded-full inline"></span>
-                       <h5 style="margin-bottom:20px;" class="inline">{{ comment.author }}</h5>
+                       <span class="inline"><img src="{{ comment.author.avatar.url }}" width="25.5px" class="rounded-full inline"></span>
+                       <h6 style="margin:3px 0 20px 0;" class="inline">{{ comment.author }}</h6>
                    </a>
                 {% else %}
-                   <span class="inline"><img src="{{ default_avatar }}" width="27.5px" class="rounded-full inline"></span>
+                   <span class="inline"><img src="{{ default_avatar }}" width="25.5px" class="rounded-full inline"></span>
                   <p style="margin-bottom:20px;" class="inline">Пользователь удален</p>
                 {% endif %}
-                <div style="margin-left:33px;font-size:16x;" class="text_break">{{comment.comment|linebreaks}}</div>
+                <div style="margin-left:33px;font-size:16x;" class="text-break text-white">{{comment.comment|linebreaks}}</div>
                 <span class="inline">
-                    <form action="{% url 'like_comment' video.id comment.id comment.author.id %}" method="post" style="margin-left:30px;margin-bottom:15px;">
+                    <form action="{% url 'like_comment' video.id comment.id comment.author.id %}" method="post" style="margin-left:30px;">
                         {% include 'comments/like-comment-form.html' %}
                     </form>
                 </span>
@@ -94,37 +130,37 @@
             </footer>
 
             <div class="comment-reply inline hidden">
-                {% if comment.replies.count > 0 %}
-                    <span class="inline fs-4" style="margin-left:50px;">
-                        Ответы на комментарий
-                    </span>
-                {% endif %}
                 {% if user.is_authenticated %}
                     <form action="{% url 'reply_comment' video.id comment.id comment.author.id %}" method="post" style="margin:10px 0 0 51.2px">
                         {% csrf_token %}
-                        <span class="inline">{{ reply_form.comment }}</span>
+                        <span class="inline">
+                            <input id="reply_input_{{ comment.id }}" name="comment" placeholder="Ответ на комметарий"
+                            style="color:white;width:500px;margin:0;background: black;border-color:#141214;"
+                            class="form-control">
+                        </span>
                         <input type="hidden" name="url_from" value="{{ request.path }}">
                         <input type="hidden" name="parent_id" value="{{ comment.id }}">
                         <span class="inline">
-                            <button type="submit" class="btn btn-dark">
+                            <button id="reply_comment_btn_{{ comment.id }}" type="submit" class="btn btn-dark">
                                 <span>Ответить</span>
                             </button>
                         </span>
                     </form>
+
                 {% else %}
                     <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
                 {% endif %}
                 <br>
-                <div class="reply-comment">
-                    {% for reply in comment.replies.all %}
-                    <blockquote>
+                {% for reply in comment.replies.all %}
+                    <div class="reply-comment">
+                    <blockquote style="margin:0;padding:0;">
                        {% if reply.author %}
                     <a href="{% url 'articles-channel' reply.author.id %}" style="text-decoration:none">
-                        <span class="inline"><img src="{{ reply.author.avatar.url }}" width="27.5px" class="rounded-full inline"></span>
+                        <span class="inline"><img src="{{ reply.author.avatar.url }}" width="25.5px" class="rounded-full inline"></span>
                         <h6 class="inline" style="margin-top:3px;">{{ reply.author }}</h6>
                     </a>
                     {% else %}
-                    <span class="inline"><img src="{{ default_avatar }}" width="27.5px" class="rounded-full inline"></span>
+                    <span class="inline"><img src="{{ default_avatar }}" width="25.5px" class="rounded-full inline"></span>
                     <p style="margin-bottom:10px;" class="inline">Пользователь удален</p>
                     {% endif %}
                     {% if reply.is_reply_to_reply %}
@@ -137,7 +173,7 @@
                         {% endif %}
                     </span>
                     {% endif %}
-                    <div style="margin-left:33px;font-size:14.5px;" class="text-break">
+                    <div style="margin:0 0 7px 33px;font-size:14.5px;" class="text-break text-white">
                         {% if reply.user_to_reply %}
                              <a href="{% url 'articles-channel' reply.user_to_reply.id %}" style="text-decoration:none">
                                  {{ reply.user_to_reply.username }}
@@ -150,7 +186,8 @@
 
                         , {{ reply.comment }}
                     </div>
-                    <span class="inline">
+                    <blockquote style="margin:0;padding:0;">
+                    <span class="bottom-inline">
                         <form action="{% url 'like_comment' video.id reply.id reply.author.id %}" method="post" style="margin: 0 0 10px 33px;">
                             {% csrf_token %}
                             <input type="hidden" name="url_from" value="{{ request.path }}">
@@ -165,29 +202,43 @@
                             </button>
                         </form>
                     </span>
-                {% if user.is_authenticated %}
-                    <form action="{% url 'reply_to_reply' post.id comment.id reply.author.id %}" method="post" style="margin:10px 0 0 51.2px">
-                        {% csrf_token %}
-                        {{ reply_form }}
-                        <input type="hidden" name="url_from" value="{{ request.path }}">
-                        <span class="inline">
-                            <button type="submit" class="btn btn-dark">
-                                <span>Ответить</span>
-                            </button>
-                        </span>
-                    </form>
-                {% else %}
-                    <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
+                    <span class="text-muted " style="margin:23.5px 0 0 0;padding:0;font-size:10px;float:right" >{{ reply.time_create }}</span>
+                    <span class="inline" style="margin:2.5px 0 0 5px;">
+                        <button class="reply-form-btn text-white">
+                            <i class="fa-solid fa-comments fa-sm" style="color: #ffffff;"></i>
+                        </button>
+                    </span>
+
+                    {% if user.is_authenticated %}
+                       <span class="reply-form hidden">
+                           <form action="{% url 'reply_to_reply' video.id comment.id reply.author.id %}" method="post" style="margin:10px 0 0 51.2px">
+                               {% csrf_token %}
+                               <input type="hidden" name="url_from" value="{{ request.path }}">
+                               <span class="inline">
+                                   <input name="comment" placeholder="Ответ на комметарий" style="color:white;height:30px;width:250px;margin:0 0 3px 0;background: black;border-color:#141214" class="form-control">
+                               </span>
+
+                               <span class="inline">
+                                   <button type="submit" class="btn btn-dark btn-sm text-white">
+                                       Ответить
+                                   </button>
+                               </span>
+                           </form>
+                       </span>
+                    {% else %}
+                </blockquote>
+                        <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
                 {% endif %}
-                    <p style="margin: 0 0 0 20px;padding:0;font-size:10px;" class="text-muted">{{ reply.time_create|timesince }} назад</p>
-                    <p class="text-muted" style="margin:0;padding:0">__________________________________________________________________________________________</p>
+
+
                      </blockquote>
-                     {% endfor %}
-                </div>
+                     </div>
+                {% endfor %}
             </div>
         </blockquote>
-        <p class="text-muted" style="margin: 0 0 10px 0;padding:0">_____________________________________________________________________________________________________________________________________________</p>
+        <span class="text-muted" style="margin: 0 0 0 0;padding:0">____________________________________________________________________________________________________________</span>
      </div>
+
 {% endfor %}
 {% else %}
     <p class="text-muted" style="font-size:15px;">Комментариев нет.Будте первым!</p>
@@ -232,6 +283,39 @@
 {% load static %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="{% static 'main/js/comments.js' %}"></script>
+{{ video.author.id|json_script:"user_id" }}
+<script>
+const userId = JSON.parse(document.getElementById('user_id').textContent)
+
+const webSocketProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+
+const notificationSocket = new WebSocket(
+  `${webSocketProtocol}://${window.location.host}/ws/notifications/${userId}/`
+)
+
+
+notificationSocket.onopen = function(e) {
+     console.log('notification websocket is opened');
+     console.log(`${webSocketProtocol}://${window.location.host}/ws/notifications/${userId}/`)
+
+}
+
+notificationSocket.onclose = function(e) {
+     console.log('notification websocket is closed');
+}
+console.log(document.querySelector("#notifications-div"))
+
+notificationSocket.onmessage = function(e) {
+     const data = JSON.parse(e.data);
+     console.log(data);
+     console.log(document.querySelector("#notifications-div"))
+
+     var notification_span = document.createElement('span');
+     notification_span.innerHTML = `<p>${data.user_to}: ${data.user_from} | ${data.event_type}`;
+
+     document.querySelector("#notifications-div").appendChild(notification_span);
+};
+</script>
 <script type="text/javascript">
 const fullDecsElement = document.querySelector('#full-desc')
 const DecsElement = document.querySelector('#desc')

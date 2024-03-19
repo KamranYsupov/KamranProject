@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="icon" sizes="152x152" href="/media/favicon/kiwi-bird-solid-lime.svg">
+    <link rel="icon" sizes="152x152" href="/media/favicon/kiwi-fruit.png">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/453680fd58.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
@@ -20,8 +20,17 @@
 <div style="max-height:73.8px" class=" fixed right-2 w-full top-2 p-2 bg-black border border-lime rounded-full">
     <p class="page">{% block header %}{% endblock %}
     {% if user.is_authenticated %}
-       <button id="open-create-div" class="rounded-full create-div-button">➕</button>
-       <button id="open-profile-menu-submit"><img class="avatar-mini rounded-full" src="{{ user.avatar.url }}"></button>
+       <button id="notifications-open-btn" class="rounded-full notifications-div-button" title="Уведомления">
+           <i class="fa-solid fa-bell"></i>
+       </button>
+       <button id="notifications-close-btn" class="rounded-full notifications-div-button hidden" title="Уведомления">
+           <i class="fa-solid fa-bell"></i>
+       </button>
+
+       <button id="open-create-div" class="rounded-full create-div-button" title="Создать">➕</button>
+       <button id="open-profile-menu-submit" title="Мой профиль">
+           <img class="avatar-mini rounded-full" src="{{ user.avatar.url }}">
+       </button>
 
      </p>
        {% if not KamranGram %}
@@ -40,13 +49,53 @@
                <a href="{% url 'profile' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-pencil"></i> Изменить профиль</div></a>
                <a href="{% url 'session_logout' %}" style="text-decoration:none;"><div class="profile-menu-span text-white"><i class="fa-solid fa-right-from-bracket"></i> Выйти</div></a>
            </div>
-    {% endif %}
+           <div id="notifications-div" class="notifications-div rounded-xl border border-gray hidden">
+               {% if request.user.notifications.all %}
+                   {% for notification in request.user.notifications.all|slice:3 %}
+
+                       <div class="text-break notification" style="font-size:14px;">
+                           {% if notification.event_type == 'Комментирование статьи' %}
+                              <a href="{% url 'articles-channel' notification.user_from.id %}" style="text-decoration:none;">
+                               <span class="inline">
+                                   <img src="{{ notification.user_from.avatar.url}}" width="30px" class="rounded-full">
+                               </span>
+                               <span class="inline" style="margin-top:3px;">
+                                   <b>{{ notification.user_from.username }}</b>
+                               </span>
+                              </a>
+                           <br>
+                               <span>
+                                   прокомментировал вашу публикацию
+                               </span>
+                               <p class="text-break">
+                                   {{ notification.text|truncatechars:150 }}
+                               </p>
+                           {% endif %}
+                       </div>
+                      <a href="{{ notification.url }}" style="text-decoration:none;color:white">
+                      </a>
+                   <br>
+                   {% endfor %}
+<!--                   {% if request.user.notifications.all|length > 3 %}-->
+<!--                       <span>-->
+<!--                           <b>__________________________________________________</b>-->
+<!--                           <a href="#" style="text-decoration:none;position:relative;left:85px;font-size:16px;">-->
+<!--                               Показать остальные-->
+<!--                           </a>-->
+<!--                       </span>-->
+<!--                   {% endif %}-->
+               {% else %}
+                 <span class="text-muted" style="font-size:14.5px;margin-left:85px;">Ни одного уведомления</span>
+               {% endif %}
+           </div>
+
+       {% endif %}
     {% else %}
        <b>
            <span style="position:absolute;left:1070px;top:20px;" >
                <a href="{% url 'session_login' %}" class="auth_btn">Войти</a> | <a href="{% url 'register' %}" class="auth_btn">Регистрация</a>
            </span>
-       </b>    
+       </b>
     {% endif %}
 </div>
 <div id="mini-aside" class="">

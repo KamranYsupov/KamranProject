@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from KamranVideo.models import Video
+from articles.models import Article
+
 User = get_user_model()
 
 
@@ -26,6 +29,20 @@ class Notification(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name='От кого',
+        blank=True,
+        null=True,
+    )
+    post = models.ForeignKey(
+        Article,
+        on_delete=models.CASCADE,
+        verbose_name='Статья',
+        blank=True,
+        null=True,
+    )
+    video = models.ForeignKey(
+        Video,
+        on_delete=models.CASCADE,
+        verbose_name='Видео',
         blank=True,
         null=True,
     )

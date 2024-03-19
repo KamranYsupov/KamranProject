@@ -17,7 +17,7 @@ body {
     border-right: 5px solid white;
     width: 21%;
     position: fixed;
-    background: #0afca0;
+    background: #278c35; /*#0afca0;*/
     height: 100%;
 
 
@@ -39,7 +39,7 @@ h1, h2, h3, h4, h5, h6, span, p, li {
     border-right: 5px solid white;
     width: 9%;
     position: fixed;
-    background: #0afca0;
+    background: #278c35;
     height: 100%;
     display: flex;
 }
@@ -542,6 +542,7 @@ input, textarea {
 .reply-comment {
    width: 60%;
    border-left: 1.5px solid gray;
+   border-bottom: 1px solid gray;
    margin: 0 0 0 50px;
 }
 

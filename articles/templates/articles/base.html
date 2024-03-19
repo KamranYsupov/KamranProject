@@ -53,21 +53,38 @@
            <div id="notifications-div" class="notifications-div rounded-xl border border-gray hidden">
                {% if request.user.notifications.all %}
                    {% for notification in request.user.notifications.all|slice:3 %}
-                      <a href="{{ notification.url }}" style="text-decoration:none;color:white">
+
                        <div class="text-break notification" style="font-size:14px;">
-                           {{ notification.text }}
-                           {{ notification.event_type }}
+                           {% if notification.event_type == 'Комментирование статьи' %}
+                              <a href="{% url 'articles-channel' notification.user_from.id %}" style="text-decoration:none;">
+                               <span class="inline">
+                                   <img src="{{ notification.user_from.avatar.url}}" width="30px" class="rounded-full">
+                               </span>
+                               <span class="inline" style="margin-top:3px;">
+                                   <b>{{ notification.user_from.username }}</b>
+                               </span>
+                              </a>
+                           <br>
+                               <span>
+                                   прокомментировал вашу публикацию
+                               </span>
+                               <p class="text-break">
+                                   {{ notification.text|truncatechars:150 }}
+                               </p>
+                           {% endif %}
                        </div>
+                      <a href="{{ notification.url }}" style="text-decoration:none;color:white">
                       </a>
+                   <br>
                    {% endfor %}
-                   {% if request.user.notifications.all|length > 3 %}
-                       <span>
-                           <b>__________________________________________________</b>
-                           <a href="#" style="text-decoration:none;position:relative;left:85px;font-size:16px;">
-                               Показать остальные
-                           </a>
-                       </span>
-                   {% endif %}
+<!--                   {% if request.user.notifications.all|length > 3 %}-->
+<!--                       <span>-->
+<!--                           <b>__________________________________________________</b>-->
+<!--                           <a href="#" style="text-decoration:none;position:relative;left:85px;font-size:16px;">-->
+<!--                               Показать остальные-->
+<!--                           </a>-->
+<!--                       </span>-->
+<!--                   {% endif %}-->
                {% else %}
                  <span class="text-muted" style="font-size:14.5px;margin-left:85px;">Ни одного уведомления</span>
                {% endif %}

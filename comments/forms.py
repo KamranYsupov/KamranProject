@@ -9,6 +9,7 @@ class AddCommentForm(forms.ModelForm):
 
         widgets = {
             'comment': forms.Textarea(attrs={
+                'id': 'add-comment-input',
                 'class': 'form-control',
                 'style': 'color:white;'
                          'height:10px;'
@@ -30,7 +31,7 @@ class ReplyCommentForm(forms.ModelForm):
         widgets = {
             'comment': forms.Textarea(attrs={
                 'class': 'form-control',
-                'style': 'color:white;height:10px;width:500px;margin:0;background: #141214;border-color:gray',
+                'style': 'height:20px;color:white;width:100px;margin:0;background: #141214;border-color:gray',
                 'placeholder': 'Ответ на комментарий',
             }),
         }

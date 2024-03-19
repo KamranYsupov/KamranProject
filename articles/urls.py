@@ -6,7 +6,7 @@ from articles import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.MainPage.as_view(), name='Articles'),
+    path('', views.redirect_from_main_to_news, name='main'),
     path('articles/order=likes', views.ArticlesByLikes.as_view(), name='articles_by_likes'),
     path('articles/order=like_percent', views.ArticlesByLikePercent.as_view(), name='articles_by_like_percent'),
     path('articles/order=views', views.ArticlesByViews.as_view(), name='articles_by_views'),

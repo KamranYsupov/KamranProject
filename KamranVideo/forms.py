@@ -34,6 +34,7 @@ class AddCommentForm(forms.ModelForm):
 
         widgets = {
             'comment': forms.Textarea(attrs={
+                'id': 'add-comment-input',
                 'class': 'form-control',
                 'style': 'background: black;border-color: black;color:white;',
                 'rows': 1,

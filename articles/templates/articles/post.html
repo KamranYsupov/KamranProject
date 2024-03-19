@@ -14,14 +14,13 @@
             </a>
             <span class="text-white text-break inline" style="width:550px;">{{ post.content }}</span>
         {% else %}
-            <div class="text-white text-break">{{ post.content }}</div>
+            <div class="text-white text-break" style="margin-left:5px;">{{ post.content }}</div>
         {% endif %}
     {% endif %}
 <div style="margin-top:20px;">{% include 'articles/like-form.html' %}</div>
 
 <p class="text-muted">_____________________________________________________________________________________________________________________________________________________</p>
-<h3 style="position:static">Комментарии</h3>
-<p class="text-muted" style="margin:5;padding:0">_____________________________________________________________________________________________________________________________________________________</p>
+<h4 style="margin: 0 0 15px 5px;">Комментарии</h4>
 {% if not user.is_authenticated %}
     <p style="margin-left:5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы оставить комментарий</p>
 {% else %}
@@ -30,16 +29,43 @@
         <input type="hidden" name="url_from" value="{{ request.path }}">
         <input type="hidden" name="user_to_id" value="{{ post.author.id }}">
         {{ form.comment }}
-        <button style="margin-top:5px;" type="submit" class="btn btn-dark"><span>Оставить комментарий</span></button>
+        <button id="add-comment-btn" style="margin-top:5px;" type="submit" class="btn btn-dark"><span>Оставить комментарий</span></button>
     </form>
+    <script>
+        const addCommentInput = document.querySelector("#add-comment-input")
+        const addCommentBtn = document.querySelector("#add-comment-btn")
+
+        addCommentBtn.onclick = function(e) {
+            if (addCommentInput.value == '')
+            {
+               alert("Нельзя отправлять пустые комментарии!")
+            }
+            else
+            {
+               notificationSocket.send(JSON.stringify({
+                    user_to_id: "{{ post.author.id }}",
+                    user_from_id : "{{ request.user.id }}",
+                    user_from_username: "{{ request.user.username }}",
+                    user_from_avatar: "{{ request.user.avatar }}",
+                    post_id: "{{ post.id }}",
+                    post_title: "{{ post.title }}",
+                    video_id: null,
+                    video_name: null,
+                    event_type: "Комментирование статьи",
+                    text: addCommentInput.value,
+                    url: window.location.href,
+                    }));
+               }
+        };
+    </script>
 {% endif %}
-    <p class="text-muted" style="margin:5;padding:0">_____________________________________________________________________________________________________________________________________________________</p>
+    <p class="text-muted" style="margin:0;padding:0">_____________________________________________________________________________________________________________________________________________________</p>
 
 {% if article_comments %}
     {% for comment in article_comments %}
-     <div style="margin-left:20px;">
+     <div style="margin:5px 0 0 20px;">
 
-        <blockquote>
+        <blockquote style="margin:0;padding:0;">
             <footer class="inline">
                 {% if comment.author %}
                    <a href="{% url 'articles-channel' comment.author.id %}" style="text-decoration:none">
@@ -52,7 +78,7 @@
                 {% endif %}
                 <div style="margin-left:33px;font-size:16x;" class="text-break text-white">{{comment.comment|linebreaks}}</div>
                 <span class="inline">
-                    <form action="{% url 'like_comment' post.id comment.id comment.author.id %}" method="post" style="margin-left:30px;margin-bottom:15px;">
+                    <form action="{% url 'like_comment' post.id comment.id comment.author.id %}" method="post" style="margin-left:30px;">
                         {% include 'comments/like-comment-form.html' %}
                     </form>
                 </span>
@@ -69,17 +95,12 @@
             </footer>
 
             <div class="comment-reply inline hidden">
-                {% if comment.replies.count > 0 %}
-                    <span class="inline fs-4" style="margin-left:50px;">
-                        Ответы на комментарий
-                    </span>
-                {% endif %}
                 {% if user.is_authenticated %}
                     <form action="{% url 'reply_comment' post.id comment.id comment.author.id %}" method="post" style="margin:10px 0 0 51.2px">
                         {% csrf_token %}
                         <span class="inline">
                             <input id="reply_input_{{ comment.id }}" name="comment" placeholder="Ответ на комметарий"
-                            style="color:white;width:500px;margin:0;background: #141214;border-color:gray"
+                            style="color:white;width:500px;margin:0;background: #141214;border-color:#141214;"
                             class="form-control">
                         </span>
                         <input type="hidden" name="url_from" value="{{ request.path }}">
@@ -90,43 +111,14 @@
                             </button>
                         </span>
                     </form>
-                    <script>
-                        const replyInput_{{ comment.id }} = document.querySelector("#reply_input_{{ comment.id }}")
-                        console.log(replyInput_{{ comment.id }})
-                        replyInput_{{ comment.id }}.focus();
-                        replyInput_{{ comment.id }}.onkeyup = function (e) {
-                             if (e.keyCode == 13) {
-                                 e.preventDefault();
-                                 document.querySelector("#reply_comment_btn_{{ comment.id }}").click();
-                             }
-                        };
 
-                        const replyCommentButton_{{ comment.id }} = document.querySelector("#reply_comment_btn_{{ comment.id }}")
-                        console.log(replyCommentButton_{{ comment.id }})
-                        replyCommentButton_{{ comment.id }}.onclick = function(e) {
-                            if (replyInput_{{ comment.id }}.value == '')
-                            {
-                              alert("Нельзя отправлять пустые комментарии!")
-                            }
-                            else
-                            {
-                              notificationSocket.send(JSON.stringify({
-                                 user_to: "{{ comment.author.id }}",
-                                 user_from : "{{ request.user.id }}",
-                                 event_type: "Ответ на комментарий",
-                                 text: replyInput_{{ comment.id }}.value,
-                                 url: window.location.href
-                              }));
-                            }
-                        };
-                    </script>
                 {% else %}
                     <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
                 {% endif %}
                 <br>
-                <div class="reply-comment">
-                    {% for reply in comment.replies.all %}
-                    <blockquote>
+                {% for reply in comment.replies.all %}
+                    <div class="reply-comment">
+                    <blockquote style="margin:0;padding:0;">
                        {% if reply.author %}
                     <a href="{% url 'articles-channel' reply.author.id %}" style="text-decoration:none">
                         <span class="inline"><img src="{{ reply.author.avatar.url }}" width="27.5px" class="rounded-full inline"></span>
@@ -146,7 +138,7 @@
                         {% endif %}
                     </span>
                     {% endif %}
-                    <div style="margin-left:33px;font-size:14.5px;" class="text-break text-white">
+                    <div style="margin:0 0 7px 33px;font-size:14.5px;" class="text-break text-white">
                         {% if reply.user_to_reply %}
                              <a href="{% url 'articles-channel' reply.user_to_reply.id %}" style="text-decoration:none">
                                  {{ reply.user_to_reply.username }}
@@ -159,7 +151,8 @@
 
                         , {{ reply.comment }}
                     </div>
-                    <span class="inline">
+                    <blockquote style="margin:0;padding:0;">
+                    <span class="bottom-inline">
                         <form action="{% url 'like_comment' post.id reply.id reply.author.id %}" method="post" style="margin: 0 0 10px 33px;">
                             {% csrf_token %}
                             <input type="hidden" name="url_from" value="{{ request.path }}">
@@ -174,33 +167,48 @@
                             </button>
                         </form>
                     </span>
-                {% if user.is_authenticated %}
-                    <form action="{% url 'reply_to_reply' post.id comment.id reply.author.id %}" method="post" style="margin:10px 0 0 51.2px">
-                        {% csrf_token %}
-                        {{ reply_form.comment }}
-                        <input type="hidden" name="url_from" value="{{ request.path }}">
-                        <span class="inline">
-                            <button type="submit" class="btn btn-dark">
-                                <span>Ответить</span>
-                            </button>
-                        </span>
-                    </form>
-                {% else %}
-                    <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
+                    <span class="text-muted " style="margin:23.5px 0 0 0;padding:0;font-size:10px;float:right" >{{ reply.time_create }}</span>
+                    <span class="inline" style="margin:2.5px 0 0 5px;">
+                        <button class="reply-form-btn text-white">
+                            <i class="fa-solid fa-comments fa-sm" style="color: #ffffff;"></i>
+                        </button>
+                    </span>
+
+                    {% if user.is_authenticated %}
+                       <span class="reply-form hidden">
+                           <form action="{% url 'reply_to_reply' post.id comment.id reply.author.id %}" method="post" style="margin:10px 0 0 51.2px">
+                               {% csrf_token %}
+                               <input type="hidden" name="url_from" value="{{ request.path }}">
+                               <span class="inline">
+                                   <input name="comment" placeholder="Ответ на комметарий" style="color:white;height:30px;width:300px;margin:0 0 3px 0;background: #141214;border-color:#141214" class="form-control">
+                               </span>
+
+                               <span class="inline">
+                                   <button type="submit" class="btn btn-dark btn-sm text-white">
+                                       Ответить
+                                   </button>
+                               </span>
+                           </form>
+                       </span>
+                    {% else %}
+                </blockquote>
+                        <p style="margin-left:55px;font-size:13.5px;"><a href="{% url 'register' %}">Зарегестрируйтесь</a>, чтобы ответить на комментарий</p>
                 {% endif %}
-                    <p style="margin: 0 0 0 20px;padding:0;font-size:10px;" class="text-muted">{{ reply.time_create|timesince }} назад</p>
-                    <p class="text-muted" style="margin:0;padding:0">__________________________________________________________________________________________</p>
+
+
                      </blockquote>
-                     {% endfor %}
-                </div>
+                     </div>
+                {% endfor %}
             </div>
         </blockquote>
-        <p class="text-muted" style="margin: 0 0 10px 0;padding:0">_____________________________________________________________________________________________________________________________________________</p>
+        <span class="text-muted" style="margin: 0 0 0 0;padding:0">_____________________________________________________________________________________________________________________________________________</span>
      </div>
+
 {% endfor %}
 {% else %}
     <p class="text-muted" style="font-size:15px;">Комментариев нет.Будте первым!</p>
 {% endif %}
+
 {% endblock %}
 
 {% block scripts %}
@@ -227,13 +235,14 @@ notificationSocket.onclose = function(e) {
      console.log('notification websocket is closed');
 }
 console.log(document.querySelector("#notifications-div"))
+
 notificationSocket.onmessage = function(e) {
      const data = JSON.parse(e.data);
      console.log(data);
      console.log(document.querySelector("#notifications-div"))
 
      var notification_span = document.createElement('span');
-     notification_span.innerHTML = `<p>${data.user_to}: ${data.user_from} | ${data.event_type}`;
+     notification_span.innerHTML = `<p>${data.user_from_username}</p>`;
 
      document.querySelector("#notifications-div").appendChild(notification_span);
 };
