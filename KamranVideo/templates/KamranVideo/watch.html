@@ -22,6 +22,27 @@
         <br>
 
         <span style="margin-top:px;">{% include 'KamranVideo/like-form.html' %}</span>
+        {% if request.user not in video.likes.all %}
+        <script>
+        const likeBtn = document.querySelector("#like-btn")
+        console.log(likeBtn)
+        likeBtn.onclick = function(e) {
+           notificationSocket.send(JSON.stringify({
+                    user_to_id: "{{ video.author.id }}",
+                    user_from_id : "{{ request.user.id }}",
+                    user_from_username: "{{ request.user.username }}",
+                    user_from_avatar: "{{ request.user.avatar }}",
+                    post_id: null,
+                    post_title: null,
+                    video_id: null,
+                    video_title: null,
+                    event_type: "Понравилось видео",
+                    text: null,
+                    url: window.location.href,
+           }));
+        };
+        </script>
+{% endif %}
 
         <span class="inline" style="padding:0;margin:2px 0 0 0">
             <p style="margin:0;padding:0" class="text-muted">{{ video.views }} {% if video.views > 1 %}просмотров{% else %}просмотр{% endif %}</p>
@@ -56,24 +77,15 @@
         {% csrf_token %}
         {{ form.comment }}
         <button id="add-comment-btn" style="margin-top:5px;margin-left:620px;" type="submit" class="btn "><span>Отправить</span></button>
-        <button id="OPEN">OPEN</button>
     </form>
-    <script>
-        const OPEN = document.querySelector("#OPEN")
-
-        console.log(OPEN)
+        <script>
         const addCommentInput = document.querySelector("#add-comment-input")
         const addCommentBtn = document.querySelector("#add-comment-btn")
-
-
 
         addCommentBtn.onclick = function(e) {
             if (addCommentInput.value == '')
             {
                alert("Нельзя отправлять пустые комментарии!")
-
-               console.log(`Input: ${addCommentInput}`)
-               console.log(`Btn: ${addCommentBtn}`)
             }
             else
             {
@@ -85,8 +97,8 @@
                     post_id: null,
                     post_title: null,
                     video_id: "{{ video.id }}",
-                    video_name: ""{{ video.title }}"",
-                    event_type: "Комментирование видео",
+                    video_title: "{{ video.title }}",
+                    event_type: "Комментирование статьи",
                     text: addCommentInput.value,
                     url: window.location.href,
                     }));
@@ -287,6 +299,8 @@
 <script>
 const userId = JSON.parse(document.getElementById('user_id').textContent)
 
+
+
 const webSocketProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
 
 const notificationSocket = new WebSocket(
@@ -296,6 +310,8 @@ const notificationSocket = new WebSocket(
 
 notificationSocket.onopen = function(e) {
      console.log('notification websocket is opened');
+     console.log(addCommentInput)
+     console.log(addCommentBtn)
      console.log(`${webSocketProtocol}://${window.location.host}/ws/notifications/${userId}/`)
 
 }
@@ -303,43 +319,17 @@ notificationSocket.onopen = function(e) {
 notificationSocket.onclose = function(e) {
      console.log('notification websocket is closed');
 }
-console.log(document.querySelector("#notifications-div"))
 
 notificationSocket.onmessage = function(e) {
      const data = JSON.parse(e.data);
      console.log(data);
-     console.log(document.querySelector("#notifications-div"))
 
      var notification_span = document.createElement('span');
-     notification_span.innerHTML = `<p>${data.user_to}: ${data.user_from} | ${data.event_type}`;
+     notification_span.innerHTML = `<p>| ${data.event_type}</p>`;
 
      document.querySelector("#notifications-div").appendChild(notification_span);
 };
-</script>
-<script type="text/javascript">
-const fullDecsElement = document.querySelector('#full-desc')
-const DecsElement = document.querySelector('#desc')
-const ShowDecsElement = document.querySelector('#show-desc')
-const HideDecsElement = document.querySelector('#hide-desc')
-
-ShowDecsElement.onclick = function(e) {
-    e.preventDefault()
-
-    DecsElement.classList.add('hidden')
-    fullDecsElement.classList.remove('hidden')
-
-    return false
-}
-
-HideDecsElement.onclick = function(e) {
-    e.preventDefault()
-
-    fullDecsElement.classList.add('hidden')
-    DecsElement.classList.remove('hidden')
-
-    return false
-}
-
 
 </script>
+
 {% endblock %}

@@ -18,7 +18,27 @@
         {% endif %}
     {% endif %}
 <div style="margin-top:20px;">{% include 'articles/like-form.html' %}</div>
+{% if request.user not in post.likes.all %}
+<script>
+        const likeBtn = document.querySelector("#like-btn")
 
+        likeBtn.onclick = function(e) {
+           notificationSocket.send(JSON.stringify({
+                    user_to_id: "{{ post.author.id }}",
+                    user_from_id : "{{ request.user.id }}",
+                    user_from_username: "{{ request.user.username }}",
+                    user_from_avatar: "{{ request.user.avatar }}",
+                    post_id: null,
+                    post_title: null,
+                    video_id: null,
+                    video_title: null,
+                    event_type: "Понравилась статья",
+                    text: null,
+                    url: window.location.href,
+           }));
+        };
+</script>
+{% endif %}
 <p class="text-muted">_____________________________________________________________________________________________________________________________________________________</p>
 <h4 style="margin: 0 0 15px 5px;">Комментарии</h4>
 {% if not user.is_authenticated %}
@@ -50,7 +70,7 @@
                     post_id: "{{ post.id }}",
                     post_title: "{{ post.title }}",
                     video_id: null,
-                    video_name: null,
+                    video_title: null,
                     event_type: "Комментирование статьи",
                     text: addCommentInput.value,
                     url: window.location.href,

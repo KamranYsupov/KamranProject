@@ -3,7 +3,7 @@
     <input type="hidden" name="url_from" value="{{ request.path }}">
     <input type="hidden" name="user_to_id" value="{{ post.author.id }}">
 
-    <button type="submit" name="post_slug" value="{{ post.slug }}" class="btn btn-sm
+    <button id="like-btn" type="submit" name="post_slug" value="{{ post.slug }}" class="btn btn-sm
            {% if user in post.likes.all %}
                   btn-danger
            {% else %}

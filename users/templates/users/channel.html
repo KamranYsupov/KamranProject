@@ -20,7 +20,7 @@
                   {% csrf_token %}
                   <input type="hidden" name="url_from" value="{{ request.path }}">
                   <input type="hidden" name="user_to_id" value="{{ owner.id }}">
-                  <button type="submit" style="margin-top:10px">
+                  <button id="follow-btn" type="submit" style="margin-top:10px">
                   {% if request.user in owner.followers.all %}
 
                             <span style="color:white;" class="follow_button rounded-full">
@@ -33,6 +33,28 @@
                 {% endif %}
                 </button>
             </form>
+            {% if request.user not in owner.followers.all %}
+            <script>
+                const followBtn = document.querySelector("#follow-btn")
+
+                followBtn.onclick = function(e) {
+                    notificationSocket.send(JSON.stringify({
+                           user_to_id: "{{ owner.id }}",
+                           user_from_id : "{{ request.user.id }}",
+                           user_from_username: "{{ request.user.username }}",
+                           user_from_avatar: "{{ request.user.avatar }}",
+                           post_id: null,
+                           post_title: null,
+                           video_id: null,
+                           video_title: null,
+                           event_type: "Подписка",
+                           text: null,
+                           url: window.location.href,
+                           }));
+
+                };
+            </script>
+            {% endif %}
             <span class="channel-piece rounded-full inline" style="width:140px;margin-top:10px">
 
                   {% if owner.followers.count == 1 %}
@@ -52,4 +74,40 @@
 {% block channel_content %}
       {% endblock %}
 
+{% endblock %}
+
+{% block scripts %}
+
+{{ owner.id|json_script:'user_id' }}
+<script>
+const userId = JSON.parse(document.getElementById('user_id').textContent)
+
+const webSocketProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+
+const notificationSocket = new WebSocket(
+  `${webSocketProtocol}://${window.location.host}/ws/notifications/${userId}/`
+)
+
+
+notificationSocket.onopen = function(e) {
+     console.log('notification websocket is opened');
+     console.log(`${webSocketProtocol}://${window.location.host}/ws/notifications/${userId}/`)
+}
+
+notificationSocket.onclose = function(e) {
+     console.log('notification websocket is closed');
+}
+console.log(document.querySelector("#notifications-div"))
+
+notificationSocket.onmessage = function(e) {
+     const data = JSON.parse(e.data);
+     console.log(data);
+     console.log(document.querySelector("#notifications-div"))
+
+     var notification_span = document.createElement('span');
+     notification_span.innerHTML = `<p>${data.user_from_username}</p>`;
+
+     document.querySelector("#notifications-div").appendChild(notification_span);
+};
+</script>
 {% endblock %}

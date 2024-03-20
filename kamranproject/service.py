@@ -5,6 +5,11 @@ from django.shortcuts import redirect
 from notifications.tasks import send_notification
 
 
+def is_connection_by_websocket(url: str) -> bool:
+    """Проверяем был ли запрос по url адресу через websocket"""
+    return url.__contains__('read_post') or url.__contains__('watch')
+
+
 def object_checker(obj):
     """Проверяем с обьектом какой модели работаем(Article или Video)"""
     try:
@@ -40,11 +45,12 @@ def like(request, obj):
         obj.views += 1
         obj.save()
 
-        send_notification.delay(
-            user_to_id=int(request.POST.get('user_to_id')),
-            user_from=request.user,
-            event_type=get_event_type(obj),
-            url=url
-        )
+        if not is_connection_by_websocket(url):
+            send_notification.delay(
+                user_to_id=int(request.POST.get('user_to_id')),
+                user_from_id=request.user.id,
+                event_type=get_event_type(obj),
+                url=url
+            )
 
     return redirect(url)

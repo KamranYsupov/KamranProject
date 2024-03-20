@@ -50,6 +50,7 @@ class Notification(models.Model):
     text = models.TextField(verbose_name='Текст', blank=True, null=True)
     url = models.URLField(verbose_name='Ссылка', blank=True, null=True)
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время отправки')
+    is_watched = models.BooleanField(default=False, verbose_name='Просмотренно')
 
     class Meta:
         verbose_name = 'Уведомление'

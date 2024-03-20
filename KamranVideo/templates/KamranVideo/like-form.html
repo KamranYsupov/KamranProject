@@ -3,7 +3,7 @@
     <input type="hidden" name="url_from" value="{{ request.path }}">
     <input type="hidden" name="user_to_id" value="{{ video.author.id }}">
 
-    <button type="submit" name="video_id" value="{{ video.id }}" class="btn btn-sm
+    <button id="like-btn" type="submit" name="video_id" value="{{ video.id }}" class="btn btn-sm
            {% if user in video.likes.all %}
                   btn-danger
            {% else %}

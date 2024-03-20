@@ -35,7 +35,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         post_id = text_json_data['post_id']
         post_title = text_json_data['post_title']
         video_id = text_json_data['video_id']
-        video_name = text_json_data['video_name']
+        video_title = text_json_data['video_title']
         event_type = text_json_data['event_type']
         text = text_json_data['text']
         url = text_json_data['url']
@@ -53,7 +53,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 'post_id': post_id,
                 'post_title': post_title,
                 'video_id': video_id,
-                'video_name': video_name,
+                'video_title': video_title,
                 'event_type': event_type,
                 'text': text,
                 'url': url,
@@ -68,7 +68,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         post_id = event['post_id']
         post_title = event['post_title']
         video_id = event['video_id']
-        video_name = event['video_name']
+        video_title = event['video_title']
         event_type = event['event_type']
         text = event['text']
         url = event['url']
@@ -82,7 +82,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 'post_id': post_id,
                 'post_title': post_title,
                 'video_id': video_id,
-                'video_name': video_name,
+                'video_title': video_title,
                 'event_type': event_type,
                 'text': text,
                 'url': url,

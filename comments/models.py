@@ -64,7 +64,7 @@ class Comment(models.Model):
     )
 
     class Meta:
-        ordering = ['time_create']
+        ordering = ['-time_create']
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 

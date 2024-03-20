@@ -8,7 +8,7 @@ const notificationSocket = new WebSocket(
 
 
 notificationSocket.onopen = function(e) {
-     console.log('notification websocket is opened');
+     console.log('notification websocket is opened1');
      console.log(`${webSocketProtocol}://${window.location.host}/ws/notifications/${userId}/`)
 }
 
@@ -22,7 +22,7 @@ notificationSocket.onmessage = function(e) {
      console.log(document.querySelector("#notifications-div"))
 
      var notification_span = document.createElement('span');
-     notification_span.innerHTML = `<p>${data.user_from_username}</p>`;
+     notification_span.innerHTML = `<p>${ data.user_from_username } - <b>${ data.event_type }</p>`;
 
      document.querySelector("#notifications-div").appendChild(notification_span);
 };

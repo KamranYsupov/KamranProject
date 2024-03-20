@@ -24,8 +24,8 @@ def like_comment(request, object_id, comment_id, user_to_reply_id):
         comment.likes.add(request.user)
 
     send_notification.delay(
-        user_to_id=int(user_to_reply_id),
-        user_from=request.user,
+        user_to_id=user_to_reply_id,
+        user_from_id=request.user.id,
         event_type='Понравился комментарий',
         url=url
     )
@@ -51,6 +51,13 @@ def create_reply(request, parent_id, user_to_reply_id, is_reply_to_reply=False):
         parent=parent,
         user_to_reply=user_to_reply,
         is_reply_to_reply=is_reply_to_reply,
+    )
+
+    send_notification.delay(
+        user_to_id=user_to_reply_id,
+        user_from_id=request.user.id,
+        event_type='Ответ на комментарий',
+        text=comment_text,
     )
 
     return redirect(url)

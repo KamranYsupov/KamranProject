@@ -14,7 +14,7 @@ from kamranproject.service import like
 from comments.forms import ReplyCommentForm
 from comments.service import deferred_comment_fields
 from notifications.tasks import send_notification
-from .forms import AddCommentForm
+from comments.forms import AddCommentForm
 from .forms import AddVideoForm
 from .models import Video
 from .serializers import VideoSerializer
@@ -67,7 +67,6 @@ class WatchVideo(DetailView, BaseMixin, CreateView):
         context['video_comments'] = video_comments
         context['reply_form'] = ReplyCommentForm
         return context
-
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('watch', kwargs={'video_id': self.kwargs['video_id']})

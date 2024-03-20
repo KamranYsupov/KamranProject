@@ -112,12 +112,6 @@ def follow(request, owner_id):
         owner_followers.remove(current_user)
     else:
         owner_followers.add(current_user)
-        send_notification.delay(
-            user_to_id=int(request.POST.get('user_to_id')),
-            user_from=request.user,
-            event_type='Подписка',
-            url=settings.PROJECT_URL + request.POST.get('url_from')
-        )
 
     return redirect(settings.PROJECT_URL + request.POST.get('url_from'))
 

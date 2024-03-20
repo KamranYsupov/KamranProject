@@ -111,7 +111,6 @@ class ShowPost(DetailView, BaseMixin, CreateView):
         context['reply_form'] = ReplyCommentForm
         return context
 
-
     def get_success_url(self, **kwargs):
         return reverse_lazy('read', kwargs={'post_slug': self.kwargs['post_slug']})
 
