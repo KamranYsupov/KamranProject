@@ -18,8 +18,6 @@ createDivOpen.onclick = function(e) {
     profileMenuDiv.classList.add('hidden')
     notificationsDiv.classList.add('hidden')
 
-    console.log('create-div is opened')
-
     return false
 }
 
@@ -30,8 +28,6 @@ createDivClose.onclick = function(e) {
     createDivClose.classList.add('hidden')
     createDiv.classList.add('hidden')
     createDivOpen.classList.remove('hidden')
-
-    console.log('create-div is closed')
 
     return false
 }
@@ -44,8 +40,6 @@ profileMenuOpenSubmit.onclick = function(e) {
     createDiv.classList.add('hidden')
     notificationsDiv.classList.add('hidden')
 
-    console.log('profile-menu is opened')
-
     return false
 }
 
@@ -57,26 +51,9 @@ profileMenuCloseSubmit.onclick = function(e) {
     profileMenuOpenSubmit.classList.remove('hidden')
     profileMenuDiv.classList.add('hidden')
 
-    console.log('profile-menu is closed')
-
     return false
 }
 
-
-notificationsOpenSubmit.onclick = function(e) {
-    e.preventDefault()
-
-    notificationsDiv.classList.remove('hidden')
-    notificationsOpenSubmit.classList.add('hidden')
-    notificationsCloseSubmit.classList.remove('hidden')
-    profileMenuDiv.classList.add('hidden')
-    createDiv.classList.add('hidden')
-
-    console.log('notifications-div is opened!')
-
-    return false
-
-}
 
 notificationsCloseSubmit.onclick = function(e) {
     e.preventDefault()
@@ -84,8 +61,6 @@ notificationsCloseSubmit.onclick = function(e) {
     notificationsDiv.classList.add('hidden')
     notificationsOpenSubmit.classList.remove('hidden')
     notificationsCloseSubmit.classList.add('hidden')
-
-    console.log('notifications-dis is opened!')
 
     return false
 

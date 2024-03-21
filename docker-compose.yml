@@ -14,17 +14,17 @@ services:
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
     depends_on:
-#      - postgres
+      - postgres
       - rabbitmq
       - redis
 
-#  postgres:
-#    image: postgres:14.6-alpine
-#    environment:
-#      - POSTGRES_DB=dbname
-#      - POSTGRES_USER=dbuser
-#      - POSTGRES_PASSWORD=pass
-#      - POSTGRES_HOST_AUTH_METHOD=trust
+  postgres:
+    image: postgres:14.6-alpine
+    environment:
+      - POSTGRES_DB=dbname
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_HOST_AUTH_METHOD=trust
 
   rabbitmq:
     image: rabbitmq:management
@@ -59,7 +59,7 @@ services:
       - rabbitmq
       - redis
     depends_on:
-#      - postgres
+      - postgres
       - rabbitmq
       - redis
 
@@ -76,7 +76,7 @@ services:
       - rabbitmq
       - redis
     depends_on:
-#      - postgres
+      - postgres
       - worker
       - rabbitmq
       - redis

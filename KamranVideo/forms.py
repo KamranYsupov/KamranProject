@@ -36,7 +36,12 @@ class AddCommentForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={
                 'id': 'add-comment-input',
                 'class': 'form-control',
-                'style': 'background: black;border-color: black;color:white;',
+                'style': 'color:white;'
+                         'height:10px;'
+                         'width:700px;'
+                         'margin:0;'
+                         'background: #141214;'
+                         'border-color:#141214;',
                 'rows': 1,
                 'placeholder': 'Комментарий',
             }),

@@ -20,14 +20,49 @@
 <div style="max-height:73.8px" class=" fixed right-2 w-full top-2 p-2 bg-black border border-lime rounded-full">
     <p class="page">{% block header %}{% endblock %}
     {% if user.is_authenticated %}
-       <button id="notifications-open-btn" class="rounded-full notifications-div-button" title="Уведомления">
-           <i class="fa-solid fa-bell"></i>
-       </button>
-       <button id="notifications-close-btn" class="rounded-full notifications-div-button hidden" title="Уведомления">
-           <i class="fa-solid fa-bell"></i>
+       <button id="notifications-open-btn" class="rounded-full notifications-div-button"
+               title="Уведомления">
+           <i class="fa-solid fa-bell" style="color: #ffffff;"></i>
        </button>
 
-       <button id="open-create-div" class="rounded-full create-div-button" title="Создать">➕</button>
+         <script>
+           document.querySelector("#notifications-open-btn").onclick = function(e) {
+              e.preventDefault()
+
+              {% if request.user.notifications.all.first.is_watched == False %}
+                   notificationSocket.send(JSON.stringify({
+                       user_to_id: "{{ request.user.id }}",
+                       is_watched: true,
+                   }))
+              {% endif %}
+
+              notificationsDiv.classList.remove('hidden')
+              notificationsOpenSubmit.classList.add('hidden')
+              notificationsCloseSubmit.classList.remove('hidden')
+              profileMenuDiv.classList.add('hidden')
+              createDiv.classList.add('hidden')
+              document.querySelector("#notifications-traker").classList.add("hidden")
+
+              return false
+           }
+         </script>
+       <button id="notifications-close-btn" class="rounded-full notifications-div-button hidden"
+               style="right:125px;" title="Уведомления">
+           <i class="fa-solid fa-bell" style="color: #ffffff;"></i>
+       </button>
+
+       <span id="notifications-traker" class="notifications-traker
+       {% if request.user.notifications.all.first.is_watched != False %}
+           hidden
+       {% endif %}"
+             style="right:126px">
+           <i class="fa-solid fa-circle fa-2xs" style="color: #e81127;"></i>
+       </span>
+
+       <button id="open-create-div" class="rounded-full create-div-button"
+               title="Создать">
+           <i class="fa-solid fa-plus" style="color: #ffffff;"></i>
+       </button>
        <button id="open-profile-menu-submit" title="Мой профиль">
            <img class="avatar-mini rounded-full" src="{{ user.avatar.url }}">
        </button>
@@ -133,5 +168,10 @@
 
     <script src="{% static 'main/js/base.js' %}"></script>
     {% block scripts %}{% endblock %}
+
+    {% if not post.id and not video.id and not owner.id %}
+       {{ request.user.id|json_script:"user_id" }}
+       <script src="{% static 'main/js/notifications.js' %}"></script>
+    {% endif %}
 </body>
 </html>

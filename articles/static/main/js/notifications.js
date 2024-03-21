@@ -16,15 +16,14 @@ notificationSocket.onclose = function(e) {
      console.log('notification websocket is closed');
 }
 console.log(document.querySelector("#notifications-div"))
+
 notificationSocket.onmessage = function(e) {
+     document.querySelector("#notifications-traker").classList.remove("hidden")
      const data = JSON.parse(e.data);
-     console.log(data);
-     console.log(document.querySelector("#notifications-div"))
+     console.log(document.querySelector("#notifications-traker"))
 
      var notification_span = document.createElement('span');
      notification_span.innerHTML = `<p>${ data.user_from_username } - <b>${ data.event_type }</p>`;
 
      document.querySelector("#notifications-div").appendChild(notification_span);
 };
-
-

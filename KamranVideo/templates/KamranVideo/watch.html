@@ -98,7 +98,7 @@
                     post_title: null,
                     video_id: "{{ video.id }}",
                     video_title: "{{ video.title }}",
-                    event_type: "Комментирование статьи",
+                    event_type: "Комментирование видео",
                     text: addCommentInput.value,
                     url: window.location.href,
                     }));
@@ -331,5 +331,30 @@ notificationSocket.onmessage = function(e) {
 };
 
 </script>
+<script type="text/javascript">
+const fullDecsElement = document.querySelector('#full-desc')
+const DecsElement = document.querySelector('#desc')
+const ShowDecsElement = document.querySelector('#show-desc')
+const HideDecsElement = document.querySelector('#hide-desc')
 
+ShowDecsElement.onclick = function(e) {
+    e.preventDefault()
+
+    DecsElement.classList.add('hidden')
+    fullDecsElement.classList.remove('hidden')
+
+    return false
+}
+
+HideDecsElement.onclick = function(e) {
+    e.preventDefault()
+
+    fullDecsElement.classList.add('hidden')
+    DecsElement.classList.remove('hidden')
+
+    return false
+}
+
+
+</script>
 {% endblock %}

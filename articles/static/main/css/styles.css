@@ -374,8 +374,14 @@ input, textarea {
    width: 30px;
    height: 30px;
    background: #141214;
-   right: 117px;
+   left: 1121px;
    bottom: 24px;
+}
+
+.notifications-traker {
+   position: absolute;
+   right: 115px;
+   bottom: 35px;
 }
 
 

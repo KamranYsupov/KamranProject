@@ -28,17 +28,21 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         text_json_data = json.loads(text_data)
-        user_to_id = text_json_data['user_to_id']
-        user_from_id = text_json_data['user_from_id']
-        user_from_username = text_json_data['user_from_username']
-        user_from_avatar = text_json_data['user_from_avatar']
-        post_id = text_json_data['post_id']
-        post_title = text_json_data['post_title']
-        video_id = text_json_data['video_id']
-        video_title = text_json_data['video_title']
-        event_type = text_json_data['event_type']
-        text = text_json_data['text']
-        url = text_json_data['url']
+        user_to_id = text_json_data.get('user_to_id')
+        user_from_id = text_json_data.get('user_from_id')
+        user_from_username = text_json_data.get('user_from_username')
+        user_from_avatar = text_json_data.get('user_from_avatar')
+        post_id = text_json_data.get('post_id')
+        post_title = text_json_data.get('post_title')
+        video_id = text_json_data.get('video_id')
+        video_title = text_json_data.get('video_title')
+        event_type = text_json_data.get('event_type')
+        text = text_json_data.get('text')
+        url = text_json_data.get('url')
+        is_watched = text_json_data.get('is_watched')
+
+        if is_watched:
+            return await self.set_notifications_status_watched(text_json_data)
 
         await self.save_notification(text_json_data)
 
@@ -57,6 +61,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 'event_type': event_type,
                 'text': text,
                 'url': url,
+                'is_watched': is_watched,
             }
         )
 
@@ -72,6 +77,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         event_type = event['event_type']
         text = event['text']
         url = event['url']
+        is_watched = event['is_watched']
 
         await self.send(
             text_data=json.dumps({
@@ -86,6 +92,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 'event_type': event_type,
                 'text': text,
                 'url': url,
+                'is_watched': is_watched
             })
         )
 
@@ -108,3 +115,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             text=data['text'],
             url=data['url'],
         )
+
+    @sync_to_async
+    def set_notifications_status_watched(self, data):
+        user = get_user_model().objects.get(id=int(data['user_to_id']))
+        user.notifications.all().update(is_watched=True)

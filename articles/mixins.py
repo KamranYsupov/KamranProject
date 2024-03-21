@@ -30,3 +30,5 @@ class ArticlesMixin(BaseMixin, ListView):
         super().__init__()
         if self.order:
             self.extra_context['order'] = self.order
+
+
