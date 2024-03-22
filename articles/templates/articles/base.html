@@ -30,10 +30,20 @@
               e.preventDefault()
 
               {% if request.user.notifications.all.first.is_watched == False %}
-                   notificationSocket.send(JSON.stringify({
-                       user_to_id: "{{ request.user.id }}",
-                       is_watched: true,
-                   }))
+                 notificationSocket.send(JSON.stringify({
+                        user_to_id: "{{ request.user.id }}",
+                        user_from_id : null,
+                        user_from_username: null,
+                        user_from_avatar: null,
+                        post_id: null,
+                        post_title: null,
+                        video_id: null,
+                        video_title: null,
+                        event_type: null,
+                        text: null,
+                        url: window.location.href,
+                        is_watched: true,
+              }))
               {% endif %}
 
               notificationsDiv.classList.remove('hidden')
@@ -102,6 +112,8 @@
                                <p class="text-break">
                                    {{ notification.text|truncatechars:150 }}
                                </p>
+                           {% else %}
+                             <p>{{ notification.event_type }}</p>
                            {% endif %}
                        </div>
                       <a href="{{ notification.url }}" style="text-decoration:none;color:white">

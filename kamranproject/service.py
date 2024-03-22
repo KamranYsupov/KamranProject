@@ -49,6 +49,8 @@ def like(request, obj):
             send_notification.delay(
                 user_to_id=int(request.POST.get('user_to_id')),
                 user_from_id=request.user.id,
+                post_id=obj.id if object_checker(obj) == 'Article' else None,
+                video_id=obj.id if object_checker(obj) == 'Video' else None,
                 event_type=get_event_type(obj),
                 url=url
             )

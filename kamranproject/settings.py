@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'djoser',
     'debug_toolbar',
     'social_django',
-   # 'cachalot',
+    'cachalot',
 
     'articles',
     'KamranGram',

@@ -3,6 +3,7 @@ from django.db import models
 
 from KamranVideo.models import Video
 from articles.models import Article
+from comments.models import Comment
 
 User = get_user_model()
 
@@ -43,6 +44,13 @@ class Notification(models.Model):
         Video,
         on_delete=models.CASCADE,
         verbose_name='Видео',
+        blank=True,
+        null=True,
+    )
+    comment = models.ForeignKey(
+        Comment,
+        on_delete=models.CASCADE,
+        verbose_name='Комментарий',
         blank=True,
         null=True,
     )

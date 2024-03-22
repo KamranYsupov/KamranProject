@@ -15,7 +15,6 @@ notificationSocket.onopen = function(e) {
 notificationSocket.onclose = function(e) {
      console.log('notification websocket is closed');
 }
-console.log(document.querySelector("#notifications-div"))
 
 notificationSocket.onmessage = function(e) {
      document.querySelector("#notifications-traker").classList.remove("hidden")

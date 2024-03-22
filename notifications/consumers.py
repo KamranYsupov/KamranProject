@@ -11,10 +11,10 @@ from notifications.models import Notification
 
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.user_to__id = self.scope['url_route']['kwargs']['user_to__id']
+        self.user_to_id = self.scope['url_route']['kwargs']['user_to__id']
 
         await self.channel_layer.group_add(
-            self.user_to__id,
+            self.user_to_id,
             self.channel_name,
         )
 
@@ -22,7 +22,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
-            self.user_to__id,
+            self.user_to_id,
             self.channel_name
         )
 
@@ -47,7 +47,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.save_notification(text_json_data)
 
         await self.channel_layer.group_send(
-            self.user_to__id,
+            self.user_to_id,
             {
                 'type': 'send_notification',
                 'user_to_id': user_to_id,
@@ -66,33 +66,19 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         )
 
     async def send_notification(self, event):
-        user_to_id = event['user_to_id']
-        user_from_id = event['user_from_id']
-        user_from_username = event['user_from_username']
-        user_from_avatar = event['user_from_avatar']
-        post_id = event['post_id']
-        post_title = event['post_title']
-        video_id = event['video_id']
-        video_title = event['video_title']
-        event_type = event['event_type']
-        text = event['text']
-        url = event['url']
-        is_watched = event['is_watched']
-
         await self.send(
             text_data=json.dumps({
-                'user_to_id': user_to_id,
-                'user_from_id': user_from_id,
-                'user_from_username': user_from_username,
-                'user_from_avatar': user_from_avatar,
-                'post_id': post_id,
-                'post_title': post_title,
-                'video_id': video_id,
-                'video_title': video_title,
-                'event_type': event_type,
-                'text': text,
-                'url': url,
-                'is_watched': is_watched
+                'user_to_id': event.get('user_to_id'),
+                'user_from_id': event.get('user_from_id'),
+                'user_from_username': event.get('user_from_username'),
+                'user_from_avatar': event.get('user_from_avatar'),
+                'post_id': event.get('post_id'),
+                'post_title': event.get('post_title'),
+                'video_id': event.get('video_id'),
+                'video_title': event.get('video_title'),
+                'event_type': event.get('event_type'),
+                'text': event.get('text'),
+                'url': event.get('url'),
             })
         )
 
@@ -120,3 +106,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     def set_notifications_status_watched(self, data):
         user = get_user_model().objects.get(id=int(data['user_to_id']))
         user.notifications.all().update(is_watched=True)
+
+
+
+
+
