@@ -17,6 +17,7 @@ class AddCommentForm(forms.ModelForm):
                          'margin:0;'
                          'background: #141214;'
                          'border-color:#141214;',
+                'minlength': 1,
                 'rows': 1,
                 'placeholder': 'Комментарий',
             }),

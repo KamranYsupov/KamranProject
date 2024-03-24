@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Prefetch
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
@@ -10,6 +10,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from articles.views import comments
 from django.conf import settings
 from articles.mixins import BaseMixin
+from comments.models import Comment
 from kamranproject.service import like
 from comments.forms import ReplyCommentForm
 from comments.service import deferred_comment_fields
@@ -57,8 +58,12 @@ class WatchVideo(DetailView, BaseMixin, CreateView):
 
         video_comments = (video
                           .video_comments.defer(*deferred_comment_fields)
-                          .select_related('author')
-                          .prefetch_related('likes', 'replies__likes', 'replies__author')
+                          .select_related('author', 'parent', 'user_to_reply')
+                          .prefetch_related('likes',
+                                            Prefetch('replies', queryset=Comment.objects
+                                                     .select_related('author', 'parent', 'user_to_reply')
+                                                     .prefetch_related('likes')))
+
                           .annotate(likes_count=Count('likes'))
                           .order_by('-likes_count'))
 

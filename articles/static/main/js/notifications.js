@@ -17,9 +17,13 @@ notificationSocket.onclose = function(e) {
 }
 
 notificationSocket.onmessage = function(e) {
-     document.querySelector("#notifications-traker").classList.remove("hidden")
+     if (document.querySelector("#no-notifications") !== null) {
+           document.querySelector("#no-notifications").classList.add("hidden")
+     }
+     if (document.querySelector("#notifications-div").classList.contains("hidden")){
+           document.querySelector("#notifications-traker").classList.remove("hidden")
+     }
      const data = JSON.parse(e.data);
-     console.log(document.querySelector("#notifications-traker"))
 
      var notification_span = document.createElement('span');
      notification_span.innerHTML = `<p>${ data.user_from_username } - <b>${ data.event_type }</p>`;

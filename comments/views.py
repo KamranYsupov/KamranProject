@@ -1,12 +1,15 @@
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 
+from notifications.models import Notification
 from .forms import ReplyCommentForm
 from .models import Comment
 
-from notifications.tasks import send_notification
+from notifications.tasks import send_notification, User
 
 comments = (Comment.objects
             .select_related('author', 'post', 'parent', 'video')

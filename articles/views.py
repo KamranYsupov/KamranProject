@@ -96,14 +96,14 @@ class ShowPost(DetailView, BaseMixin, CreateView):
         if self.request.user != article.author and self.request.user.is_authenticated:
             article.views += 1
             article.save()
-
         article_comments = (article.post_comments
                             .defer(*deferred_comment_fields)
-                            .select_related('author', 'parent')
+                            .select_related('author', 'parent', 'user_to_reply')
                             .prefetch_related('likes',
-                                              'replies__likes',
-                                              'replies__author',
-                                              'replies__user_to_reply')
+                                              Prefetch('replies', queryset=Comment.objects
+                                                       .select_related('author', 'parent', 'user_to_reply')
+                                                       .prefetch_related('likes'),
+                                                       ))
                             .annotate(likes_count=Count('likes'))
                             .order_by('-likes_count', '-time_create'))
         context = super().get_context_data(**kwargs)

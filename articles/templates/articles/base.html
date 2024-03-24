@@ -29,8 +29,8 @@
            document.querySelector("#notifications-open-btn").onclick = function(e) {
               e.preventDefault()
 
-              {% if request.user.notifications.all.first.is_watched == False %}
-                 notificationSocket.send(JSON.stringify({
+              if (!(document.querySelector("#notifications-traker").classList.contains("hidden"))){
+                    notificationSocket.send(JSON.stringify({
                         user_to_id: "{{ request.user.id }}",
                         user_from_id : null,
                         user_from_username: null,
@@ -43,8 +43,10 @@
                         text: null,
                         url: window.location.href,
                         is_watched: true,
-              }))
-              {% endif %}
+                    }))
+              }
+
+
 
               notificationsDiv.classList.remove('hidden')
               notificationsOpenSubmit.classList.add('hidden')
@@ -129,7 +131,7 @@
 <!--                       </span>-->
 <!--                   {% endif %}-->
                {% else %}
-                 <span class="text-muted" style="font-size:14.5px;margin-left:85px;">Ни одного уведомления</span>
+                 <span id="no-notifications" class="text-muted" style="font-size:14.5px;margin-left:85px;">Ни одного уведомления</span>
                {% endif %}
            </div>
 

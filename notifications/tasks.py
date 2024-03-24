@@ -34,22 +34,22 @@ def send_notification(user_to_id, user_from_id, event_type,
             text=text,
             url=url
         )
-        #
-        # channel_layer = get_channel_layer()
-        # async_to_sync(channel_layer.group_send)(
-        #     str(user_to_id),
-        #     {
-        #         'type': 'send_notification',
-        #         'user_to_id': str(user_to_id),
-        #         'user_from_id': str(user_from_id),
-        #         'user_from_username': user_from.username,
-        #         'user_from_avatar': user_from.avatar,
-        #         'post_id': str(post_id),
-        #         'post_title': post.title if post is not None else None,
-        #         'video_id': str(video_id),
-        #         'video_title': video.title if video is not None else None,
-        #         'event_type': event_type,
-        #         'text': text,
-        #         'url': url,
-        #     }
-        # )
+
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send(
+            str(user_to_id),
+            {
+                'type': 'send_notification',
+                'user_to_id': str(user_to_id),
+                'user_from_id': str(user_from_id),
+                'user_from_username': user_from.username,
+                'user_from_avatar': user_from.avatar,
+                'post_id': str(post_id),
+                'post_title': post.title if post is not None else None,
+                'video_id': str(video_id),
+                'video_title': video.title if video is not None else None,
+                'event_type': event_type,
+                'text': text,
+                'url': url,
+            }
+        ))
