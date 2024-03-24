@@ -69,15 +69,15 @@ docker-compose build
 ```
 
 ```commandline
-docker-compose run --rm  django_tree sh -c "python manage.py makemigrations"
+docker-compose run --rm  web-app sh -c "python manage.py makemigrations"
 ```
 
 ```commandline
-docker-compose run --rm  django_tree sh -c "python manage.py migrate" 
+docker-compose run --rm  web-app sh -c "python manage.py migrate" 
 ```
 
 ```commandline
-docker-compose run --rm  django_tree sh -c "python manage.py createsuperuser" 
+docker-compose run --rm  web-app sh -c "python manage.py createsuperuser" 
 ```
 ```commandline
 docker-compose up
