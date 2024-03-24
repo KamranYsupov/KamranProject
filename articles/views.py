@@ -105,7 +105,7 @@ class ShowPost(DetailView, BaseMixin, CreateView):
                                                        .prefetch_related('likes'),
                                                        ))
                             .annotate(likes_count=Count('likes'))
-                            .order_by('-likes_count', '-time_create'))
+                            .order_by('-likes_count', 'time_create'))
         context = super().get_context_data(**kwargs)
         context['article_comments'] = article_comments
         context['reply_form'] = ReplyCommentForm

@@ -28,14 +28,14 @@ base_fields = [
 class ArticleSerializerMixin(BaseSerializerMixin):
     read_url = read_article_url
     post_comments = CommentSerializer(many=True)
-    post_comments_count = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Article
         fields = base_fields
 
     @staticmethod
-    def get_post_comments_count(instance):
+    def get_comments_count(instance):
         return instance.post_comments.count()
 
 

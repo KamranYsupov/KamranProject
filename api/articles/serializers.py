@@ -12,13 +12,13 @@ from api.articles.mixins import (
 class ArticlesListSerializer(ArticleSerializerMixin):
     class Meta:
         model = Article
-        fields = base_fields + ['post_comments_count', 'read_url']
+        fields = base_fields + ['comments_count', 'read_url']
 
 
 class ReadArticleSerializer(ArticleSerializerMixin):
     class Meta:
         model = Article
-        fields = base_fields + ['post_comments', 'post_comments_count']
+        fields = base_fields + ['post_comments', 'comments_count']
 
 
 class ArticleCreateSerializer(ArticleCreateEditSerializerMixin):

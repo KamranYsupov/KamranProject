@@ -65,7 +65,7 @@ class WatchVideo(DetailView, BaseMixin, CreateView):
                                                      .prefetch_related('likes')))
 
                           .annotate(likes_count=Count('likes'))
-                          .order_by('-likes_count'))
+                          .order_by('-likes_count', 'time_create'))
 
         context = super().get_context_data(**kwargs)
         context['videos'] = related_video_queryset
