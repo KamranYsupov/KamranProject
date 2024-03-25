@@ -26,7 +26,8 @@ class ReplyMixinSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_author_username(instance):
-        return instance.author.username
+        if instance.author:
+            return instance.author.username
 
     @staticmethod
     def get_video(instance):

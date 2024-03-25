@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from KamranVideo.models import Video
-from api.comments.serializers import CommentSerializer
+from api.comments.serializers import CommentListSerializer
 from api.mixins import BaseSerializerMixin
 
 base_video_fields = [
@@ -35,7 +35,7 @@ class VideoListSerializer(BaseSerializerMixin):
 
 
 class WatchVideoSerializer(BaseSerializerMixin):
-    video_comments = CommentSerializer(many=True)
+    video_comments = CommentListSerializer(many=True)
 
     class Meta:
         model = Video

@@ -5,38 +5,7 @@ from .mixins import ReplyMixinSerializer
 from comments.models import Comment
 
 
-class CommentDetailSerializer(ReplyMixinSerializer):
-    replies = ReplyMixinSerializer(many=True)
-
-    class Meta:
-        model = Comment
-        fields = [
-            'id',
-            'author',
-            'comment',
-            'likes',
-            'time_create',
-            'video',
-            'post',
-            'parent',
-            'replies',
-        ]
-
-    @staticmethod
-    def get_parent(instance):
-        if instance.parent:
-            return {
-                'id': instance.parent.id,
-                'author': instance.parent.author.username,
-                'comment': instance.parent.comment,
-                'likes': instance.likes.count(),
-                'time_create': instance.parent.time_create,
-                'link': f'{settings.PROJECT_URL}/api/v1/kamran-project/comments/{str(instance.parent.id)}/'
-
-            }
-
-
-class CommentSerializer(ReplyMixinSerializer):
+class CommentListSerializer(ReplyMixinSerializer):
     link = serializers.HyperlinkedIdentityField(
         view_name='api:read_comment',
         lookup_field='pk'
@@ -57,6 +26,44 @@ class CommentSerializer(ReplyMixinSerializer):
             'replies_count',
             'link',
         ]
+
+    @staticmethod
+    def get_replies_count(instance):
+        return instance.replies.count()
+
+
+class CommentDetailSerializer(ReplyMixinSerializer):
+    replies = ReplyMixinSerializer(many=True)
+
+    class Meta:
+        model = Comment
+        fields = [
+            'id',
+            'author',
+            'comment',
+            'likes',
+            'time_create',
+            'video',
+            'post',
+            'parent',
+            'replies',
+            'user_to_reply',
+            'is_reply_to_reply',
+        ]
+
+    @staticmethod
+    def get_parent(instance):
+        if instance.parent:
+            return {
+                'id': instance.parent.id,
+                'author': instance.parent.author.username,
+                'comment': instance.parent.comment,
+                'likes': instance.likes.count(),
+                'time_create': instance.parent.time_create,
+                'link': f'{settings.PROJECT_URL}/api/v1/kamran-project/comments/{str(instance.parent.id)}/'
+
+            }
+
 
     @staticmethod
     def get_replies_count(instance):

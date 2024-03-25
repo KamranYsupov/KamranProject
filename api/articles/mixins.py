@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from articles.models import Article
-from api.comments.serializers import CommentSerializer
+from api.comments.serializers import CommentListSerializer
 from api.mixins import BaseSerializerMixin
 
 read_article_url = serializers.HyperlinkedIdentityField(
@@ -27,7 +27,7 @@ base_fields = [
 
 class ArticleSerializerMixin(BaseSerializerMixin):
     read_url = read_article_url
-    post_comments = CommentSerializer(many=True)
+    post_comments = CommentListSerializer(many=True)
     comments_count = serializers.SerializerMethodField()
 
     class Meta:

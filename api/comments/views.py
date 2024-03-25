@@ -4,7 +4,7 @@ from rest_framework import viewsets, generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 
-from api.comments.serializers import CommentSerializer, CommentDetailSerializer, CreateCommentSerializer
+from api.comments.serializers import CommentListSerializer, CommentDetailSerializer, CreateCommentSerializer
 from api.pagination import ObjectsListAPIPagination
 from comments.models import Comment
 from comments.service import deferred_comment_fields
@@ -25,15 +25,15 @@ comments = (
 )
 
 
+class CommentsListAPIView(generics.ListAPIView):
+    queryset = comments
+    serializer_class = CommentListSerializer
+    pagination_class = ObjectsListAPIPagination
+
+
 class CommentDetailAPIView(generics.RetrieveAPIView):
     queryset = comments
     serializer_class = CommentDetailSerializer
-
-
-class CommentsListAPIView(generics.ListAPIView):
-    queryset = comments
-    serializer_class = CommentSerializer
-    pagination_class = ObjectsListAPIPagination
 
 
 class CreateCommentAPIView(generics.CreateAPIView):
