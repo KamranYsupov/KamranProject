@@ -88,6 +88,33 @@ docker-compose up
 <h5>settings.py</h5>
 
 ```python
+INSTALLED_APPS = [
+    'daphne',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    'rest_framework',
+    'rest_framework.authtoken',
+    'captcha',
+    'djoser',
+    'debug_toolbar',
+    'social_django',
+   # 'cachalot', Если не закоментировать cachalot, то будет ошибка Error 11001 connecting to redis:6379. getaddrinfo failed.
+
+    'articles',
+    'KamranGram',
+    'KamranVideo',
+    'notifications',
+    'comments',
+    'users',
+    'api',
+
+]
+
 # SQLite
 DATABASES = {
     'default': {
